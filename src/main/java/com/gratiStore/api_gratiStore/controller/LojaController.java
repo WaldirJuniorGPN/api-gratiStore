@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/lojas")
 @RequiredArgsConstructor
@@ -40,9 +42,23 @@ public class LojaController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/cnpj/{cnpj}")
+    public ResponseEntity<LojaResponse> buscar(@PathVariable String cnpj) {
+        var response = service.buscar(cnpj);
+
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping
     public ResponseEntity<Page<LojaResponse>> listarTodos(Pageable pageable) {
         var response = service.listarTodos(pageable);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/listar")
+    public ResponseEntity<List<LojaResponse>> listarTodos() {
+        var response = service.lsitarTodos();
 
         return ResponseEntity.ok(response);
     }

@@ -3,6 +3,7 @@ package com.gratiStore.api_gratiStore.domain.exception;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -25,12 +26,12 @@ public class ExceptionHandlerAdvice {
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<StandardError> entityNotFound(EntityNotFoundException exception, HttpServletRequest request) {
+    public ResponseEntity<StandardError> handleIntityNotFound(EntityNotFoundException exception, HttpServletRequest request) {
         return this.atribuirError(exception, HttpStatus.NOT_FOUND, ENTIDADE_NAO_ENCONTRADA, request);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<StandardError> illegalArgumentException(IllegalArgumentException exception, HttpServletRequest request) {
+    public ResponseEntity<StandardError> handleIllegalArgumentException(IllegalArgumentException exception, HttpServletRequest request) {
         return this.atribuirError(exception, HttpStatus.BAD_REQUEST, PARAMETROS_INVALIDOS, request);
     }
 
@@ -49,6 +50,11 @@ public class ExceptionHandlerAdvice {
     public ResponseEntity<StandardError> handleBindException(BindException exception, HttpServletRequest request) {
         String errorMessage = exception.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         return this.atribuirError(exception, HttpStatus.BAD_REQUEST, errorMessage, request);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<StandardError> handleDataIntegrityViolationException(DataIntegrityViolationException exception, HttpServletRequest request) {
+        return this.atribuirError(exception, HttpStatus.CONFLICT, VIOLACAO_INTEGRIDADE, request);
     }
 
     private ResponseEntity<StandardError> atribuirError(Exception e, HttpStatus status, String msgError, HttpServletRequest request) {

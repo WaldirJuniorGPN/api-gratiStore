@@ -13,6 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class LojaServiceImpl implements LojaService {
@@ -47,9 +50,29 @@ public class LojaServiceImpl implements LojaService {
     }
 
     @Override
+    public LojaResponse buscar(String cnpj) {
+        var loja = repository.findByCnpjAndAtivoTrue(cnpj).orElseThrow(
+                () -> new EntityNotFoundException(String.format("Loja com CNPJ: %d não foi encontrada ou não está ativa", cnpj)));
+
+        return adapter.lojaToLojaResponse(loja);
+    }
+
+    @Override
     public Page<LojaResponse> listarTodos(Pageable pageable) {
         return repository.findAllByAtivoTrue(pageable).orElseThrow(
                 () -> new IllegalArgumentException("A estrutura de paginação está inválida")).map(adapter::lojaToLojaResponse);
+    }
+
+    @Override
+    public List<LojaResponse> lsitarTodos() {
+        var lojasAtivas = repository.findAllByAtivoTrue();
+        if (lojasAtivas.isEmpty()) {
+            throw new RuntimeException("Nenhuma loja ativa encontrada");
+        }
+
+        return lojasAtivas.stream()
+                .map(adapter::lojaToLojaResponse)
+                .collect(Collectors.toList());
     }
 
     @Override

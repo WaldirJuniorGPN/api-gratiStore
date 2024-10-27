@@ -15,6 +15,6 @@ public class Loja extends EntidadeBase {
     @Column(name = "nome", nullable = false)
     private String nome;
 
-    @Column(name = "cnpj", nullable = false)
+    @Column(name = "cnpj", nullable = false, unique = true)
     private String cnpj;
 }
