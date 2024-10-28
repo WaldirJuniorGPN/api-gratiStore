@@ -1,7 +1,7 @@
-package com.gratiStore.api_gratiStore.domain.service;
+package com.gratiStore.api_gratiStore.domain.service.loja;
 
-import com.gratiStore.api_gratiStore.controller.dto.request.LojaRequest;
-import com.gratiStore.api_gratiStore.controller.dto.response.LojaResponse;
+import com.gratiStore.api_gratiStore.controller.dto.request.loja.LojaRequest;
+import com.gratiStore.api_gratiStore.controller.dto.response.loja.LojaResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

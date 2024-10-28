@@ -1,10 +1,10 @@
-package com.gratiStore.api_gratiStore.domain.service.impl;
+package com.gratiStore.api_gratiStore.domain.service.loja.impl;
 
-import com.gratiStore.api_gratiStore.controller.dto.request.LojaRequest;
-import com.gratiStore.api_gratiStore.controller.dto.response.LojaResponse;
-import com.gratiStore.api_gratiStore.domain.entities.Loja;
-import com.gratiStore.api_gratiStore.domain.service.LojaService;
-import com.gratiStore.api_gratiStore.infra.adapter.LojaAdapter;
+import com.gratiStore.api_gratiStore.controller.dto.request.loja.LojaRequest;
+import com.gratiStore.api_gratiStore.controller.dto.response.loja.LojaResponse;
+import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
+import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
+import com.gratiStore.api_gratiStore.infra.adapter.loja.LojaAdapter;
 import com.gratiStore.api_gratiStore.infra.repository.LojaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;

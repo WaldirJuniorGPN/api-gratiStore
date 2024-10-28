@@ -1,6 +1,6 @@
 package com.gratiStore.api_gratiStore.infra.repository;
 
-import com.gratiStore.api_gratiStore.domain.entities.Loja;
+import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

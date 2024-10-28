@@ -1,5 +1,6 @@
-package com.gratiStore.api_gratiStore.domain.entities;
+package com.gratiStore.api_gratiStore.domain.entities.loja;
 
+import com.gratiStore.api_gratiStore.domain.entities.EntidadeBase;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

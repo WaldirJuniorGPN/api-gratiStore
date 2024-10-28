@@ -1,4 +1,4 @@
-package com.gratiStore.api_gratiStore.controller.dto.request;
+package com.gratiStore.api_gratiStore.controller.dto.request.loja;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

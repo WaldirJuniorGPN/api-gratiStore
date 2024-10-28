@@ -1,9 +1,9 @@
-package com.gratiStore.api_gratiStore.infra.adapter.impl;
+package com.gratiStore.api_gratiStore.infra.adapter.loja.impl;
 
-import com.gratiStore.api_gratiStore.controller.dto.request.LojaRequest;
-import com.gratiStore.api_gratiStore.controller.dto.response.LojaResponse;
-import com.gratiStore.api_gratiStore.domain.entities.Loja;
-import com.gratiStore.api_gratiStore.infra.adapter.LojaAdapter;
+import com.gratiStore.api_gratiStore.controller.dto.request.loja.LojaRequest;
+import com.gratiStore.api_gratiStore.controller.dto.response.loja.LojaResponse;
+import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
+import com.gratiStore.api_gratiStore.infra.adapter.loja.LojaAdapter;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,6 +1,6 @@
-package com.gratiStore.api_gratiStore.controller.dto.response;
+package com.gratiStore.api_gratiStore.controller.dto.response.loja;
 
-import com.gratiStore.api_gratiStore.domain.entities.Loja;
+import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 
 public record LojaResponse(Long id, String nome, String cnpj) {
 

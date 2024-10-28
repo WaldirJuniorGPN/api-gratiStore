@@ -1,8 +1,8 @@
 package com.gratiStore.api_gratiStore.controller;
 
-import com.gratiStore.api_gratiStore.controller.dto.request.LojaRequest;
-import com.gratiStore.api_gratiStore.controller.dto.response.LojaResponse;
-import com.gratiStore.api_gratiStore.domain.service.LojaService;
+import com.gratiStore.api_gratiStore.controller.dto.request.loja.LojaRequest;
+import com.gratiStore.api_gratiStore.controller.dto.response.loja.LojaResponse;
+import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
