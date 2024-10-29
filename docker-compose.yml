@@ -1,0 +1,11 @@
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql-ms
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: grati-store
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./mysql-data:/var/lib/mysql
