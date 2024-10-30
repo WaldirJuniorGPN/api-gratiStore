@@ -72,6 +72,7 @@ public class AtendenteServiceImpl implements AtendenteService {
     @Transactional
     public void deletar(Long id) {
         var atendente = buscarNoBanco(id);
+        atendente.setNome(atendente.getNome() + " - Excluido");
         atendente.setAtivo(false);
         repository.save(atendente);
     }
