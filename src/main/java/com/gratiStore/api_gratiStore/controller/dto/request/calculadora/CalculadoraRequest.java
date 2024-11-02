@@ -1,13 +1,13 @@
 package com.gratiStore.api_gratiStore.controller.dto.request.calculadora;
 
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 
 public record CalculadoraRequest(
+
+        @NotBlank(message = "O nome não pode estar nulo ou em branco")
+        String nome,
 
         @NotNull(message = "O percentual do primeiro colocado é obrigatório.")
         @Min(value = 0, message = "O percentual do primeiro colocado deve ser maior ou igual a 0.")

@@ -13,6 +13,7 @@ public class CalculadoraAdapterImpl implements CalculadoraAdapter {
     @Override
     public Calculadora calculadoraRequestToCalculadora(CalculadoraRequest request) {
         var calculadora = new Calculadora();
+        calculadora.setNome(request.nome());
         calculadora.setPercentualPrimeiroColocado(request.percentualPrimeiroColocado());
         calculadora.setPercentualSegundoColocado(request.percentualSegundoColocado());
         calculadora.setPercentualTerceiroColocado(request.percentualTerceiroColocado());
@@ -31,6 +32,7 @@ public class CalculadoraAdapterImpl implements CalculadoraAdapter {
 
     @Override
     public Calculadora calculadoraRequestToCalculadora(Calculadora calculadora, CalculadoraRequest request) {
+        calculadora.setNome(request.nome());
         calculadora.setPercentualPrimeiroColocado(request.percentualPrimeiroColocado());
         calculadora.setPercentualSegundoColocado(request.percentualSegundoColocado());
         calculadora.setPercentualTerceiroColocado(request.percentualTerceiroColocado());

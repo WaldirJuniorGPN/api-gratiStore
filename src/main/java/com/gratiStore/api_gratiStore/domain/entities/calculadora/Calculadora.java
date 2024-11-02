@@ -18,6 +18,9 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class Calculadora extends EntidadeBase {
 
+    @Column(name = "nome", nullable = false)
+    private String nome;
+
     @Column(name = "percentual-primeiro-colocado", nullable = false)
     private double percentualPrimeiroColocado;
 
