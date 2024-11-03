@@ -8,12 +8,12 @@ public record CalculadoraResponse(Long id, String nome,
                                   Double percentualPrimeiroColocado, Double percentualSegundoColocado,
                                   Double percentualTerceiroColocado, Double percentualDemaisColocados,
                                   BigDecimal bonusPrimeiroColocado, BigDecimal bonusSegundoColocado,
-                                  BigDecimal bonusTerceiroColocado) {
+                                  BigDecimal bonusTerceiroColocado, Long lojaId) {
 
     public CalculadoraResponse(Calculadora calculadora) {
         this(calculadora.getId(), calculadora.getNome(), calculadora.getPercentualPrimeiroColocado(), calculadora.getPercentualSegundoColocado(),
                 calculadora.getPercentualTerceiroColocado(), calculadora.getPercentualDemaisColocados(),
                 calculadora.getBonusPrimeiroColocado(), calculadora.getBonusSegundoColocado(),
-                calculadora.getBonusTerceiroColocado());
+                calculadora.getBonusTerceiroColocado(), calculadora.getLoja().getId());
     }
 }

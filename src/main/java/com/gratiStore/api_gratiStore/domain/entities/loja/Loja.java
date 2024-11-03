@@ -24,6 +24,6 @@ public class Loja extends EntidadeBase {
     @OneToMany(mappedBy = "loja")
     private List<Atendente> atendentes;
 
-    @ManyToOne
+    @OneToOne
     private Calculadora calculadora;
 }

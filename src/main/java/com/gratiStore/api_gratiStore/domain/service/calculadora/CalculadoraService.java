@@ -5,6 +5,8 @@ import com.gratiStore.api_gratiStore.controller.dto.response.calculadora.Calcula
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface CalculadoraService {
 
     CalculadoraResponse criar(CalculadoraRequest request);
@@ -14,6 +16,8 @@ public interface CalculadoraService {
     CalculadoraResponse buscar(Long id);
 
     Page<CalculadoraResponse> listarTodos(Pageable pageable);
+
+    List<CalculadoraResponse> listarTodos();
 
     void deletar(Long id);
 }

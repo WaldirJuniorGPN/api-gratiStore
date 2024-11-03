@@ -39,6 +39,9 @@ public record CalculadoraRequest(
 
         @NotNull(message = "O bônus do terceiro colocado é obrigatório.")
         @DecimalMin(value = "0.00", message = "O bônus do terceiro colocado deve ser maior ou igual a 0.00.")
-        BigDecimal bonusTerceiroColocado
+        BigDecimal bonusTerceiroColocado,
+
+        @NotNull(message = "O ID da loja não pode estar nulo")
+        Long lojaId
 ) {
 }

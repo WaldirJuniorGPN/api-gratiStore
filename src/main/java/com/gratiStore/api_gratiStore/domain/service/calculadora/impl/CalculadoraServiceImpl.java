@@ -13,6 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class CalculadoraServiceImpl implements CalculadoraService {
@@ -51,6 +54,18 @@ public class CalculadoraServiceImpl implements CalculadoraService {
         return repository.findAllByAtivoTrue(pageable).orElseThrow(
                         () -> new IllegalArgumentException("A estrutura de paginação está inválida"))
                 .map(adapter::calculadoraToCalculadoraResponse);
+    }
+
+    @Override
+    public List<CalculadoraResponse> listarTodos() {
+        var lojasAtivas = repository.findAllByAtivoTrue();
+        if (lojasAtivas.isEmpty()) {
+            throw new RuntimeException("Nenhuma calculadora ativa encontrada");
+        }
+
+        return lojasAtivas.stream()
+                .map(adapter::calculadoraToCalculadoraResponse)
+                .collect(Collectors.toList());
     }
 
     @Override

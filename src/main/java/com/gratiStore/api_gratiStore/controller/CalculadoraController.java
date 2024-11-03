@@ -11,8 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-@RequestMapping
-@RestController("/calculadoras")
+import java.util.List;
+
+@RequestMapping("/calculadoras")
+@RestController
 @RequiredArgsConstructor
 public class CalculadoraController {
 
@@ -43,6 +45,13 @@ public class CalculadoraController {
     @GetMapping
     public ResponseEntity<Page<CalculadoraResponse>> listarTodos(Pageable pageable) {
         var response = service.listarTodos(pageable);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/listar")
+    public ResponseEntity<List<CalculadoraResponse>> listarTodos() {
+        var response = service.listarTodos();
 
         return ResponseEntity.ok(response);
     }

@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CalculadoraRepository extends JpaRepository<Calculadora, Long> {
@@ -12,4 +13,6 @@ public interface CalculadoraRepository extends JpaRepository<Calculadora, Long> 
     Optional<Calculadora> findByIdAndAtivoTrue(Long id);
 
     Optional<Page<Calculadora>> findAllByAtivoTrue(Pageable pageable);
+
+    List<Calculadora> findAllByAtivoTrue();
 }
