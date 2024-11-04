@@ -77,6 +77,11 @@ public class AtendenteServiceImpl implements AtendenteService {
         repository.save(atendente);
     }
 
+    @Override
+    public AtendenteResponse converteAtendenteToAtendenteResponse(Atendente atendente) {
+        return adapter.atendenteToAtendenteResponse(atendente);
+    }
+
     private Atendente buscarNoBanco(Long id) {
         return repository.findByIdAndAtivoTrue(id).orElseThrow(
                 () -> new EntityNotFoundException(String.format("Atendente com ID: %d não foi encontrado ou não está ativo", id)));

@@ -1,6 +1,7 @@
 package com.gratiStore.api_gratiStore.controller;
 
 import com.gratiStore.api_gratiStore.controller.dto.request.loja.LojaRequest;
+import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
 import com.gratiStore.api_gratiStore.controller.dto.response.loja.LojaResponse;
 import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
 import jakarta.validation.Valid;
@@ -59,6 +60,13 @@ public class LojaController {
     @GetMapping("/listar")
     public ResponseEntity<List<LojaResponse>> listarTodos() {
         var response = service.lsitarTodos();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}/atendentes")
+    public ResponseEntity<List<AtendenteResponse>> listarAtendentesPorLoja(@PathVariable Long id) {
+        var response = service.listarAtendentesPorLoja(id);
 
         return ResponseEntity.ok(response);
     }

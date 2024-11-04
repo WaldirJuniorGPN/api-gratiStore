@@ -1,8 +1,10 @@
 package com.gratiStore.api_gratiStore.domain.service.loja.impl;
 
 import com.gratiStore.api_gratiStore.controller.dto.request.loja.LojaRequest;
+import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
 import com.gratiStore.api_gratiStore.controller.dto.response.loja.LojaResponse;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
+import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
 import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
 import com.gratiStore.api_gratiStore.infra.adapter.loja.LojaAdapter;
 import com.gratiStore.api_gratiStore.infra.repository.LojaRepository;
@@ -22,6 +24,7 @@ public class LojaServiceImpl implements LojaService {
 
     private final LojaAdapter adapter;
     private final LojaRepository repository;
+    private final AtendenteService atendenteService;
 
     @Override
     @Transactional
@@ -81,6 +84,20 @@ public class LojaServiceImpl implements LojaService {
         var loja = buscarNoBanco(id);
         loja.setAtivo(false);
         repository.save(loja);
+    }
+
+    @Override
+    public Loja buscarLoja(Long id) {
+        return buscarNoBanco(id);
+    }
+
+    @Override
+    public List<AtendenteResponse> listarAtendentesPorLoja(Long id) {
+        var loja = buscarNoBanco(id);
+
+        return loja.getAtendentes().stream()
+                .map(atendenteService::converteAtendenteToAtendenteResponse)
+                .collect(Collectors.toList());
     }
 
     private Loja buscarNoBanco(Long id) {

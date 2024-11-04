@@ -1,7 +1,10 @@
 package com.gratiStore.api_gratiStore.domain.service.loja;
 
 import com.gratiStore.api_gratiStore.controller.dto.request.loja.LojaRequest;
+import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
 import com.gratiStore.api_gratiStore.controller.dto.response.loja.LojaResponse;
+import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -22,4 +25,8 @@ public interface LojaService {
     List<LojaResponse> lsitarTodos();
 
     void deletar(Long id);
+
+    Loja buscarLoja(Long id);
+
+    List<AtendenteResponse> listarAtendentesPorLoja(Long id);
 }
