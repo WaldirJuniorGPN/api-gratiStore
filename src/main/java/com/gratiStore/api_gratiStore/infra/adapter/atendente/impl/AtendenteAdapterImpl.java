@@ -2,6 +2,7 @@ package com.gratiStore.api_gratiStore.infra.adapter.atendente.impl;
 
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequest;
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
+import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponseVendas;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
 import com.gratiStore.api_gratiStore.infra.adapter.atendente.AtendenteAdapter;
@@ -37,10 +38,15 @@ public class AtendenteAdapterImpl implements AtendenteAdapter {
         atendente.setNome(request.nome());
         atendente.setLoja(loja);
 
-        if (!loja.getAtendentes().contains(atendente)){
+        if (!loja.getAtendentes().contains(atendente)) {
             loja.getAtendentes().add(atendente);
         }
 
         return atendente;
+    }
+
+    @Override
+    public AtendenteResponseVendas atendenteToAtendenteResponseVendas(Atendente atendente) {
+        return new AtendenteResponseVendas(atendente);
     }
 }

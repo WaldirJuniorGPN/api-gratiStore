@@ -1,7 +1,9 @@
 package com.gratiStore.api_gratiStore.domain.service.atendente.impl;
 
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequest;
+import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequestVendas;
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
+import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponseVendas;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
 import com.gratiStore.api_gratiStore.infra.adapter.atendente.AtendenteAdapter;
@@ -80,6 +82,29 @@ public class AtendenteServiceImpl implements AtendenteService {
     @Override
     public AtendenteResponse converteAtendenteToAtendenteResponse(Atendente atendente) {
         return adapter.atendenteToAtendenteResponse(atendente);
+    }
+
+    @Override
+    @Transactional
+    public AtendenteResponseVendas adicionarVendas(Long id, AtendenteRequestVendas request) {
+        var atendente = buscarNoBanco(id);
+        atendente.setVendasPrimeiraSemana(request.vendasPrimeiraSemana());
+        atendente.setVendasSegundaSemana(request.vendasSegundaSemana());
+        atendente.setVendasTerceiraSemana(request.vendasTerceiraSemana());
+        atendente.setVendasQuartaSemana(request.vendasQuartaSemana());
+        atendente.setVendasQuintaSemana(request.vendasQuintaSemana());
+        atendente.setVendasSextaSemana(request.vendasSextaSemana());
+
+        atendente.setAtrasoStatusPrimeiraSemana(request.atrasoPrimeiraSemana());
+        atendente.setAtrasoStatusSegundaSemana(request.atrasoSegundaSemana());
+        atendente.setAtrasoStatusTerceiraSemana(request.atrasoTerceiraSemana());
+        atendente.setAtrasoStatusQuartaSemana(request.atrasoQuartaSemana());
+        atendente.setAtrasoStatusQuintaSemana(request.atrasoQuintaSemana());
+        atendente.setAtrasoStatusSextaSemana(request.atrasoSextaSemana());
+
+        repository.save(atendente);
+
+        return adapter.atendenteToAtendenteResponseVendas(atendente);
     }
 
     private Atendente buscarNoBanco(Long id) {

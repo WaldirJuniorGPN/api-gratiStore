@@ -2,6 +2,7 @@ package com.gratiStore.api_gratiStore.infra.adapter.atendente;
 
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequest;
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
+import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponseVendas;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 
 public interface AtendenteAdapter {
@@ -11,4 +12,6 @@ public interface AtendenteAdapter {
     AtendenteResponse atendenteToAtendenteResponse(Atendente atendente);
 
     Atendente atendenteReqquestToAtendente(Atendente atendente, AtendenteRequest request);
+
+    AtendenteResponseVendas atendenteToAtendenteResponseVendas(Atendente atendente);
 }

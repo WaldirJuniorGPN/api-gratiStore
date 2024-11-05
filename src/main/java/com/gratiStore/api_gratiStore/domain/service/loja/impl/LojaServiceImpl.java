@@ -24,7 +24,6 @@ public class LojaServiceImpl implements LojaService {
 
     private final LojaAdapter adapter;
     private final LojaRepository repository;
-    private final AtendenteService atendenteService;
 
     @Override
     @Transactional
@@ -95,9 +94,7 @@ public class LojaServiceImpl implements LojaService {
     public List<AtendenteResponse> listarAtendentesPorLoja(Long id) {
         var loja = buscarNoBanco(id);
 
-        return loja.getAtendentes().stream()
-                .map(atendenteService::converteAtendenteToAtendenteResponse)
-                .collect(Collectors.toList());
+        return adapter.mapAtendentesToAtendenteResponse(loja.getAtendentes());
     }
 
     private Loja buscarNoBanco(Long id) {
