@@ -1,7 +1,9 @@
 package com.gratiStore.api_gratiStore.controller;
 
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequest;
+import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequestVendas;
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
+import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponseVendas;
 import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -62,5 +64,12 @@ public class AtendenteController {
         service.deletar(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<AtendenteResponseVendas> adicionarVendas(@PathVariable Long id, @Valid @RequestBody AtendenteRequestVendas request) {
+        var response = service.adicionarVendas(id, request);
+
+        return ResponseEntity.ok(response);
     }
 }

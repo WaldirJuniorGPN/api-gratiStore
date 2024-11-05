@@ -1,7 +1,10 @@
 package com.gratiStore.api_gratiStore.domain.service.atendente;
 
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequest;
+import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequestVendas;
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
+import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponseVendas;
+import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,4 +23,8 @@ public interface AtendenteService {
     List<AtendenteResponse> listarTodos();
 
     void deletar(Long id);
+
+    AtendenteResponse converteAtendenteToAtendenteResponse(Atendente atendente);
+
+    AtendenteResponseVendas adicionarVendas(Long id, AtendenteRequestVendas request);
 }

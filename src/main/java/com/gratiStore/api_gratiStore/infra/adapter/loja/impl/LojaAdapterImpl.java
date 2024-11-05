@@ -1,10 +1,15 @@
 package com.gratiStore.api_gratiStore.infra.adapter.loja.impl;
 
 import com.gratiStore.api_gratiStore.controller.dto.request.loja.LojaRequest;
+import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
 import com.gratiStore.api_gratiStore.controller.dto.response.loja.LojaResponse;
+import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import com.gratiStore.api_gratiStore.infra.adapter.loja.LojaAdapter;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class LojaAdapterImpl implements LojaAdapter {
@@ -24,6 +29,13 @@ public class LojaAdapterImpl implements LojaAdapter {
         loja.setCnpj(normalizaCnpj(request.cnpj()));
 
         return loja;
+    }
+
+    @Override
+    public List<AtendenteResponse> mapAtendentesToAtendenteResponse(List<Atendente> atendentes) {
+        return atendentes.stream()
+                .map(AtendenteResponse::new)
+                .collect(Collectors.toList());
     }
 
     @Override
