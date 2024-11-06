@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity(name = "Loja")
@@ -21,9 +22,16 @@ public class Loja extends EntidadeBase {
     @Column(name = "cnpj", nullable = false, unique = true)
     private String cnpj;
 
-    @OneToMany(mappedBy = "loja")
+    @Column(name = "total-de-vendas")
+    private BigDecimal totalVendas;
+
+    @OneToMany(mappedBy = "loja", fetch = FetchType.EAGER)
     private List<Atendente> atendentes;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     private Calculadora calculadora;
+
+    public void atribuirVendas(BigDecimal valor) {
+        totalVendas = totalVendas.add(valor);
+    }
 }

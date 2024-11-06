@@ -4,10 +4,7 @@ import com.gratiStore.api_gratiStore.domain.entities.EntidadeBase;
 import com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -64,6 +61,45 @@ public class Atendente extends EntidadeBase {
     @Column(name = "atraso-sexta-semana")
     private AtrasoStatus atrasoStatusSextaSemana;
 
+    @Column(name = "total-de-vendas")
+    private BigDecimal totalVendas;
+
+    @Column(name = "gratificacao")
+    private BigDecimal gratificacao;
+
+    @Column(name = "bonus")
+    private BigDecimal bonus;
+
+    @Column(name = "atendimentos-primeira-semana")
+    private Integer quantidadeAtendimentosPrimeiraSemana;
+
+    @Column(name = "atendimentos-segunda-semana")
+    private Integer quantidadeAtendimentosSegundaSemana;
+
+    @Column(name = "atendimentos-terceira-semana")
+    private Integer quantidadeAtendimentosTerceiraSemana;
+
+    @Column(name = "atendimentos-quarta-semana")
+    private Integer quantidadeAtendimentosQuartaSemana;
+
+    @Column(name = "atendimentos-quinta-semana")
+    private Integer quantidadeAtendimentosQuintaSemana;
+
+    @Column(name = "atendimentos-sexta-semana")
+    private Integer quantidadeAtendimentosSextaSemana;
+
     @ManyToOne
     private Loja loja;
+
+    public void atribuirGratificacao(BigDecimal valor) {
+        gratificacao = gratificacao.add(valor);
+    }
+
+    public void atribuirBonus(BigDecimal valor) {
+        bonus = bonus.add(valor);
+    }
+
+    public void atribuirVendaTotal(BigDecimal valor) {
+        totalVendas = totalVendas.add(valor);
+    }
 }

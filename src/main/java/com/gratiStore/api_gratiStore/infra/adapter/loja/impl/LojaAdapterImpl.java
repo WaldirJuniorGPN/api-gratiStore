@@ -8,6 +8,7 @@ import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import com.gratiStore.api_gratiStore.infra.adapter.loja.LojaAdapter;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +36,7 @@ public class LojaAdapterImpl implements LojaAdapter {
     public List<AtendenteResponse> mapAtendentesToAtendenteResponse(List<Atendente> atendentes) {
         return atendentes.stream()
                 .map(AtendenteResponse::new)
+                .sorted(Comparator.comparing(AtendenteResponse::nome))
                 .collect(Collectors.toList());
     }
 
