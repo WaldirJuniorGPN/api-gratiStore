@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3307/grati-store
+    url: jdbc:mysql://localhost:3307/grati_store
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver

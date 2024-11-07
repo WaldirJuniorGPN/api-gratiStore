@@ -6,8 +6,11 @@ import com.gratiStore.api_gratiStore.domain.entities.calculadora.Calculadora;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Entity(name = "Loja")
@@ -23,15 +26,18 @@ public class Loja extends EntidadeBase {
     private String cnpj;
 
     @Column(name = "total-de-vendas")
-    private BigDecimal totalVendas;
+    private BigDecimal totalVendas = new BigDecimal(BigInteger.ZERO);
 
     @OneToMany(mappedBy = "loja", fetch = FetchType.EAGER)
+    @ToString.Exclude
     private List<Atendente> atendentes;
 
     @OneToOne(fetch = FetchType.EAGER)
+    @ToString.Exclude
     private Calculadora calculadora;
 
     public void atribuirVendas(BigDecimal valor) {
         totalVendas = totalVendas.add(valor);
+        totalVendas = totalVendas.setScale(2, RoundingMode.HALF_UP);
     }
 }

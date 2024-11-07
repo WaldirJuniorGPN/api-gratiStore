@@ -19,16 +19,17 @@ public class CalculadoraAdapterImpl implements CalculadoraAdapter {
         var calculadora = new Calculadora();
         var loja = lojaService.buscarLoja(request.lojaId());
         calculadora.setNome(request.nome());
-        calculadora.setPercentualPrimeiroColocado(request.percentualPrimeiroColocado());
-        calculadora.setPercentualSegundoColocado(request.percentualSegundoColocado());
-        calculadora.setPercentualTerceiroColocado(request.percentualTerceiroColocado());
-        calculadora.setPercentualDemaisColocados(request.percentualDemaisColocados());
+        calculadora.setPercentualPrimeiroColocado(request.percentualPrimeiroColocado() / 100);
+        calculadora.setPercentualSegundoColocado(request.percentualSegundoColocado() / 100);
+        calculadora.setPercentualTerceiroColocado(request.percentualTerceiroColocado() / 100);
+        calculadora.setPercentualDemaisColocados(request.percentualDemaisColocados() / 100);
         calculadora.setBonusPrimeiroColocado(request.bonusPrimeiroColocado());
         calculadora.setBonusSegundoColocado(request.bonusSegundoColocado());
         calculadora.setBonusTerceiroColocado(request.bonusTerceiroColocado());
         calculadora.setLoja(loja);
 
         loja.setCalculadora(calculadora);
+        lojaService.salvarNoBanco(loja);
 
         return calculadora;
     }
@@ -42,10 +43,10 @@ public class CalculadoraAdapterImpl implements CalculadoraAdapter {
     public Calculadora calculadoraRequestToCalculadora(Calculadora calculadora, CalculadoraRequest request) {
         var loja = lojaService.buscarLoja(request.lojaId());
         calculadora.setNome(request.nome());
-        calculadora.setPercentualPrimeiroColocado(request.percentualPrimeiroColocado());
-        calculadora.setPercentualSegundoColocado(request.percentualSegundoColocado());
-        calculadora.setPercentualTerceiroColocado(request.percentualTerceiroColocado());
-        calculadora.setPercentualDemaisColocados(request.percentualDemaisColocados());
+        calculadora.setPercentualPrimeiroColocado(request.percentualPrimeiroColocado() / 100);
+        calculadora.setPercentualSegundoColocado(request.percentualSegundoColocado() / 100);
+        calculadora.setPercentualTerceiroColocado(request.percentualTerceiroColocado() / 100);
+        calculadora.setPercentualDemaisColocados(request.percentualDemaisColocados() / 100);
         calculadora.setBonusPrimeiroColocado(request.bonusPrimeiroColocado());
         calculadora.setBonusSegundoColocado(request.bonusSegundoColocado());
         calculadora.setBonusTerceiroColocado(request.bonusTerceiroColocado());

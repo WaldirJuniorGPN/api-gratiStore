@@ -5,6 +5,7 @@ import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -31,14 +32,15 @@ public class Calculadora extends EntidadeBase {
     private double percentualDemaisColocados;
 
     @Column(name = "bonus-primeiro-colocado", nullable = false)
-    private BigDecimal bonusPrimeiroColocado;
+    private BigDecimal bonusPrimeiroColocado = BigDecimal.ZERO;
 
     @Column(name = "bonus-segundo-colocado", nullable = false)
-    private BigDecimal bonusSegundoColocado;
+    private BigDecimal bonusSegundoColocado = BigDecimal.ZERO;
 
     @Column(name = "bonus-terceiro-colocado", nullable = false)
-    private BigDecimal bonusTerceiroColocado;
+    private BigDecimal bonusTerceiroColocado = BigDecimal.ZERO;
 
     @OneToOne
+    @ToString.Exclude
     private Loja loja;
 }

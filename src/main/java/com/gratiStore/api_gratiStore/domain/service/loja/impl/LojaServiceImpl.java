@@ -97,6 +97,11 @@ public class LojaServiceImpl implements LojaService {
         return adapter.mapAtendentesToAtendenteResponse(loja.getAtendentes());
     }
 
+    @Override
+    public void salvarNoBanco(Loja loja) {
+        repository.save(loja);
+    }
+
     private Loja buscarNoBanco(Long id) {
         return repository.findByIdAndAtivoTrue(id).orElseThrow(
                 () -> new EntityNotFoundException(String.format("Loja com ID: %d não foi encontrada ou não está ativa", id)));

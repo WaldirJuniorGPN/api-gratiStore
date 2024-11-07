@@ -3,6 +3,7 @@ package com.gratiStore.api_gratiStore.domain.service.resultado.impl;
 import com.gratiStore.api_gratiStore.controller.dto.response.loja.LojaResponseResultado;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.calculadora.Calculadora;
+import com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import com.gratiStore.api_gratiStore.domain.service.resultado.ResultadoService;
 import com.gratiStore.api_gratiStore.infra.repository.AtendenteRepository;
@@ -94,27 +95,27 @@ public class ResultadoServiceImpl implements ResultadoService {
 
     private void calcularBonusPrimeiraSemana(List<Atendente> atendentes, Calculadora calculadora) {
         zerarBonus(atendentes);
-        calcularBonificacaoSemanal(atendentes, calculadora, Atendente::getQuantidadeAtendimentosPrimeiraSemana);
+        calcularBonificacaoSemanal(atendentes, calculadora, Atendente::getQuantidadeAtendimentosPrimeiraSemana, Atendente::getAtrasoStatusPrimeiraSemana);
     }
 
     private void calcularBonusSegundaSemana(List<Atendente> atendentes, Calculadora calculadora) {
-        calcularBonificacaoSemanal(atendentes, calculadora, Atendente::getQuantidadeAtendimentosSegundaSemana);
+        calcularBonificacaoSemanal(atendentes, calculadora, Atendente::getQuantidadeAtendimentosSegundaSemana, Atendente::getAtrasoStatusSegundaSemana);
     }
 
     private void calcularBonusTerceiraSemana(List<Atendente> atendentes, Calculadora calculadora) {
-        calcularBonificacaoSemanal(atendentes, calculadora, Atendente::getQuantidadeAtendimentosTerceiraSemana);
+        calcularBonificacaoSemanal(atendentes, calculadora, Atendente::getQuantidadeAtendimentosTerceiraSemana, Atendente::getAtrasoStatusTerceiraSemana);
     }
 
     private void calcularBonusQuartaSemana(List<Atendente> atendentes, Calculadora calculadora) {
-        calcularBonificacaoSemanal(atendentes, calculadora, Atendente::getQuantidadeAtendimentosQuartaSemana);
+        calcularBonificacaoSemanal(atendentes, calculadora, Atendente::getQuantidadeAtendimentosQuartaSemana, Atendente::getAtrasoStatusQuartaSemana);
     }
 
     private void calcularBonusQuintaSemana(List<Atendente> atendentes, Calculadora calculadora) {
-        calcularBonificacaoSemanal(atendentes, calculadora, Atendente::getQuantidadeAtendimentosQuintaSemana);
+        calcularBonificacaoSemanal(atendentes, calculadora, Atendente::getQuantidadeAtendimentosQuintaSemana, Atendente::getAtrasoStatusQuintaSemana);
     }
 
     private void calcularBonusSextaSemana(List<Atendente> atendentes, Calculadora calculadora) {
-        calcularBonificacaoSemanal(atendentes, calculadora, Atendente::getQuantidadeAtendimentosSextaSemana);
+        calcularBonificacaoSemanal(atendentes, calculadora, Atendente::getQuantidadeAtendimentosSextaSemana, Atendente::getAtrasoStatusSextaSemana);
     }
 
     private void calcularVendaTotalPrimeiraSemana(List<Atendente> atendentes) {
@@ -154,8 +155,18 @@ public class ResultadoServiceImpl implements ResultadoService {
         atendentes.forEach(atendente -> atendente.setTotalVendas(BigDecimal.ZERO));
     }
 
+    private void zerarVendaTotalLoja(Loja loja) {
+        loja.setTotalVendas(BigDecimal.ZERO);
+    }
+
     private void calcularVendaTotalLoja(Loja loja, List<Atendente> atendentes) {
-        atendentes.forEach(atendente -> loja.atribuirVendas(atendente.getTotalVendas()));
+        zerarVendaTotalLoja(loja);
+
+        var totalVendas = atendentes.stream()
+                .map(Atendente::getTotalVendas)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        loja.atribuirVendas(totalVendas);
     }
 
     private void calcularVendaTotalSemanal(List<Atendente> atendentes, Function<Atendente, BigDecimal> vendasSemana) {
@@ -179,21 +190,23 @@ public class ResultadoServiceImpl implements ResultadoService {
         }
     }
 
-    private void calcularBonificacaoSemanal(List<Atendente> atendentes, Calculadora calculadora, Function<Atendente, Integer> atendimentosSemana) {
+    private void calcularBonificacaoSemanal(List<Atendente> atendentes, Calculadora calculadora, Function<Atendente, Integer> atendimentosSemana, Function<Atendente, AtrasoStatus> status) {
         var atendentesOrdenados = atendentes.stream()
                 .sorted(Comparator.comparing(atendimentosSemana).reversed())
                 .toList();
 
         for (int i = 0; i < atendentesOrdenados.size(); i++) {
-            BigDecimal bonus;
-            switch (i) {
-                case PRIMEIRO_COLOCADO -> bonus = calculadora.getBonusPrimeiroColocado();
-                case SEGUNDO_COLOCADO -> bonus = calculadora.getBonusSegundoColocado();
-                case TERCEIRO_COLOCADO -> bonus = calculadora.getBonusTerceiroColocado();
-                default -> bonus = BigDecimal.ZERO;
-            }
-            if (atendimentosSemana.apply(atendentesOrdenados.get(i)) > 0) {
-                atendentesOrdenados.get(i).atribuirBonus(bonus);
+            if (status.apply(atendentesOrdenados.get(i)).equals(AtrasoStatus.NAO)) {
+                BigDecimal bonus;
+                switch (i) {
+                    case PRIMEIRO_COLOCADO -> bonus = calculadora.getBonusPrimeiroColocado();
+                    case SEGUNDO_COLOCADO -> bonus = calculadora.getBonusSegundoColocado();
+                    case TERCEIRO_COLOCADO -> bonus = calculadora.getBonusTerceiroColocado();
+                    default -> bonus = BigDecimal.ZERO;
+                }
+                if (atendimentosSemana.apply(atendentesOrdenados.get(i)) > 0) {
+                    atendentesOrdenados.get(i).atribuirBonus(bonus);
+                }
             }
         }
     }
