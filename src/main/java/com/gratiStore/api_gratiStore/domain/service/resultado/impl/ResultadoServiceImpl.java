@@ -34,7 +34,17 @@ public class ResultadoServiceImpl implements ResultadoService {
         var lojas = lojaRepository.findAllByAtivoTrue();
 
         for (var loja : lojas) {
+
+            if (loja.getAtendentes().isEmpty()) {
+                continue;
+            }
+
             var atendentes = loja.getAtendentes();
+
+            if (loja.getCalculadora() == null) {
+                continue;
+            }
+
             var calculadora = loja.getCalculadora();
 
             calcularGratificacaoPrimeiraSemana(atendentes, calculadora);
@@ -175,7 +185,7 @@ public class ResultadoServiceImpl implements ResultadoService {
 
     private void calcularGratificacaoSemanal(List<Atendente> atendentes, Calculadora calculadora, Function<Atendente, BigDecimal> vendasSemana) {
         var atendentesOrdenados = atendentes.stream()
-                .sorted(Comparator.comparing(vendasSemana).reversed())
+                .sorted(Comparator.comparing(vendasSemana, Comparator.nullsLast(Comparator.naturalOrder())).reversed())
                 .toList();
 
         for (int i = 0; i < atendentesOrdenados.size(); i++) {
@@ -192,11 +202,11 @@ public class ResultadoServiceImpl implements ResultadoService {
 
     private void calcularBonificacaoSemanal(List<Atendente> atendentes, Calculadora calculadora, Function<Atendente, Integer> atendimentosSemana, Function<Atendente, AtrasoStatus> status) {
         var atendentesOrdenados = atendentes.stream()
-                .sorted(Comparator.comparing(atendimentosSemana).reversed())
+                .sorted(Comparator.comparing(atendimentosSemana, Comparator.nullsLast(Comparator.naturalOrder())).reversed())
                 .toList();
 
         for (int i = 0; i < atendentesOrdenados.size(); i++) {
-            if (status.apply(atendentesOrdenados.get(i)).equals(AtrasoStatus.NAO)) {
+            if (AtrasoStatus.NAO.equals(status.apply(atendentesOrdenados.get(i)))) {
                 BigDecimal bonus;
                 switch (i) {
                     case PRIMEIRO_COLOCADO -> bonus = calculadora.getBonusPrimeiroColocado();
