@@ -3,10 +3,8 @@ package com.gratiStore.api_gratiStore.infra.adapter.calculadora.impl;
 import com.gratiStore.api_gratiStore.controller.dto.request.calculadora.CalculadoraRequest;
 import com.gratiStore.api_gratiStore.controller.dto.response.calculadora.CalculadoraResponse;
 import com.gratiStore.api_gratiStore.domain.entities.calculadora.Calculadora;
-import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
+import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
 import com.gratiStore.api_gratiStore.infra.adapter.calculadora.CalculadoraAdapter;
-import com.gratiStore.api_gratiStore.infra.repository.LojaRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,20 +12,24 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CalculadoraAdapterImpl implements CalculadoraAdapter {
 
-    private final LojaRepository lojaRepository;
+    private final LojaService lojaService;
 
     @Override
     public Calculadora calculadoraRequestToCalculadora(CalculadoraRequest request) {
         var calculadora = new Calculadora();
+        var loja = lojaService.buscarLoja(request.lojaId());
         calculadora.setNome(request.nome());
-        calculadora.setPercentualPrimeiroColocado(request.percentualPrimeiroColocado());
-        calculadora.setPercentualSegundoColocado(request.percentualSegundoColocado());
-        calculadora.setPercentualTerceiroColocado(request.percentualTerceiroColocado());
-        calculadora.setPercentualDemaisColocados(request.percentualDemaisColocados());
+        calculadora.setPercentualPrimeiroColocado(request.percentualPrimeiroColocado() / 100);
+        calculadora.setPercentualSegundoColocado(request.percentualSegundoColocado() / 100);
+        calculadora.setPercentualTerceiroColocado(request.percentualTerceiroColocado() / 100);
+        calculadora.setPercentualDemaisColocados(request.percentualDemaisColocados() / 100);
         calculadora.setBonusPrimeiroColocado(request.bonusPrimeiroColocado());
         calculadora.setBonusSegundoColocado(request.bonusSegundoColocado());
         calculadora.setBonusTerceiroColocado(request.bonusTerceiroColocado());
-        calculadora.setLoja(buscarLoja(request.lojaId()));
+        calculadora.setLoja(loja);
+
+        loja.setCalculadora(calculadora);
+        lojaService.salvarNoBanco(loja);
 
         return calculadora;
     }
@@ -39,21 +41,19 @@ public class CalculadoraAdapterImpl implements CalculadoraAdapter {
 
     @Override
     public Calculadora calculadoraRequestToCalculadora(Calculadora calculadora, CalculadoraRequest request) {
+        var loja = lojaService.buscarLoja(request.lojaId());
         calculadora.setNome(request.nome());
-        calculadora.setPercentualPrimeiroColocado(request.percentualPrimeiroColocado());
-        calculadora.setPercentualSegundoColocado(request.percentualSegundoColocado());
-        calculadora.setPercentualTerceiroColocado(request.percentualTerceiroColocado());
-        calculadora.setPercentualDemaisColocados(request.percentualDemaisColocados());
+        calculadora.setPercentualPrimeiroColocado(request.percentualPrimeiroColocado() / 100);
+        calculadora.setPercentualSegundoColocado(request.percentualSegundoColocado() / 100);
+        calculadora.setPercentualTerceiroColocado(request.percentualTerceiroColocado() / 100);
+        calculadora.setPercentualDemaisColocados(request.percentualDemaisColocados() / 100);
         calculadora.setBonusPrimeiroColocado(request.bonusPrimeiroColocado());
         calculadora.setBonusSegundoColocado(request.bonusSegundoColocado());
         calculadora.setBonusTerceiroColocado(request.bonusTerceiroColocado());
-        calculadora.setLoja(buscarLoja(request.lojaId()));
+        calculadora.setLoja(loja);
+
+        loja.setCalculadora(calculadora);
 
         return calculadora;
-    }
-
-    private Loja buscarLoja(Long id) {
-        return lojaRepository.findByIdAndAtivoTrue(id).orElseThrow(
-                () -> new EntityNotFoundException(String.format("Loja com ID: %d não existe ou não está ativa", id)));
     }
 }

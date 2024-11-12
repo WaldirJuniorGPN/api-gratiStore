@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,6 +68,7 @@ public class AtendenteServiceImpl implements AtendenteService {
 
         return atendentesAtivos.stream()
                 .map(adapter::atendenteToAtendenteResponse)
+                .sorted(Comparator.comparing(AtendenteResponse::nome))
                 .collect(Collectors.toList());
     }
 
@@ -101,6 +103,13 @@ public class AtendenteServiceImpl implements AtendenteService {
         atendente.setAtrasoStatusQuartaSemana(request.atrasoQuartaSemana());
         atendente.setAtrasoStatusQuintaSemana(request.atrasoQuintaSemana());
         atendente.setAtrasoStatusSextaSemana(request.atrasoSextaSemana());
+
+        atendente.setQuantidadeAtendimentosPrimeiraSemana(request.quantidadeAtendimentosPrimeiraSemana());
+        atendente.setQuantidadeAtendimentosSegundaSemana(request.quantidadeAtendimentosSegundaSemana());
+        atendente.setQuantidadeAtendimentosTerceiraSemana(request.quantidadeAtendimentosTerceiraSemana());
+        atendente.setQuantidadeAtendimentosQuartaSemana(request.quantidadeAtendimentosQuartaSemana());
+        atendente.setQuantidadeAtendimentosQuintaSemana(request.quantidadeAtendimentosQuintaSemana());
+        atendente.setQuantidadeAtendimentosSextaSemana(request.quantidadeAtendimentosSextaSemana());
 
         repository.save(atendente);
 

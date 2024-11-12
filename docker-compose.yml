@@ -4,7 +4,7 @@ services:
     container_name: mysql-ms
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: grati-store
+      MYSQL_DATABASE: grati_store
     ports:
       - "3307:3306"
     volumes:
