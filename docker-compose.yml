@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   mysql:
     image: mysql:latest
@@ -9,3 +11,28 @@ services:
       - "3307:3306"
     volumes:
       - ./mysql-data:/var/lib/mysql
+
+  api:
+    container_name: api-gratiStore
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: DEFAULT
+      MYSQL_URL: jdbc:mysql://mysql:3306/grati_store
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: root
+
+  front:
+      container_name: front-gratiStore
+      build:
+        context: ../front-gratiStore
+        dockerfile: Dockerfile
+      depends_on:
+        - api
+      ports:
+        - "5500:80"
