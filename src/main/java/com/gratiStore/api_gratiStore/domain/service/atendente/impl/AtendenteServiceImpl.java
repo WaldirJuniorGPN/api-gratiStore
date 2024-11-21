@@ -1,11 +1,13 @@
 package com.gratiStore.api_gratiStore.domain.service.atendente.impl;
 
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequest;
+import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequestPlanilha;
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequestVendas;
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponseVendas;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
+import com.gratiStore.api_gratiStore.domain.utils.SemanaUtils;
 import com.gratiStore.api_gratiStore.infra.adapter.atendente.AtendenteAdapter;
 import com.gratiStore.api_gratiStore.infra.repository.AtendenteRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -37,9 +39,22 @@ public class AtendenteServiceImpl implements AtendenteService {
 
     @Override
     @Transactional
+    public void uploadSemana(AtendenteRequestPlanilha request, SemanaUtils semana) {
+        var atendente = buscarPeloNome(request.nome());
+        if (atendente == null) {
+            atendente = adapter.atendenteRequestToAtendente(request);
+        }
+
+        atualizarSemana(atendente, request, semana);
+
+        repository.save(atendente);
+    }
+
+    @Override
+    @Transactional
     public AtendenteResponse atualizar(Long id, AtendenteRequest request) {
         var atendente = buscarNoBanco(id);
-        adapter.atendenteReqquestToAtendente(atendente, request);
+        adapter.atendenteRequestToAtendente(atendente, request);
         repository.save(atendente);
 
         return adapter.atendenteToAtendenteResponse(atendente);
@@ -120,4 +135,39 @@ public class AtendenteServiceImpl implements AtendenteService {
         return repository.findByIdAndAtivoTrue(id).orElseThrow(
                 () -> new EntityNotFoundException(String.format("Atendente com ID: %d não foi encontrado ou não está ativo", id)));
     }
+
+    private Atendente buscarPeloNome(String nome) {
+        return repository.findByNomeAndAtivoTrue(nome);
+    }
+
+    private void atualizarSemana(Atendente atendente, AtendenteRequestPlanilha request, SemanaUtils semana) {
+        switch (semana) {
+            case PRIMEIRA -> {
+                atendente.setVendasPrimeiraSemana(request.vendas());
+                atendente.setQuantidadeAtendimentosPrimeiraSemana(request.quantidadeAtendimentos());
+            }
+            case SEGUNDA -> {
+                atendente.setVendasSegundaSemana(request.vendas());
+                atendente.setQuantidadeAtendimentosSegundaSemana(request.quantidadeAtendimentos());
+            }
+            case TERCEIRA -> {
+                atendente.setVendasTerceiraSemana(request.vendas());
+                atendente.setQuantidadeAtendimentosTerceiraSemana(request.quantidadeAtendimentos());
+            }
+            case QUARTA -> {
+                atendente.setVendasQuartaSemana(request.vendas());
+                atendente.setQuantidadeAtendimentosQuartaSemana(request.quantidadeAtendimentos());
+            }
+            case QUINTA -> {
+                atendente.setVendasQuintaSemana(request.vendas());
+                atendente.setQuantidadeAtendimentosQuintaSemana(request.quantidadeAtendimentos());
+            }
+            case SEXTA -> {
+                atendente.setVendasSextaSemana(request.vendas());
+                atendente.setQuantidadeAtendimentosSextaSemana(request.quantidadeAtendimentos());
+            }
+            default -> throw new IllegalArgumentException("Semana inválida: " + semana);
+        }
+    }
+
 }
