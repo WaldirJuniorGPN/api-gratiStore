@@ -15,4 +15,6 @@ public interface AtendenteRepository extends JpaRepository<Atendente, Long> {
     Optional<Page<Atendente>> findAllByAtivoTrue(Pageable pageable);
 
     List<Atendente> findAllByAtivoTrue();
+
+    Atendente findByNomeAndAtivoTrue(String nome);
 }
