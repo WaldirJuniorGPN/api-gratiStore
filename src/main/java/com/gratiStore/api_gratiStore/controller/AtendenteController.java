@@ -2,8 +2,10 @@ package com.gratiStore.api_gratiStore.controller;
 
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequest;
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequestVendas;
+import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtrasoRequest;
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponseVendas;
+import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtrasoResponse;
 import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
 import com.gratiStore.api_gratiStore.domain.service.planilha.PlanilhaService;
 import jakarta.validation.Valid;
@@ -119,5 +121,12 @@ public class AtendenteController {
         planilhaService.lerPlanilha(file, lojaId, SEXTA);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/update/atrasos")
+    public ResponseEntity<AtrasoResponse> updateAtrasos(@Valid @RequestBody AtrasoRequest request) {
+        var response = service.updateAtraso(request);
+
+        return ResponseEntity.ok(response);
     }
 }
