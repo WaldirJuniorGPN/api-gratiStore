@@ -3,8 +3,10 @@ package com.gratiStore.api_gratiStore.domain.service.atendente.impl;
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequest;
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequestPlanilha;
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequestVendas;
+import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtrasoRequest;
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponseVendas;
+import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtrasoResponse;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
 import com.gratiStore.api_gratiStore.domain.utils.SemanaUtils;
@@ -20,6 +22,8 @@ import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus.SIM;
 
 @Service
 @RequiredArgsConstructor
@@ -129,6 +133,26 @@ public class AtendenteServiceImpl implements AtendenteService {
         repository.save(atendente);
 
         return adapter.atendenteToAtendenteResponseVendas(atendente);
+    }
+
+    @Override
+    public AtrasoResponse updateAtraso(AtrasoRequest request) {
+        var atendente = buscarNoBanco(request.id());
+        setterAtraso(atendente, request);
+        repository.save(atendente);
+
+        return new AtrasoResponse(atendente.getId(), true, request.semana());
+    }
+
+    private void setterAtraso(Atendente atendente, AtrasoRequest request) {
+        switch (request.semana()) {
+            case PRIMEIRA -> atendente.setAtrasoStatusPrimeiraSemana(SIM);
+            case SEGUNDA -> atendente.setAtrasoStatusSegundaSemana(SIM);
+            case TERCEIRA -> atendente.setAtrasoStatusTerceiraSemana(SIM);
+            case QUARTA -> atendente.setAtrasoStatusQuartaSemana(SIM);
+            case QUINTA -> atendente.setAtrasoStatusQuintaSemana(SIM);
+            case SEXTA -> atendente.setAtrasoStatusSextaSemana(SIM);
+        }
     }
 
     private Atendente buscarNoBanco(Long id) {

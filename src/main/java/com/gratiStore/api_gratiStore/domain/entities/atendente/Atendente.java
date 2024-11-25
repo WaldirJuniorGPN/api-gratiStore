@@ -9,6 +9,8 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import static com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus.NAO;
+
 @Entity(name = "Atendente")
 @Table(name = "atendentes")
 @NoArgsConstructor
@@ -40,27 +42,27 @@ public class Atendente extends EntidadeBase {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "atraso-primeira-semana")
-    private AtrasoStatus atrasoStatusPrimeiraSemana;
+    private AtrasoStatus atrasoStatusPrimeiraSemana = NAO;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "atraso-segunda-semana")
-    private AtrasoStatus atrasoStatusSegundaSemana;
+    private AtrasoStatus atrasoStatusSegundaSemana = NAO;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "atraso-terceira-semana")
-    private AtrasoStatus atrasoStatusTerceiraSemana;
+    private AtrasoStatus atrasoStatusTerceiraSemana = NAO;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "atraso-quarta-semana")
-    private AtrasoStatus atrasoStatusQuartaSemana;
+    private AtrasoStatus atrasoStatusQuartaSemana = NAO;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "atraso-quinta-semana")
-    private AtrasoStatus atrasoStatusQuintaSemana;
+    private AtrasoStatus atrasoStatusQuintaSemana = NAO;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "atraso-sexta-semana")
-    private AtrasoStatus atrasoStatusSextaSemana;
+    private AtrasoStatus atrasoStatusSextaSemana = NAO;
 
     @Column(name = "total-de-vendas")
     private BigDecimal totalVendas = BigDecimal.ZERO;
@@ -72,22 +74,22 @@ public class Atendente extends EntidadeBase {
     private BigDecimal bonus = BigDecimal.ZERO;
 
     @Column(name = "atendimentos-primeira-semana")
-    private Integer quantidadeAtendimentosPrimeiraSemana;
+    private Integer quantidadeAtendimentosPrimeiraSemana = 0;
 
     @Column(name = "atendimentos-segunda-semana")
-    private Integer quantidadeAtendimentosSegundaSemana;
+    private Integer quantidadeAtendimentosSegundaSemana = 0;
 
     @Column(name = "atendimentos-terceira-semana")
-    private Integer quantidadeAtendimentosTerceiraSemana;
+    private Integer quantidadeAtendimentosTerceiraSemana = 0;
 
     @Column(name = "atendimentos-quarta-semana")
-    private Integer quantidadeAtendimentosQuartaSemana;
+    private Integer quantidadeAtendimentosQuartaSemana = 0;
 
     @Column(name = "atendimentos-quinta-semana")
-    private Integer quantidadeAtendimentosQuintaSemana;
+    private Integer quantidadeAtendimentosQuintaSemana = 0;
 
     @Column(name = "atendimentos-sexta-semana")
-    private Integer quantidadeAtendimentosSextaSemana;
+    private Integer quantidadeAtendimentosSextaSemana = 0;
 
     @ManyToOne
     @ToString.Exclude
