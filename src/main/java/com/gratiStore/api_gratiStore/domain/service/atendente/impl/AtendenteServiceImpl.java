@@ -9,6 +9,7 @@ import com.gratiStore.api_gratiStore.controller.dto.response.atendente.Atendente
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtrasoResponse;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
+import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
 import com.gratiStore.api_gratiStore.domain.utils.SemanaUtils;
 import com.gratiStore.api_gratiStore.infra.adapter.atendente.AtendenteAdapter;
 import com.gratiStore.api_gratiStore.infra.repository.AtendenteRepository;
@@ -19,10 +20,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus.NAO;
 import static com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus.SIM;
 
 @Service
@@ -30,6 +34,7 @@ import static com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus.SI
 public class AtendenteServiceImpl implements AtendenteService {
 
     private final AtendenteRepository repository;
+    private final LojaService lojaService;
     private final AtendenteAdapter adapter;
 
     @Override
@@ -95,8 +100,8 @@ public class AtendenteServiceImpl implements AtendenteService {
     @Transactional
     public void deletar(Long id) {
         var atendente = buscarNoBanco(id);
-        atendente.setNome(atendente.getNome() + " - Excluido");
-        atendente.setAtivo(false);
+        defaultAtributos(atendente);
+
         repository.save(atendente);
     }
 
@@ -194,4 +199,44 @@ public class AtendenteServiceImpl implements AtendenteService {
         }
     }
 
+    private void defaultAtributos(Atendente atendente) {
+
+        removarAtendenteDaLoja(atendente);
+
+        atendente.setNome(String.format("%s - Excluído - %s", atendente.getNome(), LocalDateTime.now()));
+
+        atendente.setVendasPrimeiraSemana(BigDecimal.ZERO);
+        atendente.setVendasSegundaSemana(BigDecimal.ZERO);
+        atendente.setVendasTerceiraSemana(BigDecimal.ZERO);
+        atendente.setVendasQuartaSemana(BigDecimal.ZERO);
+        atendente.setVendasQuintaSemana(BigDecimal.ZERO);
+        atendente.setVendasSextaSemana(BigDecimal.ZERO);
+
+        atendente.setQuantidadeAtendimentosPrimeiraSemana(0);
+        atendente.setQuantidadeAtendimentosSegundaSemana(0);
+        atendente.setQuantidadeAtendimentosTerceiraSemana(0);
+        atendente.setQuantidadeAtendimentosQuartaSemana(0);
+        atendente.setQuantidadeAtendimentosQuintaSemana(0);
+        atendente.setQuantidadeAtendimentosSextaSemana(0);
+
+        atendente.setAtrasoStatusPrimeiraSemana(NAO);
+        atendente.setAtrasoStatusSegundaSemana(NAO);
+        atendente.setAtrasoStatusTerceiraSemana(NAO);
+        atendente.setAtrasoStatusQuartaSemana(NAO);
+        atendente.setAtrasoStatusQuintaSemana(NAO);
+        atendente.setAtrasoStatusSextaSemana(NAO);
+
+        atendente.setBonus(BigDecimal.ZERO);
+        atendente.setGratificacao(BigDecimal.ZERO);
+        atendente.setTotalVendas(BigDecimal.ZERO);
+        atendente.setLoja(null);
+        atendente.setAtivo(false);
+    }
+
+    private void removarAtendenteDaLoja(Atendente atendente) {
+        var loja = atendente.getLoja();
+        loja.getAtendentes().remove(atendente);
+
+        lojaService.salvarNoBanco(loja);
+    }
 }
