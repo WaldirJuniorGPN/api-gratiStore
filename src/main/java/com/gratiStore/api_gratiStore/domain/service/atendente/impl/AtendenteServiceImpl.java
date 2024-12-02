@@ -100,6 +100,7 @@ public class AtendenteServiceImpl implements AtendenteService {
     @Transactional
     public void deletar(Long id) {
         var atendente = buscarNoBanco(id);
+        atendente.setNome(String.format("%s - Excluído - %s", atendente.getNome(), LocalDateTime.now()));
         defaultAtributos(atendente);
 
         repository.save(atendente);
@@ -200,11 +201,21 @@ public class AtendenteServiceImpl implements AtendenteService {
     }
 
     private void defaultAtributos(Atendente atendente) {
+        atendente.setLoja(null);
+        atendente.setAtivo(false);
 
         removarAtendenteDaLoja(atendente);
+        zerarValores(atendente);
+    }
 
-        atendente.setNome(String.format("%s - Excluído - %s", atendente.getNome(), LocalDateTime.now()));
+    private void removarAtendenteDaLoja(Atendente atendente) {
+        var loja = atendente.getLoja();
+        loja.getAtendentes().remove(atendente);
 
+        lojaService.salvarNoBanco(loja);
+    }
+
+    private void zerarValores(Atendente atendente) {
         atendente.setVendasPrimeiraSemana(BigDecimal.ZERO);
         atendente.setVendasSegundaSemana(BigDecimal.ZERO);
         atendente.setVendasTerceiraSemana(BigDecimal.ZERO);
@@ -229,14 +240,5 @@ public class AtendenteServiceImpl implements AtendenteService {
         atendente.setBonus(BigDecimal.ZERO);
         atendente.setGratificacao(BigDecimal.ZERO);
         atendente.setTotalVendas(BigDecimal.ZERO);
-        atendente.setLoja(null);
-        atendente.setAtivo(false);
-    }
-
-    private void removarAtendenteDaLoja(Atendente atendente) {
-        var loja = atendente.getLoja();
-        loja.getAtendentes().remove(atendente);
-
-        lojaService.salvarNoBanco(loja);
     }
 }

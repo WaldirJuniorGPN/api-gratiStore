@@ -77,4 +77,11 @@ public class LojaController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/{lojaId}")
+    public ResponseEntity<Void> zerarValoresAtendentes(@PathVariable Long lojaId) {
+        service.zerarValoresAtendentes(lojaId);
+
+        return ResponseEntity.noContent().build();
+    }
 }

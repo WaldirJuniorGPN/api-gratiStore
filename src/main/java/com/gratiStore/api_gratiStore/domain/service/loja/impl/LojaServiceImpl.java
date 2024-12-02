@@ -3,6 +3,7 @@ package com.gratiStore.api_gratiStore.domain.service.loja.impl;
 import com.gratiStore.api_gratiStore.controller.dto.request.loja.LojaRequest;
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
 import com.gratiStore.api_gratiStore.controller.dto.response.loja.LojaResponse;
+import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
 import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
@@ -15,8 +16,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus.NAO;
 
 @Service
 @RequiredArgsConstructor
@@ -100,6 +104,42 @@ public class LojaServiceImpl implements LojaService {
     @Override
     public void salvarNoBanco(Loja loja) {
         repository.save(loja);
+    }
+
+    @Override
+    @Transactional
+    public void zerarValoresAtendentes(Long lojaId) {
+        var loja = buscarLoja(lojaId);
+        var atendentes = loja.getAtendentes();
+        atendentes.forEach(this::zerarValores);
+        salvarNoBanco(loja);
+    }
+
+    private void zerarValores(Atendente atendente) {
+        atendente.setVendasPrimeiraSemana(BigDecimal.ZERO);
+        atendente.setVendasSegundaSemana(BigDecimal.ZERO);
+        atendente.setVendasTerceiraSemana(BigDecimal.ZERO);
+        atendente.setVendasQuartaSemana(BigDecimal.ZERO);
+        atendente.setVendasQuintaSemana(BigDecimal.ZERO);
+        atendente.setVendasSextaSemana(BigDecimal.ZERO);
+
+        atendente.setQuantidadeAtendimentosPrimeiraSemana(0);
+        atendente.setQuantidadeAtendimentosSegundaSemana(0);
+        atendente.setQuantidadeAtendimentosTerceiraSemana(0);
+        atendente.setQuantidadeAtendimentosQuartaSemana(0);
+        atendente.setQuantidadeAtendimentosQuintaSemana(0);
+        atendente.setQuantidadeAtendimentosSextaSemana(0);
+
+        atendente.setAtrasoStatusPrimeiraSemana(NAO);
+        atendente.setAtrasoStatusSegundaSemana(NAO);
+        atendente.setAtrasoStatusTerceiraSemana(NAO);
+        atendente.setAtrasoStatusQuartaSemana(NAO);
+        atendente.setAtrasoStatusQuintaSemana(NAO);
+        atendente.setAtrasoStatusSextaSemana(NAO);
+
+        atendente.setBonus(BigDecimal.ZERO);
+        atendente.setGratificacao(BigDecimal.ZERO);
+        atendente.setTotalVendas(BigDecimal.ZERO);
     }
 
     private Loja buscarNoBanco(Long id) {
