@@ -31,4 +31,6 @@ public interface LojaService {
     List<AtendenteResponse> listarAtendentesPorLoja(Long id);
 
     void salvarNoBanco(Loja loja);
+
+    void zerarValoresAtendentes(Long lojaId);
 }

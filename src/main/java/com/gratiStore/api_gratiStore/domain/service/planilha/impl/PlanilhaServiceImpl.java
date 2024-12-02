@@ -30,6 +30,7 @@ public class PlanilhaServiceImpl implements PlanilhaService {
     public void lerPlanilha(MultipartFile file, Long lojaId, SemanaUtils semana) throws IOException {
         ler(file, lojaId);
         requests.forEach(request -> atendenteService.uploadSemana(request, semana));
+        requests.clear();
     }
 
     private boolean isRowEmpty(Row row) {
