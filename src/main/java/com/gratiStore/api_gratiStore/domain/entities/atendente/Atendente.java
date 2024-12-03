@@ -19,7 +19,7 @@ import static com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus.NA
 @EqualsAndHashCode(callSuper = true)
 public class Atendente extends EntidadeBase {
 
-    @Column(name = "nome", unique = true, nullable = false)
+    @Column(name = "nome", nullable = false)
     private String nome;
 
     @Column(name = "vendas-primeira-semana")
