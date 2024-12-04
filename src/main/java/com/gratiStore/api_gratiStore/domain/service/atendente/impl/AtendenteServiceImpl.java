@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus.NAO;
@@ -49,10 +50,17 @@ public class AtendenteServiceImpl implements AtendenteService {
     @Override
     @Transactional
     public void uploadSemana(AtendenteRequestPlanilha request, SemanaUtils semana) {
-        var atendente = buscarPeloNome(request.nome());
-        if (atendente == null) {
-            atendente = adapter.atendenteRequestToAtendente(request);
-        }
+
+        var loja = lojaService.buscarLoja(request.lojaId());
+
+        var atendentes = Optional.ofNullable(loja.getAtendentes())
+                .orElseThrow(() -> new RuntimeException("A lista de atendentes está nula"));
+
+        var atendenteOptional = atendentes.stream()
+                .filter(atendente1 -> atendente1.getNome().equals(request.nome()))
+                .findFirst();
+
+        var atendente = atendenteOptional.orElseGet(() -> adapter.atendenteRequestToAtendente(request));
 
         atualizarSemana(atendente, request, semana);
 
@@ -210,9 +218,11 @@ public class AtendenteServiceImpl implements AtendenteService {
 
     private void removarAtendenteDaLoja(Atendente atendente) {
         var loja = atendente.getLoja();
-        loja.getAtendentes().remove(atendente);
 
-        lojaService.salvarNoBanco(loja);
+        if (loja != null) {
+            loja.getAtendentes().remove(atendente);
+            lojaService.salvarNoBanco(loja);
+        }
     }
 
     private void zerarValores(Atendente atendente) {
