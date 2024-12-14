@@ -7,6 +7,7 @@ import com.gratiStore.api_gratiStore.domain.service.grupo.GrupoService;
 import com.gratiStore.api_gratiStore.infra.adapter.grupo.GrupoAdapter;
 import com.gratiStore.api_gratiStore.infra.repository.GrupoRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ public class GrupoServiceImpl implements GrupoService {
     private final GrupoAdapter adapter;
 
     @Override
+    @Transactional
     public GrupoResponse criar(GrupoRequest request) {
         var grupo = adapter.grupoRequestToGrupo(request);
         repository.save(grupo);
@@ -30,6 +32,7 @@ public class GrupoServiceImpl implements GrupoService {
     }
 
     @Override
+    @Transactional
     public GrupoResponse atualizar(Long id, GrupoRequest request) {
         var grupo = buscarNoBanco(id);
         adapter.grupoRequestToGrupo(grupo, request);
@@ -46,12 +49,13 @@ public class GrupoServiceImpl implements GrupoService {
 
     @Override
     public Page<GrupoResponse> buscarTodos(Pageable pageable) {
-        return repository.findAllEndAtivoTrue(pageable).orElseThrow(
+        return repository.findAllByAtivoTrue(pageable).orElseThrow(
                         () -> new IllegalArgumentException("A estrutura de paginação está inválida"))
                 .map(adapter::grupoToGrupoResponse);
     }
 
     @Override
+    @Transactional
     public void deletar(Long id) {
         var grupo = buscarNoBanco(id);
         grupo.setAtivo(false);

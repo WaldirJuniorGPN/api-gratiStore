@@ -11,5 +11,5 @@ public interface GrupoRepository extends JpaRepository<Grupo, Long> {
 
     Optional<Grupo> findByIdAndAtivoTrue(Long id);
 
-    Optional<Page<Grupo>> findAllEndAtivoTrue(Pageable pageable);
+    Optional<Page<Grupo>> findAllByAtivoTrue(Pageable pageable);
 }
