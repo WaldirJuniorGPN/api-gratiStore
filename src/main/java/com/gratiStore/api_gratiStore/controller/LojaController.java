@@ -1,18 +1,30 @@
 package com.gratiStore.api_gratiStore.controller;
 
-import com.gratiStore.api_gratiStore.controller.dto.request.loja.LojaRequest;
-import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
-import com.gratiStore.api_gratiStore.controller.dto.response.loja.LojaResponse;
-import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
+import com.gratiStore.api_gratiStore.controller.dto.request.loja.LojaRequest;
+import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
+import com.gratiStore.api_gratiStore.controller.dto.response.loja.LojaResponse;
+import com.gratiStore.api_gratiStore.controller.dto.response.loja.VendasResponse;
+import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
 
 @RestController
 @RequestMapping("/lojas")
@@ -67,6 +79,13 @@ public class LojaController {
     @GetMapping("/{id}/atendentes")
     public ResponseEntity<List<AtendenteResponse>> listarAtendentesPorLoja(@PathVariable Long id) {
         var response = service.listarAtendentesPorLoja(id);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}/vendas")
+    public ResponseEntity<VendasResponse> buscaVendasTotais(@PathVariable Long id) {
+        var response = service.buscarVendasTotais(id);
 
         return ResponseEntity.ok(response);
     }
