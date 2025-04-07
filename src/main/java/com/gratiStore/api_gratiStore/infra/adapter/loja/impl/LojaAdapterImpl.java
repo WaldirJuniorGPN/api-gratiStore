@@ -3,6 +3,7 @@ package com.gratiStore.api_gratiStore.infra.adapter.loja.impl;
 import com.gratiStore.api_gratiStore.controller.dto.request.loja.LojaRequest;
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
 import com.gratiStore.api_gratiStore.controller.dto.response.loja.LojaResponse;
+import com.gratiStore.api_gratiStore.controller.dto.response.loja.VendasResponse;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import com.gratiStore.api_gratiStore.infra.adapter.loja.LojaAdapter;
@@ -51,5 +52,11 @@ public class LojaAdapterImpl implements LojaAdapter {
         }
 
         return cnpj.replaceAll("\\D", "");
+    }
+
+    @Override
+    public VendasResponse lojaToVendaResponse(Loja loja) {
+    
+        return new VendasResponse(loja.getTotalVendas());
     }
 }

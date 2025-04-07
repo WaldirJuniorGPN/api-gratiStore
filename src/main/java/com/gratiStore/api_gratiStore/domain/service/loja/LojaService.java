@@ -1,14 +1,15 @@
 package com.gratiStore.api_gratiStore.domain.service.loja;
 
-import com.gratiStore.api_gratiStore.controller.dto.request.loja.LojaRequest;
-import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
-import com.gratiStore.api_gratiStore.controller.dto.response.loja.LojaResponse;
-import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
-import jakarta.validation.constraints.NotNull;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
+import com.gratiStore.api_gratiStore.controller.dto.request.loja.LojaRequest;
+import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
+import com.gratiStore.api_gratiStore.controller.dto.response.loja.LojaResponse;
+import com.gratiStore.api_gratiStore.controller.dto.response.loja.VendasResponse;
+import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 
 public interface LojaService {
 
@@ -33,4 +34,6 @@ public interface LojaService {
     void salvarNoBanco(Loja loja);
 
     void zerarValoresAtendentes(Long lojaId);
+
+    VendasResponse buscarVendasTotais(Long id);
 }

@@ -3,6 +3,7 @@ package com.gratiStore.api_gratiStore.domain.service.loja.impl;
 import com.gratiStore.api_gratiStore.controller.dto.request.loja.LojaRequest;
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
 import com.gratiStore.api_gratiStore.controller.dto.response.loja.LojaResponse;
+import com.gratiStore.api_gratiStore.controller.dto.response.loja.VendasResponse;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
@@ -100,12 +101,12 @@ public class LojaServiceImpl implements LojaService {
 
         return adapter.mapAtendentesToAtendenteResponse(loja.getAtendentes());
     }
-
+    
     @Override
     public void salvarNoBanco(Loja loja) {
         repository.save(loja);
     }
-
+    
     @Override
     @Transactional
     public void zerarValoresAtendentes(Long lojaId) {
@@ -114,7 +115,14 @@ public class LojaServiceImpl implements LojaService {
         atendentes.forEach(this::zerarValores);
         salvarNoBanco(loja);
     }
-
+    
+    @Override
+    public VendasResponse buscarVendasTotais(Long id) {
+        var loja = buscarNoBanco(id);
+        
+        return adapter.lojaToVendaResponse(loja);
+    }
+    
     private void zerarValores(Atendente atendente) {
         atendente.setVendasPrimeiraSemana(BigDecimal.ZERO);
         atendente.setVendasSegundaSemana(BigDecimal.ZERO);
@@ -146,4 +154,5 @@ public class LojaServiceImpl implements LojaService {
         return repository.findByIdAndAtivoTrue(id).orElseThrow(
                 () -> new EntityNotFoundException(String.format("Loja com ID: %d não foi encontrada ou não está ativa", id)));
     }
+
 }
