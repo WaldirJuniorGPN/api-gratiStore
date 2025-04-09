@@ -87,7 +87,7 @@ public class AtendenteServiceImpl implements AtendenteService {
     @Override
     public Page<AtendenteResponse> listarTodos(Pageable pageable) {
         return repository.findAllByAtivoTrue(pageable).orElseThrow(
-                        () -> new IllegalArgumentException("A estrutura de paginação está inválida"))
+                () -> new IllegalArgumentException("A estrutura de paginação está inválida"))
                 .map(adapter::atendenteToAtendenteResponse);
     }
 
@@ -160,18 +160,19 @@ public class AtendenteServiceImpl implements AtendenteService {
 
     private void setterAtraso(Atendente atendente, AtrasoRequest request) {
         switch (request.semana()) {
-            case PRIMEIRA -> atendente.setAtrasoStatusPrimeiraSemana(SIM);
-            case SEGUNDA -> atendente.setAtrasoStatusSegundaSemana(SIM);
-            case TERCEIRA -> atendente.setAtrasoStatusTerceiraSemana(SIM);
-            case QUARTA -> atendente.setAtrasoStatusQuartaSemana(SIM);
-            case QUINTA -> atendente.setAtrasoStatusQuintaSemana(SIM);
-            case SEXTA -> atendente.setAtrasoStatusSextaSemana(SIM);
+            case PRIMEIRA -> atendente.setAtrasoStatusPrimeiraSemana(request.atraso() == SIM ? SIM : NAO);
+            case SEGUNDA -> atendente.setAtrasoStatusSegundaSemana(request.atraso() == SIM ? SIM : NAO);
+            case TERCEIRA -> atendente.setAtrasoStatusTerceiraSemana(request.atraso() == SIM ? SIM : NAO);
+            case QUARTA -> atendente.setAtrasoStatusQuartaSemana(request.atraso() == SIM ? SIM : NAO);
+            case QUINTA -> atendente.setAtrasoStatusQuintaSemana(request.atraso() == SIM ? SIM : NAO);
+            case SEXTA -> atendente.setAtrasoStatusSextaSemana(request.atraso() == SIM ? SIM : NAO);
         }
     }
 
     private Atendente buscarNoBanco(Long id) {
         return repository.findByIdAndAtivoTrue(id).orElseThrow(
-                () -> new EntityNotFoundException(String.format("Atendente com ID: %d não foi encontrado ou não está ativo", id)));
+                () -> new EntityNotFoundException(
+                        String.format("Atendente com ID: %d não foi encontrado ou não está ativo", id)));
     }
 
     private Atendente buscarPeloNome(String nome) {
