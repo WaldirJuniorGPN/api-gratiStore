@@ -3,11 +3,13 @@ package com.gratiStore.api_gratiStore.domain.entities.atendente;
 import com.gratiStore.api_gratiStore.domain.entities.EntidadeBase;
 import com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
+import com.gratiStore.api_gratiStore.domain.entities.ponto.PontoEletronico;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 
 import static com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus.NAO;
 
@@ -15,7 +17,8 @@ import static com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus.NA
 @Table(name = "atendentes")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Setter
+@Getter
 @EqualsAndHashCode(callSuper = true)
 public class Atendente extends EntidadeBase {
 
@@ -90,6 +93,12 @@ public class Atendente extends EntidadeBase {
 
     @Column(name = "atendimentos-sexta-semana")
     private Integer quantidadeAtendimentosSextaSemana = 0;
+
+    @Column(name = "salario")
+    private BigDecimal salario = BigDecimal.ZERO;
+
+    @OneToMany(mappedBy = "atendente")
+    private List<PontoEletronico> pontos;
 
     @ManyToOne
     @ToString.Exclude
