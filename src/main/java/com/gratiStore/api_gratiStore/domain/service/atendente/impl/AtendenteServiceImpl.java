@@ -158,6 +158,13 @@ public class AtendenteServiceImpl implements AtendenteService {
         return new AtrasoResponse(atendente.getId(), true, request.semana());
     }
 
+    @Override
+    public Atendente buscarNoBanco(Long id) {
+        return repository.findByIdAndAtivoTrue(id).orElseThrow(
+                () -> new EntityNotFoundException(
+                        String.format("Atendente com ID: %d não foi encontrado ou não está ativo", id)));
+    }
+
     private void setterAtraso(Atendente atendente, AtrasoRequest request) {
         switch (request.semana()) {
             case PRIMEIRA -> atendente.setAtrasoStatusPrimeiraSemana(request.atraso() == SIM ? SIM : NAO);
@@ -167,12 +174,6 @@ public class AtendenteServiceImpl implements AtendenteService {
             case QUINTA -> atendente.setAtrasoStatusQuintaSemana(request.atraso() == SIM ? SIM : NAO);
             case SEXTA -> atendente.setAtrasoStatusSextaSemana(request.atraso() == SIM ? SIM : NAO);
         }
-    }
-
-    private Atendente buscarNoBanco(Long id) {
-        return repository.findByIdAndAtivoTrue(id).orElseThrow(
-                () -> new EntityNotFoundException(
-                        String.format("Atendente com ID: %d não foi encontrado ou não está ativo", id)));
     }
 
     private Atendente buscarPeloNome(String nome) {
