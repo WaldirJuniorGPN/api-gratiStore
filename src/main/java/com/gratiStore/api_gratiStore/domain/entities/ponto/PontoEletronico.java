@@ -11,8 +11,6 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "pontos_eletrônicos")
 @EqualsAndHashCode(callSuper = true)
-@Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PontoEletronico extends EntidadeBase {
 
@@ -35,15 +33,63 @@ public class PontoEletronico extends EntidadeBase {
     @JoinColumn(name = "atendente-id")
     private Atendente atendente;
 
-    private PontoEletronico data(LocalDate data) {
+    public PontoEletronico(LocalDate data, LocalTime entrada, LocalTime inicioAlmoco, LocalTime fimAlmoco, LocalTime saida) {
+        this .setData(data)
+                .setEntrada(entrada)
+                .setInicioAlmoco(inicioAlmoco)
+                .setFimAlmoco(fimAlmoco)
+                .setSaida(saida);
+    }
+
+    private PontoEletronico setData(LocalDate data) {
         if (data == null) {
-            throw new IllegalStateException("a data não pode estar nula");
+            throw new IllegalStateException("A data não pode estar nula");
         }
         this.data = data;
         return this;
     }
 
-    public static PontoEletronico builder() {
-        return new PontoEletronico();
+    private PontoEletronico setEntrada(LocalTime entrada) {
+        if (entrada == null) {
+            throw new IllegalStateException("A hora da entrada não pode estar nula");
+        }
+        this.entrada = entrada;
+        return this;
+    }
+
+    private PontoEletronico setInicioAlmoco(LocalTime inicioAlmoco) {
+        if (inicioAlmoco == null) {
+            throw new IllegalStateException("A hora de início do almoço não pode estar nula");
+        }
+
+        if (inicioAlmoco.isBefore(this.entrada)) {
+            throw new IllegalStateException("A hora de início do almoço não pode ser anterior à hora de entrada");
+        }
+        this.inicioAlmoco = inicioAlmoco;
+        return this;
+    }
+
+    private PontoEletronico setFimAlmoco(LocalTime fimAlmoco) {
+        if (fimAlmoco == null) {
+            throw new IllegalStateException("A hora do fim do almoço não pode estar nula");
+        }
+
+        if (fimAlmoco.isBefore(this.inicioAlmoco)) {
+            throw new IllegalStateException("A hora do fim do almoço não pode ser anterior a ao início do almoço");
+        }
+        this.fimAlmoco = fimAlmoco;
+        return this;
+    }
+
+    private PontoEletronico setSaida(LocalTime saida) {
+        if (saida == null) {
+            throw new IllegalStateException("A hora de saída não pode ser nula");
+        }
+
+        if (saida.isBefore(this.fimAlmoco)) {
+            throw new IllegalStateException("A hora de saída não pode ser anteior ao fim do almoço");
+        }
+        this.saida = saida;
+        return this;
     }
 }
