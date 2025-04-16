@@ -10,14 +10,7 @@ public class PontoEletronicoAdapterImpl implements PontoEletronicoAdapter {
 
     @Override
     public void pontoRequestToPonto(PontoRequest request, Atendente atendente) {
-        var ponto = PontoEletronico.builder()
-                .data(request.data())
-                .entrada(request.entrada())
-                .inicioAlmoco(request.inicioAlmoco())
-                .fimAlmoco(request.fimAlmoco())
-                .saida(request.saida())
-                .atendente(atendente)
-                .build();
+
     }
 
     @Override
