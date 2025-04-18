@@ -1,4 +1,4 @@
-package com.gratiStore.api_gratiStore.domain.factory;
+package com.gratiStore.api_gratiStore.domain.factory.ponto;
 
 import com.gratiStore.api_gratiStore.controller.dto.request.ponto.PontoRequest;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
