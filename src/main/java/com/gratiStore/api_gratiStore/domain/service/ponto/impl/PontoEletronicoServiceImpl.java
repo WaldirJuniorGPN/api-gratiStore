@@ -24,13 +24,13 @@ public class PontoEletronicoServiceImpl implements PontoEletronicoService {
     @Override
     public void registrarPronto(PontoRequest request) {
         var atendente = atendenteService.buscarNoBanco(request.atendenteId());
-        adapter.pontoRequestToPonto(request, atendente);
+        var ponto = adapter.pontoRequestToPonto(request, atendente);
+        repository.save(ponto);
     }
 
     @Override
     public Page<HistoricoResponse> listarHistorico(Pageable pageable) {
-        return repository.findPageAll(pageable).orElseThrow(
-                () -> new IllegalStateException("Estrutura de paginação está inválida"))
+        return repository.findAll(pageable)
                 .map(adapter::pontoToHistoricoResponse);
     }
 
