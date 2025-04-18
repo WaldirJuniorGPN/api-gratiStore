@@ -24,6 +24,8 @@ public interface AtendenteService {
 
     AtendenteResponse buscar(Long id);
 
+    Atendente buscarNoBanco(Long id);
+
     Page<AtendenteResponse> listarTodos(Pageable pageable);
 
     List<AtendenteResponse> listarTodos();
