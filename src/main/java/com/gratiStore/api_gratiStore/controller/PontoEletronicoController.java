@@ -8,9 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/ponto")
 @RestController
@@ -19,12 +17,14 @@ public class PontoEletronicoController {
 
     private PontoEletronicoService service;
 
+    @PostMapping
     public ResponseEntity<Void> registrarPonto(@RequestBody @Valid PontoRequest request) {
         service.registrarPronto(request);
 
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping
     public ResponseEntity<Page<HistoricoResponse>> listarHistorico(Pageable pageable) {
         var page = service.listarHistorico(pageable);
 
