@@ -1,75 +1,68 @@
-# API - GratiStore
+# gratiStore API
 
-Este é o repositório do projeto **api-gratiStore**, uma API responsável por calcular e gerenciar as gratificações e bônus dos funcionários de uma papelaria. O projeto é desenvolvido em Java, utilizando o Spring Boot e conta com integração a um banco de dados MySQL, configurado para ser executado via Docker.
+API responsável pelo cálculo de gratificações de atendentes com base em desempenho e ranking.
 
-## Tecnologias Utilizadas
+## 🚀 Tecnologias principais
 
-- **Java 17**
-- **Spring Boot 3.3.5**
-- **Maven**
-- **MySQL** (via Docker Compose)
-- **JPA** (Java Persistence API)
-- **H2 Database** (para testes em ambiente local)
-- **Lombok** (para simplificação de código)
-- **Docker e Docker Compose** (para gerenciamento de containers)
+- Java 17
+- Spring Boot 3.3.5
+- Spring Data JPA
+- MySQL
+- H2 (para testes)
+- Lombok
+- Docker e Docker Compose
+- Swagger (springdoc-openapi)
+- Apache POI (leitura de planilhas XLSX)
 
-## Funcionalidades
+## 📦 Pré-requisitos
 
-A API `api-gratiStore` foi projetada para atender às seguintes funcionalidades:
+Antes de rodar o projeto, você precisa ter instalado:
 
-- Cálculo de gratificações e bônus de funcionários
-- Gestão dos dados de gratificação de acordo com as metas e o desempenho
-- Persistência dos dados em um banco de dados MySQL
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
 
-## Estrutura do Projeto
+## 🛠️ Como rodar o projeto
 
-O projeto utiliza o Maven para gerenciamento de dependências e construção, com as principais dependências sendo:
+### 1. Clone os repositórios
 
-- `spring-boot-starter-data-jpa`: para a integração com o banco de dados e persistência de dados.
-- `spring-boot-starter-validation`: para validação de dados de entrada.
-- `spring-boot-starter-web`: para expor os endpoints REST da API.
-- `mysql-connector-j`: driver para conexão com o banco de dados MySQL.
-- `h2`: banco de dados em memória utilizado para testes.
-- `lombok`: biblioteca que simplifica o código, reduzindo o uso de getters, setters e outros métodos boilerplate.
-  
-## Configuração
+```bash
+git clone https://github.com/WaldirJuniorGPN/api-gratiStore.git
+git clone https://github.com/WaldirJuniorGPN/front-gratiStore
+cd api-gratiStore
+```
 
-1. **Pré-requisitos**:
-   - Docker e Docker Compose instalados
-   - Java 17 instalado
+**Importante:** os dois repositórios precisam estar na mesma pasta para que o build funcione corretamente.
 
-2. **Clonando o repositório**:
-   ```bash
-   git clone https://github.com/WaldirJuniorGPN/api-gratiStore.git
-   cd api-gratiStore
-   ```
+### 2. Suba os containers
 
-3. **Configuração do Banco de Dados**:
-   O projeto utiliza um banco de dados MySQL. O arquivo `docker-compose.yml` define um container para o MySQL. Certifique-se de que as variáveis de ambiente do MySQL estejam configuradas corretamente.
+Execute o seguinte comando na raiz do projeto `api-gratiStore`:
 
-4. **Executando o Docker Compose**:
-   Para subir o container do MySQL, execute:
-   ```bash
-   docker-compose up -d
-   ```
+```bash
+docker-compose up --build
+```
 
-5. **Executando o Projeto**:
-   Com o banco de dados MySQL em execução, você pode rodar o projeto com o seguinte comando:
-   ```bash
-   ./mvnw spring-boot:run
-   ```
+O Docker Compose irá subir 3 containers:
 
-6. **Testando a API**:
-   A API estará disponível na URL `http://localhost:8080`. Os endpoints para cálculo e visualização das gratificações estarão documentados e acessíveis nesta porta.
+- `mysql-ms`: container do MySQL (porta 3307)
+- `api-gratiStore`: back-end da aplicação (porta 8080)
+- `front-gratiStore`: front-end da aplicação (porta 5500)
 
-## Desenvolvimento e Testes
+> ⚠️ **Importante:** o container `api-gratiStore` depende do `mysql-ms`. Certifique-se de que o banco de dados esteja pronto antes do Spring Boot tentar iniciar. Caso contrário, o back-end poderá falhar na conexão com o banco. O `docker-compose` já cuida da ordem de inicialização com a diretiva `depends_on`, mas em ambientes mais lentos, pode ser necessário aguardar manualmente a inicialização completa do MySQL.
 
-Para rodar os testes, execute:
+### 3. Acesse a aplicação
+
+- Front-end: [http://localhost:5500](http://localhost:5500)
+- API Swagger UI: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+
+## 🧪 Rodando os testes
+
+Os testes utilizam o banco de dados em memória H2.
+
 ```bash
 ./mvnw test
 ```
 
-## Contribuição
+---
 
-Contribuições são bem-vindas! Para contribuir, faça um fork do projeto, crie uma nova branch, implemente as mudanças e abra um pull request.
+Se tiver qualquer dúvida ou sugestão, fique à vontade para abrir uma issue ou contribuir! 😄
 
