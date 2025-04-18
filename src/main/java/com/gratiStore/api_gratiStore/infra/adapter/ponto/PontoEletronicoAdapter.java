@@ -7,7 +7,7 @@ import com.gratiStore.api_gratiStore.domain.entities.ponto.PontoEletronico;
 
 public interface PontoEletronicoAdapter {
 
-    void pontoRequestToPonto(PontoRequest request, Atendente atendente);
+    PontoEletronico pontoRequestToPonto(PontoRequest request, Atendente atendente);
 
     HistoricoResponse pontoToHistoricoResponse(PontoEletronico ponto);
 }
