@@ -17,9 +17,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PontoEletronicoServiceImpl implements PontoEletronicoService {
 
-    private PontoEletronicoAdapter adapter;
-    private PontoEletronicoRepository repository;
-    private AtendenteService atendenteService;
+    private final PontoEletronicoAdapter adapter;
+    private final PontoEletronicoRepository repository;
+    private final AtendenteService atendenteService;
 
     @Override
     public void registrarPronto(PontoRequest request) {

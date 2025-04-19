@@ -7,11 +7,13 @@ import com.gratiStore.api_gratiStore.domain.entities.ponto.PontoEletronico;
 import com.gratiStore.api_gratiStore.domain.factory.ponto.PontoEletronicoFactory;
 import com.gratiStore.api_gratiStore.infra.adapter.ponto.PontoEletronicoAdapter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class PontoEletronicoAdapterImpl implements PontoEletronicoAdapter {
 
-    private PontoEletronicoFactory factory;
+    private final PontoEletronicoFactory factory;
 
     @Override
     public PontoEletronico pontoRequestToPonto(PontoRequest request, Atendente atendente) {
