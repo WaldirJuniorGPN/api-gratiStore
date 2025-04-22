@@ -12,12 +12,11 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import static com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus.NAO;
+import static com.gratiStore.api_gratiStore.domain.validator.AtendenteValidator.*;
 
 @Entity(name = "Atendente")
 @Table(name = "atendentes")
-@NoArgsConstructor
-@AllArgsConstructor
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @EqualsAndHashCode(callSuper = true)
 public class Atendente extends EntidadeBase {
@@ -104,16 +103,141 @@ public class Atendente extends EntidadeBase {
     @ToString.Exclude
     private Loja loja;
 
+    public Atendente(String nome, Loja loja) {
+        validarNome(nome);
+        validarLoja(loja);
+        this.nome = nome;
+        this.loja = loja;
+    }
+
+    public void setNome(String nome) {
+        validarNome(nome);
+        this.nome = nome;
+    }
+
+    public void setLoja(Loja loja) {
+        validarLoja(loja);
+        this.loja = loja;
+    }
+
+    public void setVendasPrimeiraSemana(BigDecimal vendasPrimeiraSemana) {
+        validarValor(vendasPrimeiraSemana);
+        this.vendasPrimeiraSemana = vendasPrimeiraSemana;
+    }
+
+    public void setVendasSegundaSemana(BigDecimal vendasSegundaSemana) {
+        validarValor(vendasSegundaSemana);
+        this.vendasSegundaSemana = vendasSegundaSemana;
+    }
+
+    public void setVendasTerceiraSemana(BigDecimal vendasTerceiraSemana) {
+        validarValor(vendasTerceiraSemana);
+        this.vendasTerceiraSemana = vendasTerceiraSemana;
+    }
+
+    public void setVendasQuartaSemana(BigDecimal vendasQuartaSemana) {
+        validarValor(vendasQuartaSemana);
+        this.vendasQuartaSemana = vendasQuartaSemana;
+    }
+
+    public void setVendasQuintaSemana(BigDecimal vendasQuintaSemana) {
+        validarValor(vendasQuintaSemana);
+        this.vendasQuintaSemana = vendasQuintaSemana;
+    }
+
+    public void setVendasSextaSemana(BigDecimal vendasSextaSemana) {
+        validarValor(vendasSextaSemana);
+        this.vendasSextaSemana = vendasSextaSemana;
+    }
+
+    public void setQuantidadeAtendimentosPrimeiraSemana(Integer atendimentosPrimeiraSemana) {
+        validarAtendimentos(atendimentosPrimeiraSemana);
+        this.quantidadeAtendimentosPrimeiraSemana = atendimentosPrimeiraSemana;
+    }
+
+    public void setQuantidadeAtendimentosSegundaSemana(Integer atendimentosSegundaSemana) {
+        validarAtendimentos(atendimentosSegundaSemana);
+        this.quantidadeAtendimentosSegundaSemana = atendimentosSegundaSemana;
+    }
+
+    public void setQuantidadeAtendimentosTerceiraSemana(Integer atendimentosTerceiraSemana) {
+        validarAtendimentos(atendimentosTerceiraSemana);
+        this.quantidadeAtendimentosTerceiraSemana = atendimentosTerceiraSemana;
+    }
+
+    public void setQuantidadeAtendimentosQuartaSemana(Integer atendimentosQuartaSemana) {
+        validarAtendimentos(atendimentosQuartaSemana);
+        this.quantidadeAtendimentosQuartaSemana = atendimentosQuartaSemana;
+    }
+
+    public void setQuantidadeAtendimentosQuintaSemana(Integer atendimentosQuintaSemana) {
+        validarAtendimentos(atendimentosQuintaSemana);
+        this.quantidadeAtendimentosQuintaSemana = atendimentosQuintaSemana;
+    }
+
+    public void setQuantidadeAtendimentosSextaSemana(Integer atendimentosSextaSemana) {
+        validarAtendimentos(atendimentosSextaSemana);
+        this.quantidadeAtendimentosSextaSemana = atendimentosSextaSemana;
+    }
+
+    public void setAtrasoStatusPrimeiraSemana(AtrasoStatus status) {
+        validarAtrasoStatus(status);
+        this.atrasoStatusPrimeiraSemana = status;
+    }
+
+    public void setAtrasoStatusSegundaSemana(AtrasoStatus status) {
+        validarAtrasoStatus(status);
+        this.atrasoStatusSegundaSemana = status;
+    }
+
+    public void setAtrasoStatusTerceiraSemana(AtrasoStatus status) {
+        validarAtrasoStatus(status);
+        this.atrasoStatusTerceiraSemana = status;
+    }
+
+    public void setAtrasoStatusQuartaSemana(AtrasoStatus status) {
+        validarAtrasoStatus(status);
+        this.atrasoStatusQuartaSemana = status;
+    }
+
+    public void setAtrasoStatusQuintaSemana(AtrasoStatus status) {
+        validarAtrasoStatus(status);
+        this.atrasoStatusQuintaSemana = status;
+    }
+
+    public void setAtrasoStatusSextaSemana(AtrasoStatus status) {
+        validarAtrasoStatus(status);
+        this.atrasoStatusSextaSemana = status;
+    }
+
+    public void setBonus(BigDecimal bonus) {
+        validarValor(bonus);
+        this.bonus = bonus;
+    }
+
+    public void setGratificacao(BigDecimal gratificacao) {
+        validarValor(gratificacao);
+        this.gratificacao = gratificacao;
+    }
+
+    public void setTotalVendas(BigDecimal totalVendas) {
+        validarValor(totalVendas);
+        this.totalVendas = totalVendas;
+    }
+
     public void atribuirGratificacao(BigDecimal valor) {
+        validarValor(valor);
         gratificacao = gratificacao.add(valor);
         gratificacao = gratificacao.setScale(2, RoundingMode.HALF_UP);
     }
 
     public void atribuirBonus(BigDecimal valor) {
+        validarValor(valor);
         bonus = bonus.add(valor);
     }
 
     public void atribuirVendaTotal(BigDecimal valor) {
+        validarValor(valor);
         totalVendas = totalVendas.add(valor);
         totalVendas = totalVendas.setScale(2, RoundingMode.HALF_UP);
     }
