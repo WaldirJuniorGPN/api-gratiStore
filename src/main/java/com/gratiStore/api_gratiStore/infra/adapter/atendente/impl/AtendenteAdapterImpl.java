@@ -6,6 +6,7 @@ import com.gratiStore.api_gratiStore.controller.dto.response.atendente.Atendente
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponseVendas;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
+import com.gratiStore.api_gratiStore.domain.factory.atendente.AtendenteFactory;
 import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
 import com.gratiStore.api_gratiStore.infra.adapter.atendente.AtendenteAdapter;
 import lombok.RequiredArgsConstructor;
@@ -15,28 +16,22 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AtendenteAdapterImpl implements AtendenteAdapter {
 
+    private final AtendenteFactory atendenteFactory;
     private final LojaService lojaService;
 
     @Override
     public Atendente atendenteRequestToAtendente(AtendenteRequest request) {
-        var atendente = new Atendente();
-        var loja = lojaService.buscarLoja(request.lojaId());
-        atendente.setNome(request.nome());
-        atendente.setLoja(loja);
+        var atendente = atendenteFactory.criar(request);
 
-        loja.getAtendentes().add(atendente);
+        atendente.getLoja().getAtendentes().add(atendente);
 
         return atendente;
     }
 
     @Override
     public Atendente atendenteRequestToAtendente(AtendenteRequestPlanilha request) {
-        var atendente = new Atendente();
-        var loja = lojaService.buscarLoja(request.lojaId());
-        atendente.setNome(request.nome());
-        atendente.setLoja(loja);
 
-        return atendente;
+        return atendenteFactory.criar(request);
     }
 
     @Override
