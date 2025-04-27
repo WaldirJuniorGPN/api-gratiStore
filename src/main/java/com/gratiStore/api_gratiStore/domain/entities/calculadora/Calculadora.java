@@ -2,17 +2,21 @@ package com.gratiStore.api_gratiStore.domain.entities.calculadora;
 
 import com.gratiStore.api_gratiStore.domain.entities.EntidadeBase;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
-import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.List;
+
+import static com.gratiStore.api_gratiStore.domain.validator.Validator.*;
+
 
 @Entity(name = "Calculadora")
 @Table(name = "calculadoras")
-@Data
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(callSuper = true)
 public class Calculadora extends EntidadeBase {
 
@@ -43,4 +47,70 @@ public class Calculadora extends EntidadeBase {
     @OneToOne
     @ToString.Exclude
     private Loja loja;
+
+    public Calculadora(String nome,
+                       double percentualPrimeiroColocado,
+                       double percentualSegundoColocado,
+                       double percentualTerceiroColocado,
+                       double percentualDemaisColocados,
+                       BigDecimal bonusPrimeiroColocado,
+                       BigDecimal bonusSegundoColocado,
+                       BigDecimal bonusTerceiroColocado,
+                       Loja loja) {
+
+        setNome(nome);
+        setPercentualPrimeiroColocado(percentualPrimeiroColocado);
+        setPercentualSegundoColocado(percentualSegundoColocado);
+        setPercentualTerceiroColocado(percentualTerceiroColocado);
+        setPercentualDemaisColocados(percentualDemaisColocados);
+        setBonusPrimeiroColocado(bonusPrimeiroColocado);
+        setBonusSegundoColocado(bonusSegundoColocado);
+        setBonusTerceiroColocado(bonusTerceiroColocado);
+        setLoja(loja);
+    }
+
+    public void setNome(String nome) {
+        validarNome(nome);
+        this.nome = nome;
+    }
+
+    public void setPercentualPrimeiroColocado(double percentualPrimeiroColocado) {
+        validarPercentual(percentualPrimeiroColocado);
+        this.percentualPrimeiroColocado = percentualPrimeiroColocado / 100;
+    }
+
+    public void setPercentualSegundoColocado(double percentualSegundoColocado) {
+        validarPercentual(percentualSegundoColocado);
+        this.percentualSegundoColocado = percentualSegundoColocado / 100;
+    }
+
+    public void setPercentualTerceiroColocado(double percentualTerceiroColocado) {
+        validarPercentual(percentualTerceiroColocado);
+        this.percentualTerceiroColocado = percentualTerceiroColocado / 100;
+    }
+
+    public void setPercentualDemaisColocados(double percentualDemaisColocados) {
+        validarPercentual(percentualDemaisColocados);
+        this.percentualDemaisColocados = percentualDemaisColocados / 100;
+    }
+
+    public void setBonusPrimeiroColocado(BigDecimal bonusPrimeiroColocado) {
+        validarValor(bonusPrimeiroColocado);
+        this.bonusPrimeiroColocado = bonusPrimeiroColocado;
+    }
+
+    public void setBonusSegundoColocado(BigDecimal bonusSegundoColocado) {
+        validarValor(bonusSegundoColocado);
+        this.bonusSegundoColocado = bonusSegundoColocado;
+    }
+
+    public void setBonusTerceiroColocado(BigDecimal bonusTerceiroColocado) {
+        validarValor(bonusTerceiroColocado);
+        this.bonusTerceiroColocado = bonusTerceiroColocado;
+    }
+
+    public void setLoja(Loja loja) {
+        validarLoja(loja);
+        this.loja = loja;
+    }
 }

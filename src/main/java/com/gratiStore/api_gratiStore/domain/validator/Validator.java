@@ -8,7 +8,7 @@ import lombok.experimental.UtilityClass;
 import java.math.BigDecimal;
 
 @UtilityClass
-public class AtendenteValidator {
+public class Validator {
 
     public void validarCriacao(AtendenteRequest request) {
         validarNome(request.nome());
@@ -58,6 +58,12 @@ public class AtendenteValidator {
     public void validarAtrasoStatus(AtrasoStatus status) {
         if (status == null) {
             throw new ValidacaoNegiocioException("O status de atraso não pode ser nulo");
+        }
+    }
+
+    public void validarPercentual(double percentual) {
+        if (percentual < 0) {
+            throw new ValidacaoNegiocioException("O percentual de gratificação precisa ser um valor maior do que zero");
         }
     }
 }

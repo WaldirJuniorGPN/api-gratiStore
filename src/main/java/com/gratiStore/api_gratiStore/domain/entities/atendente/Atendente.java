@@ -12,7 +12,7 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import static com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus.NAO;
-import static com.gratiStore.api_gratiStore.domain.validator.AtendenteValidator.*;
+import static com.gratiStore.api_gratiStore.domain.validator.Validator.*;
 
 @Entity(name = "Atendente")
 @Table(name = "atendentes")
