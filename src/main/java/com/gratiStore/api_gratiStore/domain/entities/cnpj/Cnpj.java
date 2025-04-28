@@ -1,4 +1,4 @@
-package com.gratiStore.api_gratiStore.domain.entities.Cnpj;
+package com.gratiStore.api_gratiStore.domain.entities.cnpj;
 
 import jakarta.persistence.Embeddable;
 
