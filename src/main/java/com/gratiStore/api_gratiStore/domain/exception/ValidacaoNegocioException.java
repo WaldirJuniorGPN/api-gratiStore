@@ -1,7 +1,7 @@
 package com.gratiStore.api_gratiStore.domain.exception;
 
-public class ValidacaoNegiocioException extends RuntimeException {
-    public ValidacaoNegiocioException(String mensagem) {
+public class ValidacaoNegocioException extends RuntimeException {
+    public ValidacaoNegocioException(String mensagem) {
         super(mensagem);
     }
 }

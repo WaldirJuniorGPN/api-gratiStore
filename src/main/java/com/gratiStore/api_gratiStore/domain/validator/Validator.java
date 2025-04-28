@@ -1,69 +1,92 @@
 package com.gratiStore.api_gratiStore.domain.validator;
 
-import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequest;
+import br.com.caelum.stella.validation.CNPJValidator;
+import br.com.caelum.stella.validation.CPFValidator;
+import br.com.caelum.stella.validation.InvalidStateException;
 import com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus;
-import com.gratiStore.api_gratiStore.domain.exception.ValidacaoNegiocioException;
-import lombok.experimental.UtilityClass;
+import com.gratiStore.api_gratiStore.domain.exception.ValidacaoNegocioException;
 
 import java.math.BigDecimal;
 
-@UtilityClass
 public class Validator {
 
-    public void validarCriacao(AtendenteRequest request) {
-        validarNome(request.nome());
-        validarIdLoja(request.lojaId());
+    private Validator() {
+        throw new UnsupportedOperationException("Classe utilitária, não deve ser instanciada");
     }
 
-    public void validarNome(String nome) {
+    public static void validarNome(String nome) {
         if (nome == null) {
-            throw new ValidacaoNegiocioException("O nome do Atendente não pode estar nulo");
+            throw new ValidacaoNegocioException("O nome do Atendente não pode estar nulo");
         }
 
         if (nome.isBlank()) {
-            throw new ValidacaoNegiocioException("O nome do Atendente não pode estar em branco");
+            throw new ValidacaoNegocioException("O nome do Atendente não pode estar em branco");
         }
     }
 
-    public void validarLoja(Object loja) {
+    public static void validarLoja(Object loja) {
         if (loja == null) {
-            throw new ValidacaoNegiocioException("A loja vinculda ao Atendente não pode estar nula");
+            throw new ValidacaoNegocioException("A loja vinculda ao Atendente não pode estar nula");
         }
     }
 
-    public void validarIdLoja(Long id) {
+    public static void validarCalculadora(Object calculadora) {
+        if (calculadora == null) {
+            throw new ValidacaoNegocioException("A calculadora vinculada à loja não pode ser nula");
+        }
+    }
+
+    public static void validarIdLoja(Long id) {
         if (id == null) {
-            throw new ValidacaoNegiocioException("O id da loja vinculada ao Atenente não pode estar nulo");
+            throw new ValidacaoNegocioException("O id da loja vinculada ao Atenente não pode estar nulo");
         }
     }
 
-    public void validarValor(BigDecimal vendas) {
+    public static void validarValor(BigDecimal vendas) {
         if (vendas == null) {
-            throw new ValidacaoNegiocioException("o valor não pode ser nulo");
+            throw new ValidacaoNegocioException("o valor não pode ser nulo");
         }
         if (vendas.compareTo(BigDecimal.ZERO) < 0) {
-            throw new ValidacaoNegiocioException("O valor não pode ser negativo");
+            throw new ValidacaoNegocioException("O valor não pode ser negativo");
         }
     }
 
-    public void validarAtendimentos(Integer atendimentos) {
+    public static void validarAtendimentos(Integer atendimentos) {
         if (atendimentos == null) {
-            throw new ValidacaoNegiocioException("A quantidade de atendimentos não pode ser nula");
+            throw new ValidacaoNegocioException("A quantidade de atendimentos não pode ser nula");
         }
         if (atendimentos < 0) {
-            throw new ValidacaoNegiocioException("A quantidade de atendimentos não pode ser menor do que zero");
+            throw new ValidacaoNegocioException("A quantidade de atendimentos não pode ser menor do que zero");
         }
     }
 
-    public void validarAtrasoStatus(AtrasoStatus status) {
+    public static void validarAtrasoStatus(AtrasoStatus status) {
         if (status == null) {
-            throw new ValidacaoNegiocioException("O status de atraso não pode ser nulo");
+            throw new ValidacaoNegocioException("O status de atraso não pode ser nulo");
         }
     }
 
-    public void validarPercentual(double percentual) {
+    public static void validarPercentual(double percentual) {
         if (percentual < 0) {
-            throw new ValidacaoNegiocioException("O percentual de gratificação precisa ser um valor maior do que zero");
+            throw new ValidacaoNegocioException("O percentual de gratificação precisa ser um valor maior do que zero");
+        }
+    }
+
+    public static void validarCpf(String cpf) {
+        var validator = new CPFValidator();
+        try {
+            validator.assertValid(cpf);
+        } catch (InvalidStateException e) {
+            throw new ValidacaoNegocioException("CPF inválido" + cpf);
+        }
+    }
+
+    public static void validarCnpj(String cnpj) {
+        var validator = new CNPJValidator();
+        try {
+            validator.assertValid(cnpj);
+        } catch (InvalidStateException e) {
+            throw new ValidacaoNegocioException("CNPJ inválido" + cnpj);
         }
     }
 }
