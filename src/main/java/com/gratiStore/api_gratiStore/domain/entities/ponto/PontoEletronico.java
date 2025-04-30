@@ -2,18 +2,20 @@ package com.gratiStore.api_gratiStore.domain.entities.ponto;
 
 import com.gratiStore.api_gratiStore.domain.entities.EntidadeBase;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
+import com.gratiStore.api_gratiStore.domain.validator.PontoEletronicoValidator;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static com.gratiStore.api_gratiStore.domain.validator.PontoEletronicoValidator.validarPonto;
+
 @Entity
 @Table(name = "pontos_eletrônicos")
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class PontoEletronico extends EntidadeBase {
 
     @Column(name = "data", nullable = false)
@@ -32,6 +34,22 @@ public class PontoEletronico extends EntidadeBase {
     private LocalTime saida;
 
     @ManyToOne
-    @JoinColumn(name = "atendente-id")
+    @JoinColumn(name = "atendente-id", nullable = false)
     private Atendente atendente;
+
+    public PontoEletronico(LocalDate data,
+                           LocalTime entrada,
+                           LocalTime inicioAlmoco,
+                           LocalTime fimAlmoco,
+                           LocalTime saida,
+                           Atendente atendente) {
+
+        validarPonto(data, entrada, inicioAlmoco, fimAlmoco, saida, atendente);
+        this.data = data;
+        this.entrada = entrada;
+        this.inicioAlmoco = inicioAlmoco;
+        this.fimAlmoco = fimAlmoco;
+        this.saida = saida;
+        this.atendente = atendente;
+    }
 }
