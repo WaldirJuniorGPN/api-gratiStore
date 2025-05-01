@@ -28,7 +28,7 @@ public class Loja extends EntidadeBase {
     @Column(name = "cnpj", nullable = false, unique = true)
     private Cnpj cnpj;
 
-    @Column(name = "total-de-vendas")
+    @Column(name = "total_de_vendas")
     private BigDecimal totalVendas = new BigDecimal(BigInteger.ZERO);
 
     @OneToMany(mappedBy = "loja", fetch = FetchType.EAGER)
@@ -36,6 +36,7 @@ public class Loja extends EntidadeBase {
     private List<Atendente> atendentes;
 
     @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "calculadora_id", nullable = false)
     @ToString.Exclude
     private Calculadora calculadora;
 
@@ -54,6 +55,7 @@ public class Loja extends EntidadeBase {
     }
 
     public void atribuirVendas(BigDecimal valor) {
+        validarValor(valor);
         totalVendas = totalVendas.add(valor);
         totalVendas = totalVendas.setScale(2, RoundingMode.HALF_UP);
     }
