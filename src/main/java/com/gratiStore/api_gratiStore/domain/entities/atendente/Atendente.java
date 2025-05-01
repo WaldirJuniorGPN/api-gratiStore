@@ -104,10 +104,8 @@ public class Atendente extends EntidadeBase {
     private Loja loja;
 
     public Atendente(String nome, Loja loja) {
-        validarNome(nome);
-        validarLoja(loja);
-        this.nome = nome;
-        this.loja = loja;
+        setNome(nome);
+        setLoja(loja);
     }
 
     public void setNome(String nome) {
@@ -122,32 +120,32 @@ public class Atendente extends EntidadeBase {
 
     public void setVendasPrimeiraSemana(BigDecimal vendasPrimeiraSemana) {
         validarValor(vendasPrimeiraSemana);
-        this.vendasPrimeiraSemana = vendasPrimeiraSemana;
+        this.vendasPrimeiraSemana = vendasPrimeiraSemana.setScale(2, RoundingMode.HALF_UP);
     }
 
     public void setVendasSegundaSemana(BigDecimal vendasSegundaSemana) {
         validarValor(vendasSegundaSemana);
-        this.vendasSegundaSemana = vendasSegundaSemana;
+        this.vendasSegundaSemana = vendasSegundaSemana.setScale(2, RoundingMode.HALF_UP);
     }
 
     public void setVendasTerceiraSemana(BigDecimal vendasTerceiraSemana) {
         validarValor(vendasTerceiraSemana);
-        this.vendasTerceiraSemana = vendasTerceiraSemana;
+        this.vendasTerceiraSemana = vendasTerceiraSemana.setScale(2, RoundingMode.HALF_UP);
     }
 
     public void setVendasQuartaSemana(BigDecimal vendasQuartaSemana) {
         validarValor(vendasQuartaSemana);
-        this.vendasQuartaSemana = vendasQuartaSemana;
+        this.vendasQuartaSemana = vendasQuartaSemana.setScale(2, RoundingMode.HALF_UP);
     }
 
     public void setVendasQuintaSemana(BigDecimal vendasQuintaSemana) {
         validarValor(vendasQuintaSemana);
-        this.vendasQuintaSemana = vendasQuintaSemana;
+        this.vendasQuintaSemana = vendasQuintaSemana.setScale(2, RoundingMode.HALF_UP);
     }
 
     public void setVendasSextaSemana(BigDecimal vendasSextaSemana) {
         validarValor(vendasSextaSemana);
-        this.vendasSextaSemana = vendasSextaSemana;
+        this.vendasSextaSemana = vendasSextaSemana.setScale(2, RoundingMode.HALF_UP);
     }
 
     public void setQuantidadeAtendimentosPrimeiraSemana(Integer atendimentosPrimeiraSemana) {
@@ -212,17 +210,17 @@ public class Atendente extends EntidadeBase {
 
     public void setBonus(BigDecimal bonus) {
         validarValor(bonus);
-        this.bonus = bonus;
+        this.bonus = bonus.setScale(2, RoundingMode.HALF_UP);
     }
 
     public void setGratificacao(BigDecimal gratificacao) {
         validarValor(gratificacao);
-        this.gratificacao = gratificacao;
+        this.gratificacao = gratificacao.setScale(2, RoundingMode.HALF_UP);
     }
 
     public void setTotalVendas(BigDecimal totalVendas) {
         validarValor(totalVendas);
-        this.totalVendas = totalVendas;
+        this.totalVendas = totalVendas.setScale(2, RoundingMode.HALF_UP);
     }
 
     public void atribuirGratificacao(BigDecimal valor) {
@@ -234,6 +232,7 @@ public class Atendente extends EntidadeBase {
     public void atribuirBonus(BigDecimal valor) {
         validarValor(valor);
         bonus = bonus.add(valor);
+        bonus = bonus.setScale(2, RoundingMode.HALF_UP);
     }
 
     public void atribuirVendaTotal(BigDecimal valor) {
