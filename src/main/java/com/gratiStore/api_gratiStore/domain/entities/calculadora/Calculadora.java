@@ -44,7 +44,7 @@ public class Calculadora extends EntidadeBase {
     @Column(name = "bonus-terceiro-colocado", nullable = false)
     private BigDecimal bonusTerceiroColocado = BigDecimal.ZERO;
 
-    @OneToOne
+    @OneToOne(mappedBy = "calculadora")
     @ToString.Exclude
     private Loja loja;
 
