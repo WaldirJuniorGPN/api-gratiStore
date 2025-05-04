@@ -82,6 +82,10 @@ public class Validator {
     }
 
     public static void validarCnpj(String cnpj) {
+        if (cnpj == null) {
+            throw new ValidacaoNegocioException("CNPJ não pode estar nulo");
+        }
+
         var validator = new CNPJValidator();
         try {
             validator.assertValid(cnpj);
