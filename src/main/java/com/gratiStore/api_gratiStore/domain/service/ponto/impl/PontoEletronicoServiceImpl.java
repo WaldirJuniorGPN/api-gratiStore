@@ -1,9 +1,12 @@
 package com.gratiStore.api_gratiStore.domain.service.ponto.impl;
 
+import com.gratiStore.api_gratiStore.controller.dto.request.horasExtras.FiltroHorasExtrasRequest;
 import com.gratiStore.api_gratiStore.controller.dto.request.ponto.PontoRequest;
 import com.gratiStore.api_gratiStore.controller.dto.response.ponto.HistoricoResponse;
+import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.ponto.PontoEletronico;
 import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
+import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
 import com.gratiStore.api_gratiStore.domain.service.ponto.PontoEletronicoService;
 import com.gratiStore.api_gratiStore.infra.adapter.ponto.PontoEletronicoAdapter;
 import com.gratiStore.api_gratiStore.infra.repository.PontoEletronicoRepository;
@@ -13,6 +16,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PontoEletronicoServiceImpl implements PontoEletronicoService {
@@ -20,6 +26,7 @@ public class PontoEletronicoServiceImpl implements PontoEletronicoService {
     private final PontoEletronicoAdapter adapter;
     private final PontoEletronicoRepository repository;
     private final AtendenteService atendenteService;
+    private final LojaService lojaService;
 
     @Override
     public void registrarPronto(PontoRequest request) {
@@ -34,8 +41,32 @@ public class PontoEletronicoServiceImpl implements PontoEletronicoService {
                 .map(adapter::pontoToHistoricoResponse);
     }
 
+    @Override
+    public List<PontoEletronico> listarHistorico(FiltroHorasExtrasRequest request) {
+        var atendentes = carregaAtendentes(request.lojaId());
+
+        return carregaPontosEletronicos(atendentes, request.ano(), request.mes());
+    }
+
     private PontoEletronico buscarNoBanco(Long id) {
         return repository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(String.format("Ponto Eletrônico com id %d não encontrado", id)));
+    }
+
+    private List<Atendente> carregaAtendentes(Long lojaId) {
+        var loja = lojaService.buscarLoja(lojaId);
+
+        return loja.getAtendentes();
+    }
+
+    private List<PontoEletronico> carregaPontosEletronicos(List<Atendente> atendentes, int ano, int mes) {
+        var dataInicio = LocalDate.of(ano, mes, 1);
+        var dataFim = dataInicio.withDayOfMonth(dataInicio.lengthOfMonth());
+
+        return atendentes.stream()
+                .flatMap(atendente -> repository
+                        .findByAtendenteIdAndDataBetween(atendente.getId(), dataInicio, dataFim)
+                        .stream())
+                .toList();
     }
 }

@@ -2,8 +2,9 @@ package com.gratiStore.api_gratiStore.domain.service.horasExtras.impl;
 
 import com.gratiStore.api_gratiStore.controller.dto.request.horasExtras.FiltroHorasExtrasRequest;
 import com.gratiStore.api_gratiStore.controller.dto.response.horasExtras.ResumoHorasExtrasResponse;
+import com.gratiStore.api_gratiStore.domain.service.horasExtras.CalculadoraDeHorasExtras;
 import com.gratiStore.api_gratiStore.domain.service.horasExtras.HorasExtrasService;
-import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
+import com.gratiStore.api_gratiStore.domain.service.ponto.PontoEletronicoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,14 +14,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HorasExtrasServiceImpl implements HorasExtrasService {
 
-    private final LojaService service;
+    private final PontoEletronicoService pontoEletronicoService;
+    private final CalculadoraDeHorasExtras calculadora;
 
     @Override
     public List<ResumoHorasExtrasResponse> calcular(FiltroHorasExtrasRequest request) {
+        var pontosEletronicos = pontoEletronicoService.listarHistorico(request);
+        var totalHorasExtras = calculadora.calcular(pontosEletronicos);
 
-        var loja = service.buscarLoja(request.lojaId());
-        var atendentes = loja.getAtendentes();
-
-        return List.of();
+        return pontosEletronicos.stream()
+                .map(ponto -> new ResumoHorasExtrasResponse(ponto.getAtendente().getId(), totalHorasExtras))
+                .toList();
     }
 }
