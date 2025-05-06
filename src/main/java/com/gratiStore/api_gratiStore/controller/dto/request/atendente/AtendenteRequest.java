@@ -14,7 +14,7 @@ public record AtendenteRequest(
         Long lojaId,
 
         @Min(value = 0, message = "O salário não pode ser menor do que zero")
-        @NotBlank(message = "O salário não pode ser nulo")
+        @NotNull(message = "O salário não pode ser nulo")
         BigDecimal salario
 ) {
 }

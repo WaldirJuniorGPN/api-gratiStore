@@ -36,7 +36,7 @@ public class Loja extends EntidadeBase {
     private List<Atendente> atendentes;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "calculadora_id", nullable = false)
+    @JoinColumn(name = "calculadora_id")
     @ToString.Exclude
     private Calculadora calculadora;
 
