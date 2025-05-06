@@ -12,7 +12,7 @@ import java.time.LocalTime;
 import static com.gratiStore.api_gratiStore.domain.validator.PontoEletronicoValidator.validarPonto;
 
 @Entity
-@Table(name = "pontos_eletrônicos")
+@Table(name = "pontos_eletronicos")
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
