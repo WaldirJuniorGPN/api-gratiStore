@@ -6,6 +6,7 @@ import com.gratiStore.api_gratiStore.domain.exception.ValidacaoNegocioException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -18,7 +19,7 @@ class PontoEletronicoTest {
     @BeforeEach
     void setUp() {
         var loja = new Loja("Americanas", "06026378000140");
-        this.atendente = new Atendente("Fulano", loja);
+        this.atendente = new Atendente("Fulano", loja, BigDecimal.ZERO);
     }
 
     @Test

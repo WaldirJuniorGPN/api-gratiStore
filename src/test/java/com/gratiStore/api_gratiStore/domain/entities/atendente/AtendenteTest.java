@@ -18,29 +18,40 @@ class AtendenteTest {
     @BeforeEach
     void setUp() {
         this.loja = new Loja("Americanas", "06026378000140");
-        this.atendente = new Atendente("Pedro", loja);
+        this.atendente = new Atendente("Pedro", loja, BigDecimal.ZERO);
     }
 
     @Test
-    void deveCriarAtendenteComNomeELojaValido() {
-        var atendente = new Atendente("João", loja);
+    void deveCriarAtendenteComSucesso() {
+        var atendente = new Atendente("João", loja, new BigDecimal("2000"));
         assertEquals("João", atendente.getNome());
         assertEquals(loja, atendente.getLoja());
+        assertEquals(new BigDecimal("2000.00"), atendente.getSalario());
+    }
+
+    @Test
+    void deveFalharAoCriarAtendenteComSalarioInvalido() {
+        assertThrows(ValidacaoNegocioException.class, () -> atendente.setSalario(new BigDecimal("-1")));
+    }
+
+    @Test
+    void deveFalharAoCriarAtendenteComSalarioNull() {
+        assertThrows(ValidacaoNegocioException.class, () -> atendente.setSalario(null));
     }
 
     @Test
     void deveFalharAoCriarAtendenteComNomeInvalido() {
-        assertThrows(ValidacaoNegocioException.class, () -> new Atendente(" ", loja));
+        assertThrows(ValidacaoNegocioException.class, () -> new Atendente(" ", loja, BigDecimal.ZERO));
     }
 
     @Test
     void deveFalharAoCriarAtendenteComNomeNull() {
-        assertThrows(ValidacaoNegocioException.class, () -> new Atendente(null, loja));
+        assertThrows(ValidacaoNegocioException.class, () -> new Atendente(null, loja, BigDecimal.ZERO));
     }
 
     @Test
     void deveFalharAoCriarAtendenteComLojaNull() {
-        assertThrows(ValidacaoNegocioException.class, () -> new Atendente("João", null));
+        assertThrows(ValidacaoNegocioException.class, () -> new Atendente("João", null, BigDecimal.ZERO));
     }
 
     @Test
