@@ -103,9 +103,15 @@ public class Atendente extends EntidadeBase {
     @ToString.Exclude
     private Loja loja;
 
-    public Atendente(String nome, Loja loja) {
+    public Atendente(String nome, Loja loja, BigDecimal salario) {
         setNome(nome);
         setLoja(loja);
+        setSalario(salario);
+    }
+
+    public void setSalario(BigDecimal salario) {
+        validarValor(salario);
+        this.salario = salario.setScale(2, RoundingMode.HALF_UP);
     }
 
     public void setNome(String nome) {

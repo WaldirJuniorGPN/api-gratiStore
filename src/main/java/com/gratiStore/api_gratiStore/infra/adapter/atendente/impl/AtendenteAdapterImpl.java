@@ -44,6 +44,7 @@ public class AtendenteAdapterImpl implements AtendenteAdapter {
         var loja = lojaService.buscarLoja(request.lojaId());
         atendente.setNome(request.nome());
         atendente.setLoja(loja);
+        atendente.setSalario(request.salario());
 
         atribuirAtendenteALoja(atendente, loja);
 
