@@ -16,8 +16,7 @@ public class CalculadoraFactoryImpl implements CalculadoraFactory {
     @Override
     public Calculadora criar(CalculadoraRequest request) {
         var loja = lojaService.buscarLoja(request.lojaId());
-
-        return new Calculadora(request.nome(),
+        var calculadora = new Calculadora(request.nome(),
                 request.percentualPrimeiroColocado(),
                 request.percentualSegundoColocado(),
                 request.percentualTerceiroColocado(),
@@ -26,5 +25,9 @@ public class CalculadoraFactoryImpl implements CalculadoraFactory {
                 request.bonusSegundoColocado(),
                 request.bonusTerceiroColocado(),
                 loja);
+
+        loja.setCalculadora(calculadora);
+
+        return calculadora;
     }
 }
