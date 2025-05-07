@@ -10,6 +10,7 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.gratiStore.api_gratiStore.domain.validator.Validator.*;
@@ -33,7 +34,7 @@ public class Loja extends EntidadeBase {
 
     @OneToMany(mappedBy = "loja", fetch = FetchType.EAGER)
     @ToString.Exclude
-    private List<Atendente> atendentes;
+    private List<Atendente> atendentes = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "calculadora_id")
