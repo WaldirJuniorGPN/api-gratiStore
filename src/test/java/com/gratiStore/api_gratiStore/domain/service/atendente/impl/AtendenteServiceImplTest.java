@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import static com.gratiStore.api_gratiStore.domain.utils.SemanaUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -288,5 +289,33 @@ class AtendenteServiceImplTest {
         assertEquals(new BigDecimal("100.00"), atendenteMock.getVendasSextaSemana());
         verifyNoInteractions(adapter);
         verify(repository, times(1)).save(any(Atendente.class));
+    }
+
+    @Test
+    void deveAtualizarAtendente_quandoRequestValido() {
+        var atualizacaoRequest = new AtendenteRequest("Beltrano", 1L, BigDecimal.valueOf(3000));
+        var atendenteAtualizado = new Atendente("Beltrano", loja, BigDecimal.valueOf(3000));
+
+        when(repository.findByIdAndAtivoTrue(any(Long.class))).thenReturn(Optional.of(atendenteMock));
+        when(adapter.atendenteRequestToAtendente(atendenteMock, atualizacaoRequest)).thenReturn(atendenteAtualizado);
+
+        atendenteService.atualizar(1L, atualizacaoRequest);
+
+        verify(repository, times(1)).findByIdAndAtivoTrue(atualizacaoRequest.lojaId());
+        verify(adapter, times(1)).atendenteRequestToAtendente(any(Atendente.class), any(AtendenteRequest.class));
+        verify(repository, times(1)).save(any(Atendente.class));
+        verify(adapter, times(1)).atendenteToAtendenteResponse(any(Atendente.class));
+    }
+
+    @Test
+    void deveBuscarUmAtendente_quandoIdValido() {
+        var atendenteId = 1L;
+
+        when(repository.findByIdAndAtivoTrue(any(Long.class))).thenReturn(Optional.of(atendenteMock));
+
+        atendenteService.buscar(atendenteId);
+
+        verify(repository, times(1)).findByIdAndAtivoTrue(atendenteId);
+        verify(adapter, times(1)).atendenteToAtendenteResponse(any(Atendente.class));
     }
 }
