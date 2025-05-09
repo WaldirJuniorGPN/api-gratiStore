@@ -116,11 +116,6 @@ public class AtendenteServiceImpl implements AtendenteService {
     }
 
     @Override
-    public AtendenteResponse converteAtendenteToAtendenteResponse(Atendente atendente) {
-        return adapter.atendenteToAtendenteResponse(atendente);
-    }
-
-    @Override
     @Transactional
     public AtendenteResponseVendas adicionarVendas(Long id, AtendenteRequestVendas request) {
         var atendente = buscarNoBanco(id);
