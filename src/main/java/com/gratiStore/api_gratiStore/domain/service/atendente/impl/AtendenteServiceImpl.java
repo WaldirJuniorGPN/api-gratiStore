@@ -177,6 +177,11 @@ public class AtendenteServiceImpl implements AtendenteService {
     }
 
     private void atualizarSemana(Atendente atendente, AtendenteRequestPlanilha request, SemanaUtils semana) {
+
+        if (semana == null) {
+            throw new IllegalArgumentException("Semana não pode ser nula");
+        }
+
         switch (semana) {
             case PRIMEIRA -> {
                 atendente.setVendasPrimeiraSemana(request.vendas());
