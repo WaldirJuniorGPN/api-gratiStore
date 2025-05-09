@@ -15,12 +15,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import static com.gratiStore.api_gratiStore.domain.utils.SemanaUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -45,6 +50,8 @@ class AtendenteServiceImplTest {
     private Loja loja;
     private AtendenteRequestPlanilha planilhaRequest;
     private SemanaUtils semana;
+    private List<Atendente> listaAtendentes;
+    private AtendenteResponse atendenteResponse;
 
     @BeforeEach
     void setUp() {
@@ -53,6 +60,8 @@ class AtendenteServiceImplTest {
         this.request = new AtendenteRequest("Fulano", 1L, new BigDecimal("2000"));
         this.response = new AtendenteResponse(1L, "Fulano", "Americana");
         this.planilhaRequest = new AtendenteRequestPlanilha("Fulano", 10, BigDecimal.valueOf(100), 1L);
+        this.listaAtendentes = List.of(atendenteMock, atendenteMock);
+        this.atendenteResponse = new AtendenteResponse(1L, "Fulano", "Google");
     }
 
     @Test
@@ -292,6 +301,15 @@ class AtendenteServiceImplTest {
     }
 
     @Test
+    void deveFalharAoAtualizar_quandoSemanaInvalida() {
+        loja.getAtendentes().add(atendenteMock);
+
+        when(lojaService.buscarLoja(any(Long.class))).thenReturn(loja);
+
+        assertThrows(IllegalArgumentException.class, () -> atendenteService.uploadSemana(planilhaRequest, null));
+    }
+
+    @Test
     void deveAtualizarAtendente_quandoRequestValido() {
         var atualizacaoRequest = new AtendenteRequest("Beltrano", 1L, BigDecimal.valueOf(3000));
         var atendenteAtualizado = new Atendente("Beltrano", loja, BigDecimal.valueOf(3000));
@@ -317,5 +335,30 @@ class AtendenteServiceImplTest {
 
         verify(repository, times(1)).findByIdAndAtivoTrue(atendenteId);
         verify(adapter, times(1)).atendenteToAtendenteResponse(any(Atendente.class));
+    }
+
+    @Test
+    void deveListarPaginadoTodosAtendente_quandoAtivo() {
+        var page = PageRequest.of(0, 10);
+        var pageAtendentes = new PageImpl<>(listaAtendentes);
+
+        when(repository.findAllByAtivoTrue(any(Pageable.class))).thenReturn(Optional.of(pageAtendentes));
+        when(adapter.atendenteToAtendenteResponse(any(Atendente.class))).thenReturn(atendenteResponse);
+
+        atendenteService.listarTodos(page);
+
+        verify(repository, times(1)).findAllByAtivoTrue(page);
+        verify(adapter, times(2)).atendenteToAtendenteResponse(any(Atendente.class));
+    }
+
+    @Test
+    void deveListarTodosAtendente_quandoAtivo() {
+        when(repository.findAllByAtivoTrue()).thenReturn(listaAtendentes);
+        when(adapter.atendenteToAtendenteResponse(any(Atendente.class))).thenReturn(atendenteResponse);
+
+        atendenteService.listarTodos();
+
+        verify(repository, times(1)).findAllByAtivoTrue();
+        verify(adapter, times(2)).atendenteToAtendenteResponse(any(Atendente.class));
     }
 }
