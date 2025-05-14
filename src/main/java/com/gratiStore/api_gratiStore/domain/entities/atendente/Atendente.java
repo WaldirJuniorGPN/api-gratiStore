@@ -246,4 +246,8 @@ public class Atendente extends EntidadeBase {
         totalVendas = totalVendas.add(valor);
         totalVendas = totalVendas.setScale(2, RoundingMode.HALF_UP);
     }
+
+    public void removerLoja() {
+        this.loja = null;
+    }
 }

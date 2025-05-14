@@ -4,6 +4,7 @@ import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteR
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequestPlanilha;
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
+import com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
 import com.gratiStore.api_gratiStore.domain.utils.SemanaUtils;
@@ -15,12 +16,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
 import java.util.Optional;
 
+import static com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus.NAO;
 import static com.gratiStore.api_gratiStore.domain.utils.SemanaUtils.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -45,6 +52,7 @@ class AtendenteServiceImplTest {
     private Loja loja;
     private AtendenteRequestPlanilha planilhaRequest;
     private SemanaUtils semana;
+    private List<Atendente> atendenteList;
 
     @BeforeEach
     void setUp() {
@@ -53,6 +61,7 @@ class AtendenteServiceImplTest {
         this.request = new AtendenteRequest("Fulano", 1L, new BigDecimal("2000"));
         this.response = new AtendenteResponse(1L, "Fulano", "Americana");
         this.planilhaRequest = new AtendenteRequestPlanilha("Fulano", 10, BigDecimal.valueOf(100), 1L);
+        this.atendenteList = List.of(atendenteMock, atendenteMock);
     }
 
     @Test
@@ -317,5 +326,64 @@ class AtendenteServiceImplTest {
 
         verify(repository, times(1)).findByIdAndAtivoTrue(atendenteId);
         verify(adapter, times(1)).atendenteToAtendenteResponse(any(Atendente.class));
+    }
+
+    @Test
+    void deveRetornarTodosAtendentesPaginado_quandoAtivo() {
+        var pageable = PageRequest.of(1, 10);
+        var page = new PageImpl<>(atendenteList);
+        when(repository.findAllByAtivoTrue(any(Pageable.class))).thenReturn(Optional.of(page));
+        when(adapter.atendenteToAtendenteResponse(any(Atendente.class))).thenReturn(response);
+
+        atendenteService.listarTodos(pageable);
+
+        verify(repository, times(1)).findAllByAtivoTrue(pageable);
+        verify(adapter, times(atendenteList.size())).atendenteToAtendenteResponse(any(Atendente.class));
+    }
+
+    @Test
+    void deveRetornarTodosAtendentesEmLista_quandoAtivo() {
+        when(repository.findAllByAtivoTrue()).thenReturn(atendenteList);
+        when(adapter.atendenteToAtendenteResponse(any(Atendente.class))).thenReturn(response);
+
+        atendenteService.listarTodos();
+
+        verify(repository, times(1)).findAllByAtivoTrue();
+        verify(adapter, times(atendenteList.size())).atendenteToAtendenteResponse(any(Atendente.class));
+    }
+
+    @Test
+    void deveFazerExclusaoLogica() {
+        var atendenteId = 1L;
+        var nomeAntigo = atendenteMock.getNome();
+        var loja = atendenteMock.getLoja();
+        when(repository.findByIdAndAtivoTrue(atendenteId)).thenReturn(Optional.of(atendenteMock));
+
+        atendenteService.deletar(atendenteId);
+
+        assertNotEquals(nomeAntigo, atendenteMock.getNome());
+        assertFalse(atendenteMock.isAtivo());
+        assertFalse(loja.getAtendentes().contains(atendenteMock));
+        assertNull(atendenteMock.getLoja());
+        assertEquals(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), atendenteMock.getVendasPrimeiraSemana());
+        assertEquals(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), atendenteMock.getVendasSegundaSemana());
+        assertEquals(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), atendenteMock.getVendasTerceiraSemana());
+        assertEquals(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), atendenteMock.getVendasQuartaSemana());
+        assertEquals(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), atendenteMock.getVendasQuintaSemana());
+        assertEquals(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), atendenteMock.getVendasSextaSemana());
+        assertEquals(0, atendenteMock.getQuantidadeAtendimentosPrimeiraSemana());
+        assertEquals(0, atendenteMock.getQuantidadeAtendimentosSegundaSemana());
+        assertEquals(0, atendenteMock.getQuantidadeAtendimentosTerceiraSemana());
+        assertEquals(0, atendenteMock.getQuantidadeAtendimentosQuartaSemana());
+        assertEquals(0, atendenteMock.getQuantidadeAtendimentosQuintaSemana());
+        assertEquals(0, atendenteMock.getQuantidadeAtendimentosSextaSemana());
+        assertEquals(NAO, atendenteMock.getAtrasoStatusPrimeiraSemana());
+        assertEquals(NAO, atendenteMock.getAtrasoStatusSegundaSemana());
+        assertEquals(NAO, atendenteMock.getAtrasoStatusQuartaSemana());
+        assertEquals(NAO, atendenteMock.getAtrasoStatusQuintaSemana());
+        assertEquals(NAO, atendenteMock.getAtrasoStatusSextaSemana());
+        assertEquals(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), atendenteMock.getBonus());
+        assertEquals(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), atendenteMock.getGratificacao());
+        assertEquals(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), atendenteMock.getTotalVendas());
     }
 }

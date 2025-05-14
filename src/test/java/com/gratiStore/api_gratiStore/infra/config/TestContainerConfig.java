@@ -25,4 +25,4 @@ public abstract class TestContainerConfig {
         registry.add("spring.datasource.driver-class-name", mysql::getDriverClassName);
         registry.add("spring.jpa.hibernate.ddl-auto", () -> "create-drop");
     }
-} 
+}

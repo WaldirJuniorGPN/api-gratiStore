@@ -211,7 +211,7 @@ public class AtendenteServiceImpl implements AtendenteService {
     }
 
     private void defaultAtributos(Atendente atendente) {
-        atendente.setLoja(null);
+        atendente.removerLoja();
         atendente.setAtivo(false);
 
         removarAtendenteDaLoja(atendente);
