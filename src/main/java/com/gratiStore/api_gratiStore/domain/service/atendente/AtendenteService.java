@@ -32,8 +32,6 @@ public interface AtendenteService {
 
     void deletar(Long id);
 
-    AtendenteResponse converteAtendenteToAtendenteResponse(Atendente atendente);
-
     AtendenteResponseVendas adicionarVendas(Long id, AtendenteRequestVendas request);
 
     AtrasoResponse updateAtraso(AtrasoRequest request);

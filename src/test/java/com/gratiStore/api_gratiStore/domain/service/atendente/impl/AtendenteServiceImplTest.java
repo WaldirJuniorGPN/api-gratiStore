@@ -19,6 +19,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -298,6 +301,15 @@ class AtendenteServiceImplTest {
         assertEquals(new BigDecimal("100.00"), atendenteMock.getVendasSextaSemana());
         verifyNoInteractions(adapter);
         verify(repository, times(1)).save(any(Atendente.class));
+    }
+
+    @Test
+    void deveFalharAoAtualizar_quandoSemanaInvalida() {
+        loja.getAtendentes().add(atendenteMock);
+
+        when(lojaService.buscarLoja(any(Long.class))).thenReturn(loja);
+
+        assertThrows(IllegalArgumentException.class, () -> atendenteService.uploadSemana(planilhaRequest, null));
     }
 
     @Test

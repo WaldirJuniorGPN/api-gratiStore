@@ -8,6 +8,7 @@ import com.gratiStore.api_gratiStore.controller.dto.response.atendente.Atendente
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponseVendas;
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtrasoResponse;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
+import com.gratiStore.api_gratiStore.domain.exception.PaginacaoInvalidaException;
 import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
 import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
 import com.gratiStore.api_gratiStore.domain.utils.SemanaUtils;
@@ -87,7 +88,7 @@ public class AtendenteServiceImpl implements AtendenteService {
     @Override
     public Page<AtendenteResponse> listarTodos(Pageable pageable) {
         return repository.findAllByAtivoTrue(pageable).orElseThrow(
-                () -> new IllegalArgumentException("A estrutura de paginação está inválida"))
+                () -> new PaginacaoInvalidaException("A estrutura de paginação está inválida"))
                 .map(adapter::atendenteToAtendenteResponse);
     }
 
@@ -112,11 +113,6 @@ public class AtendenteServiceImpl implements AtendenteService {
         defaultAtributos(atendente);
 
         repository.save(atendente);
-    }
-
-    @Override
-    public AtendenteResponse converteAtendenteToAtendenteResponse(Atendente atendente) {
-        return adapter.atendenteToAtendenteResponse(atendente);
     }
 
     @Override
@@ -181,6 +177,11 @@ public class AtendenteServiceImpl implements AtendenteService {
     }
 
     private void atualizarSemana(Atendente atendente, AtendenteRequestPlanilha request, SemanaUtils semana) {
+
+        if (semana == null) {
+            throw new IllegalArgumentException("Semana não pode ser nula");
+        }
+
         switch (semana) {
             case PRIMEIRA -> {
                 atendente.setVendasPrimeiraSemana(request.vendas());
