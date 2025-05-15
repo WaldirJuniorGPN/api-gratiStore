@@ -7,7 +7,6 @@ import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtrasoRequ
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponseVendas;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
-import com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
 import com.gratiStore.api_gratiStore.domain.utils.SemanaUtils;
@@ -19,9 +18,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -465,6 +461,74 @@ class AtendenteServiceImplTest {
 
         atendenteService.updateAtraso(request);
 
+        assertEquals(request.atraso(), atendenteMock.getAtrasoStatusPrimeiraSemana());
+        verify(repository, times(1)).findByIdAndAtivoTrue(request.id());
+        verify(repository, times(1)).save(atendenteMock);
+        verify(adapter, times(1)).atendenteToAtrasoResponse(atendenteMock, request);
+    }
 
+    @Test
+    void deveAlterarStatusDeAtraso_daSegundaSemana() {
+        var request = new AtrasoRequest(1L, SIM, SEGUNDA);
+        when(repository.findByIdAndAtivoTrue(request.id())).thenReturn(Optional.of(atendenteMock));
+
+        atendenteService.updateAtraso(request);
+
+        assertEquals(request.atraso(), atendenteMock.getAtrasoStatusSegundaSemana());
+        verify(repository, times(1)).findByIdAndAtivoTrue(request.id());
+        verify(repository, times(1)).save(atendenteMock);
+        verify(adapter, times(1)).atendenteToAtrasoResponse(atendenteMock, request);
+    }
+
+    @Test
+    void deveAlterarStatusDeAtraso_daTerceiraSemana() {
+        var request = new AtrasoRequest(1L, SIM, TERCEIRA);
+        when(repository.findByIdAndAtivoTrue(request.id())).thenReturn(Optional.of(atendenteMock));
+
+        atendenteService.updateAtraso(request);
+
+        assertEquals(request.atraso(), atendenteMock.getAtrasoStatusTerceiraSemana());
+        verify(repository, times(1)).findByIdAndAtivoTrue(request.id());
+        verify(repository, times(1)).save(atendenteMock);
+        verify(adapter, times(1)).atendenteToAtrasoResponse(atendenteMock, request);
+    }
+
+    @Test
+    void deveAlterarStatusDeAtraso_daQuartaSemana() {
+        var request = new AtrasoRequest(1L, SIM, QUARTA);
+        when(repository.findByIdAndAtivoTrue(request.id())).thenReturn(Optional.of(atendenteMock));
+
+        atendenteService.updateAtraso(request);
+
+        assertEquals(request.atraso(), atendenteMock.getAtrasoStatusQuartaSemana());
+        verify(repository, times(1)).findByIdAndAtivoTrue(request.id());
+        verify(repository, times(1)).save(atendenteMock);
+        verify(adapter, times(1)).atendenteToAtrasoResponse(atendenteMock, request);
+    }
+
+    @Test
+    void deveAlterarStatusDeAtraso_daQuintaSemana() {
+        var request = new AtrasoRequest(1L, SIM, QUINTA);
+        when(repository.findByIdAndAtivoTrue(request.id())).thenReturn(Optional.of(atendenteMock));
+
+        atendenteService.updateAtraso(request);
+
+        assertEquals(request.atraso(), atendenteMock.getAtrasoStatusQuintaSemana());
+        verify(repository, times(1)).findByIdAndAtivoTrue(request.id());
+        verify(repository, times(1)).save(atendenteMock);
+        verify(adapter, times(1)).atendenteToAtrasoResponse(atendenteMock, request);
+    }
+
+    @Test
+    void deveAlterarStatusDeAtraso_daSextaSemana() {
+        var request = new AtrasoRequest(1L, SIM, SEXTA);
+        when(repository.findByIdAndAtivoTrue(request.id())).thenReturn(Optional.of(atendenteMock));
+
+        atendenteService.updateAtraso(request);
+
+        assertEquals(request.atraso(), atendenteMock.getAtrasoStatusSextaSemana());
+        verify(repository, times(1)).findByIdAndAtivoTrue(request.id());
+        verify(repository, times(1)).save(atendenteMock);
+        verify(adapter, times(1)).atendenteToAtrasoResponse(atendenteMock, request);
     }
 }
