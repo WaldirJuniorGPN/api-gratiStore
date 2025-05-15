@@ -2,7 +2,10 @@ package com.gratiStore.api_gratiStore.domain.service.atendente.impl;
 
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequest;
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequestPlanilha;
+import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequestVendas;
+import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtrasoRequest;
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
+import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponseVendas;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
@@ -29,6 +32,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus.NAO;
+import static com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus.SIM;
 import static com.gratiStore.api_gratiStore.domain.utils.SemanaUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -369,33 +373,98 @@ class AtendenteServiceImplTest {
         var atendenteId = 1L;
         var nomeAntigo = atendenteMock.getNome();
         var loja = atendenteMock.getLoja();
+        var zero = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
         when(repository.findByIdAndAtivoTrue(atendenteId)).thenReturn(Optional.of(atendenteMock));
 
         atendenteService.deletar(atendenteId);
 
+        verify(repository, times(1)).save(any(Atendente.class));
         assertNotEquals(nomeAntigo, atendenteMock.getNome());
         assertFalse(atendenteMock.isAtivo());
         assertFalse(loja.getAtendentes().contains(atendenteMock));
         assertNull(atendenteMock.getLoja());
-        assertEquals(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), atendenteMock.getVendasPrimeiraSemana());
-        assertEquals(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), atendenteMock.getVendasSegundaSemana());
-        assertEquals(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), atendenteMock.getVendasTerceiraSemana());
-        assertEquals(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), atendenteMock.getVendasQuartaSemana());
-        assertEquals(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), atendenteMock.getVendasQuintaSemana());
-        assertEquals(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), atendenteMock.getVendasSextaSemana());
-        assertEquals(0, atendenteMock.getQuantidadeAtendimentosPrimeiraSemana());
-        assertEquals(0, atendenteMock.getQuantidadeAtendimentosSegundaSemana());
-        assertEquals(0, atendenteMock.getQuantidadeAtendimentosTerceiraSemana());
-        assertEquals(0, atendenteMock.getQuantidadeAtendimentosQuartaSemana());
-        assertEquals(0, atendenteMock.getQuantidadeAtendimentosQuintaSemana());
-        assertEquals(0, atendenteMock.getQuantidadeAtendimentosSextaSemana());
-        assertEquals(NAO, atendenteMock.getAtrasoStatusPrimeiraSemana());
-        assertEquals(NAO, atendenteMock.getAtrasoStatusSegundaSemana());
-        assertEquals(NAO, atendenteMock.getAtrasoStatusQuartaSemana());
-        assertEquals(NAO, atendenteMock.getAtrasoStatusQuintaSemana());
-        assertEquals(NAO, atendenteMock.getAtrasoStatusSextaSemana());
-        assertEquals(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), atendenteMock.getBonus());
-        assertEquals(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), atendenteMock.getGratificacao());
-        assertEquals(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), atendenteMock.getTotalVendas());
+        assertAll("Verificando valores zerados e resetados",
+                () -> assertEquals(zero, atendenteMock.getVendasPrimeiraSemana()),
+                () -> assertEquals(zero, atendenteMock.getVendasSegundaSemana()),
+                () -> assertEquals(zero, atendenteMock.getVendasTerceiraSemana()),
+                () -> assertEquals(zero, atendenteMock.getVendasQuartaSemana()),
+                () -> assertEquals(zero, atendenteMock.getVendasQuintaSemana()),
+                () -> assertEquals(zero, atendenteMock.getVendasSextaSemana()),
+                () -> assertEquals(zero, atendenteMock.getBonus()),
+                () -> assertEquals(zero, atendenteMock.getGratificacao()),
+                () -> assertEquals(zero, atendenteMock.getTotalVendas()),
+                () -> assertEquals(0, atendenteMock.getQuantidadeAtendimentosPrimeiraSemana()),
+                () -> assertEquals(0, atendenteMock.getQuantidadeAtendimentosSegundaSemana()),
+                () -> assertEquals(0, atendenteMock.getQuantidadeAtendimentosTerceiraSemana()),
+                () -> assertEquals(0, atendenteMock.getQuantidadeAtendimentosQuartaSemana()),
+                () -> assertEquals(0, atendenteMock.getQuantidadeAtendimentosSextaSemana()),
+                () -> assertEquals(NAO, atendenteMock.getAtrasoStatusPrimeiraSemana()),
+                () -> assertEquals(NAO, atendenteMock.getAtrasoStatusSegundaSemana()),
+                () -> assertEquals(NAO, atendenteMock.getAtrasoStatusQuartaSemana()),
+                () -> assertEquals(NAO, atendenteMock.getAtrasoStatusQuintaSemana()),
+                () -> assertEquals(NAO, atendenteMock.getAtrasoStatusSextaSemana()));
+    }
+
+    @Test
+    void deveAdicionarVenda() {
+        var request = new AtendenteRequestVendas(
+                BigDecimal.valueOf(100),
+                SIM,
+                BigDecimal.valueOf(200),
+                SIM,
+                BigDecimal.valueOf(300),
+                SIM,
+                BigDecimal.valueOf(400),
+                SIM,
+                BigDecimal.valueOf(500),
+                SIM,
+                BigDecimal.valueOf(600),
+                SIM,
+                10,
+                20,
+                30,
+                40,
+                50,
+                60
+        );
+        var atendenteId = 1L;
+        var responseVendas = new AtendenteResponseVendas(atendenteMock);
+        when(repository.findByIdAndAtivoTrue(any(Long.class))).thenReturn(Optional.of(atendenteMock));
+        when(adapter.atendenteToAtendenteResponseVendas(any(Atendente.class))).thenReturn(responseVendas);
+
+        atendenteService.adicionarVendas(atendenteId, request);
+
+        verify(adapter, times(1)).atendenteToAtendenteResponseVendas(any(Atendente.class));
+        verify(repository, times(1)).findByIdAndAtivoTrue(any(Long.class));
+        verify(repository, times(1)).save(any(Atendente.class));
+        assertAll("Verifica valores setados",
+                () -> assertEquals(request.vendasPrimeiraSemana().setScale(2, RoundingMode.HALF_UP), atendenteMock.getVendasPrimeiraSemana()),
+                () -> assertEquals(request.vendasSegundaSemana().setScale(2, RoundingMode.HALF_UP), atendenteMock.getVendasSegundaSemana()),
+                () -> assertEquals(request.vendasTerceiraSemana().setScale(2, RoundingMode.HALF_UP), atendenteMock.getVendasTerceiraSemana()),
+                () -> assertEquals(request.vendasQuartaSemana().setScale(2, RoundingMode.HALF_UP), atendenteMock.getVendasQuartaSemana()),
+                () -> assertEquals(request.vendasQuintaSemana().setScale(2, RoundingMode.HALF_UP), atendenteMock.getVendasQuintaSemana()),
+                () -> assertEquals(request.vendasSextaSemana().setScale(2, RoundingMode.HALF_UP), atendenteMock.getVendasSextaSemana()),
+                () -> assertEquals(request.atrasoPrimeiraSemana(), atendenteMock.getAtrasoStatusPrimeiraSemana()),
+                () -> assertEquals(request.atrasoSegundaSemana(), atendenteMock.getAtrasoStatusSegundaSemana()),
+                () -> assertEquals(request.atrasoTerceiraSemana(), atendenteMock.getAtrasoStatusTerceiraSemana()),
+                () -> assertEquals(request.atrasoQuartaSemana(), atendenteMock.getAtrasoStatusQuartaSemana()),
+                () -> assertEquals(request.atrasoQuintaSemana(), atendenteMock.getAtrasoStatusQuintaSemana()),
+                () -> assertEquals(request.atrasoSextaSemana(), atendenteMock.getAtrasoStatusSextaSemana()),
+                () -> assertEquals(request.quantidadeAtendimentosPrimeiraSemana(), atendenteMock.getQuantidadeAtendimentosPrimeiraSemana()),
+                () -> assertEquals(request.quantidadeAtendimentosSegundaSemana(), atendenteMock.getQuantidadeAtendimentosSegundaSemana()),
+                () -> assertEquals(request.quantidadeAtendimentosTerceiraSemana(), atendenteMock.getQuantidadeAtendimentosTerceiraSemana()),
+                () -> assertEquals(request.quantidadeAtendimentosQuartaSemana(), atendenteMock.getQuantidadeAtendimentosQuartaSemana()),
+                () -> assertEquals(request.quantidadeAtendimentosQuintaSemana(), atendenteMock.getQuantidadeAtendimentosQuintaSemana()),
+                () -> assertEquals(request.quantidadeAtendimentosSextaSemana(), atendenteMock.getQuantidadeAtendimentosSextaSemana()));
+    }
+
+    @Test
+    void deveAlterarStatusDeAtraso_daPrimeiraSemana() {
+        var request = new AtrasoRequest(1L, SIM, PRIMEIRA);
+        when(repository.findByIdAndAtivoTrue(request.id())).thenReturn(Optional.of(atendenteMock));
+
+        atendenteService.updateAtraso(request);
+
+
     }
 }

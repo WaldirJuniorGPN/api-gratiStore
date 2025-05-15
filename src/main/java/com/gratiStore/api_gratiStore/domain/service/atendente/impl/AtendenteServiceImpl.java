@@ -151,7 +151,7 @@ public class AtendenteServiceImpl implements AtendenteService {
         setterAtraso(atendente, request);
         repository.save(atendente);
 
-        return new AtrasoResponse(atendente.getId(), true, request.semana());
+        return adapter.atendenteToAtrasoResponse(atendente, request);
     }
 
     @Override
