@@ -1,9 +1,9 @@
 package com.gratiStore.api_gratiStore.domain.entities.loja;
 
-import com.gratiStore.api_gratiStore.domain.entities.cnpj.Cnpj;
 import com.gratiStore.api_gratiStore.domain.entities.EntidadeBase;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.calculadora.Calculadora;
+import com.gratiStore.api_gratiStore.domain.entities.cnpj.Cnpj;
 import jakarta.persistence.*;
 import lombok.*;
 

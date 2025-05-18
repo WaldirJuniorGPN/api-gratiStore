@@ -6,7 +6,6 @@ import com.gratiStore.api_gratiStore.controller.dto.response.loja.LojaResponse;
 import com.gratiStore.api_gratiStore.controller.dto.response.loja.VendasResponse;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
-import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
 import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
 import com.gratiStore.api_gratiStore.infra.adapter.loja.LojaAdapter;
 import com.gratiStore.api_gratiStore.infra.repository.LojaRepository;

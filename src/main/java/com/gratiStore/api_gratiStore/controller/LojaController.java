@@ -1,22 +1,20 @@
 package com.gratiStore.api_gratiStore.controller;
 
-import java.util.List;
-
+import com.gratiStore.api_gratiStore.controller.dto.request.loja.LojaRequest;
+import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
+import com.gratiStore.api_gratiStore.controller.dto.response.loja.LojaResponse;
+import com.gratiStore.api_gratiStore.controller.dto.response.loja.VendasResponse;
+import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.gratiStore.api_gratiStore.controller.dto.request.loja.LojaRequest;
-import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
-import com.gratiStore.api_gratiStore.controller.dto.response.loja.LojaResponse;
-import com.gratiStore.api_gratiStore.controller.dto.response.loja.VendasResponse;
-import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
-
-import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 @RestController
 @RequestMapping("/lojas")

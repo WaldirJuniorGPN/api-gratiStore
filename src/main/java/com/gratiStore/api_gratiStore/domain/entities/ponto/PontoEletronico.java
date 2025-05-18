@@ -2,9 +2,11 @@ package com.gratiStore.api_gratiStore.domain.entities.ponto;
 
 import com.gratiStore.api_gratiStore.domain.entities.EntidadeBase;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
-import com.gratiStore.api_gratiStore.domain.validator.PontoEletronicoValidator;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
