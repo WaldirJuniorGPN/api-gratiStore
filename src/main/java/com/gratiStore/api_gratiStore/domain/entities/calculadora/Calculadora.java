@@ -10,7 +10,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 
-import static com.gratiStore.api_gratiStore.domain.validator.Validator.*;
+import static com.gratiStore.api_gratiStore.domain.validator.negocio.Validator.*;
 
 
 @Entity(name = "Calculadora")

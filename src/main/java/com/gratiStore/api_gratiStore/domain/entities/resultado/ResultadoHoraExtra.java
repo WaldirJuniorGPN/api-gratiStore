@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import static com.gratiStore.api_gratiStore.domain.validator.ResultadoHoraExtraValidator.*;
+import static com.gratiStore.api_gratiStore.domain.validator.negocio.ResultadoHoraExtraValidator.*;
 
 @Entity
 @Table(name = "resultados_horas_extras", uniqueConstraints = {

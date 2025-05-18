@@ -1,4 +1,4 @@
-package com.gratiStore.api_gratiStore.domain.validator;
+package com.gratiStore.api_gratiStore.domain.validator.negocio;
 
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.exception.ValidacaoNegocioException;

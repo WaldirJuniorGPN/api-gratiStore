@@ -1,4 +1,4 @@
-package com.gratiStore.api_gratiStore.domain.validator;
+package com.gratiStore.api_gratiStore.domain.validator.negocio;
 
 import br.com.caelum.stella.validation.CNPJValidator;
 import br.com.caelum.stella.validation.CPFValidator;

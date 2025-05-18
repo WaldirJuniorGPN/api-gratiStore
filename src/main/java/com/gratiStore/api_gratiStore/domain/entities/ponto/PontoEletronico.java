@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static com.gratiStore.api_gratiStore.domain.validator.PontoEletronicoValidator.validarPonto;
+import static com.gratiStore.api_gratiStore.domain.validator.negocio.PontoEletronicoValidator.validarPonto;
 
 @Entity
 @Table(name = "pontos_eletronicos")

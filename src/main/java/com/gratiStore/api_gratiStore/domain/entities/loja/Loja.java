@@ -13,7 +13,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.gratiStore.api_gratiStore.domain.validator.Validator.*;
+import static com.gratiStore.api_gratiStore.domain.validator.negocio.Validator.*;
 
 @Entity(name = "Loja")
 @Table(name = "lojas")
