@@ -30,16 +30,8 @@ public class Validator {
             throw new IllegalStateException("O objeto de paginação não pode ser nulo");
         }
 
-        if (pageable.getPageNumber() < 0) {
-            throw new IllegalStateException("O número de páginas não pode ser negativo");
-        }
-
         if (pageable.getPageSize() > 100) {
             throw new IllegalStateException("O tamanho da página execede o limite máximo permitido (100)");
-        }
-
-        if (pageable.getPageSize() < 1) {
-            throw new IllegalStateException("O tamanho da página deve ser pelo menos 1");
         }
     }
 }
