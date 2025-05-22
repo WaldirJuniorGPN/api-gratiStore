@@ -1,7 +1,10 @@
 package com.gratiStore.api_gratiStore.domain.validator.integridadeDeEntrada;
 
 import com.gratiStore.api_gratiStore.controller.dto.request.calculadora.CalculadoraRequest;
+import com.gratiStore.api_gratiStore.domain.entities.ponto.PontoEletronico;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public class Validator {
 
@@ -32,6 +35,12 @@ public class Validator {
 
         if (pageable.getPageSize() > 100) {
             throw new IllegalStateException("O tamanho da página execede o limite máximo permitido (100)");
+        }
+    }
+
+    public static void validarHistoricoDePonto(List<PontoEletronico> pontos) {
+        if (pontos == null) {
+            throw new IllegalStateException("A lista de Pontos Eletrônicos não pode estar nula");
         }
     }
 }

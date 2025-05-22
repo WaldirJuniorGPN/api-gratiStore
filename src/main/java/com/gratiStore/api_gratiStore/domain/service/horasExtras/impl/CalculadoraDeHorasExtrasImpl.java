@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.util.List;
 
+import static com.gratiStore.api_gratiStore.domain.validator.integridadeDeEntrada.Validator.validarHistoricoDePonto;
+
 @Service
 public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
 
@@ -14,6 +16,7 @@ public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
 
     @Override
     public Duration calcular(List<PontoEletronico> pontos) {
+        validarHistoricoDePonto(pontos);
         return pontos.stream()
                 .map(this::calcularHorasExtrasDiarias)
                 .reduce(Duration.ZERO, Duration::plus);
