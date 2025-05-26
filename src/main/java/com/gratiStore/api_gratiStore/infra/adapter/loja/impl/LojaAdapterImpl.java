@@ -28,14 +28,6 @@ public class LojaAdapterImpl implements LojaAdapter {
     }
 
     @Override
-    public Loja lojaRequestToLoja(Loja loja, LojaRequest request) {
-        loja.setNome(request.nome());
-        loja.setCnpj(normalizaCnpj(request.cnpj()));
-
-        return loja;
-    }
-
-    @Override
     public List<AtendenteResponse> mapAtendentesToAtendenteResponse(List<Atendente> atendentes) {
         return atendentes.stream()
                 .map(AtendenteResponse::new)
@@ -46,14 +38,6 @@ public class LojaAdapterImpl implements LojaAdapter {
     @Override
     public LojaResponse lojaToLojaResponse(Loja loja) {
         return new LojaResponse(loja);
-    }
-
-    private String normalizaCnpj(String cnpj) {
-        if (cnpj == null) {
-            return null;
-        }
-
-        return cnpj.replaceAll("\\D", "");
     }
 
     @Override
