@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus.NAO;
+import static com.gratiStore.api_gratiStore.domain.validator.integridadeDeEntrada.Validator.validarId;
+import static com.gratiStore.api_gratiStore.domain.validator.integridadeDeEntrada.Validator.validarRequisicao;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +34,7 @@ public class LojaServiceImpl implements LojaService {
     @Override
     @Transactional
     public LojaResponse criar(LojaRequest request) {
+        validarRequisicao(request);
         var loja = adapter.lojaRequestToLoja(request);
         repository.save(loja);
 
@@ -41,8 +44,12 @@ public class LojaServiceImpl implements LojaService {
     @Override
     @Transactional
     public LojaResponse atualizar(Long id, LojaRequest request) {
+        validarRequisicao(request);
+        validarId(id);
         var loja = buscarNoBanco(id);
-        adapter.lojaRequestToLoja(loja, request);
+        loja.setNome(request.nome());
+        loja.setCnpj(request.cnpj());
+
         repository.save(loja);
 
         return adapter.lojaToLojaResponse(loja);
@@ -50,6 +57,7 @@ public class LojaServiceImpl implements LojaService {
 
     @Override
     public LojaResponse buscar(Long id) {
+        validarId(id);
         var loja = buscarNoBanco(id);
 
         return adapter.lojaToLojaResponse(loja);
