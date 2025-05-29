@@ -1,7 +1,10 @@
 package com.gratiStore.api_gratiStore.domain.validator.integridadeDeEntrada;
 
 import com.gratiStore.api_gratiStore.controller.dto.request.calculadora.CalculadoraRequest;
+import com.gratiStore.api_gratiStore.controller.dto.request.loja.LojaRequest;
 import com.gratiStore.api_gratiStore.domain.entities.ponto.PontoEletronico;
+import org.apache.coyote.Request;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -12,7 +15,7 @@ public class Validator {
         throw new UnsupportedOperationException("Classe utilitária, não deve ser instanciada");
     }
 
-    public static void validarRequisicao(CalculadoraRequest request) {
+    public static <T extends Record> void validarRequisicao(T request) {
         if (request == null) {
             throw new IllegalStateException("A requisição não pode ser nula");
         }
