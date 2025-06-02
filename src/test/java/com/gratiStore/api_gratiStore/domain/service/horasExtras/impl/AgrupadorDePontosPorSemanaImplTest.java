@@ -73,6 +73,6 @@ class AgrupadorDePontosPorSemanaImplTest {
         var resultado = agrupador.agrupar(pontoEletronicoList);
 
         assertEquals(5, resultado.size());
-        assertEquals(ponto1, resultado.get(0));
+        assertTrue(resultado.get(1).contains(ponto1));
     }
 }
