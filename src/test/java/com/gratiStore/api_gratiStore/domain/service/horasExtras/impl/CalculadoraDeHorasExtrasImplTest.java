@@ -41,7 +41,7 @@ class CalculadoraDeHorasExtrasImplTest {
     }
 
     @Test
-    void deveCalcularHorasExtras() {
+    void deveCalcularCargaHorariaDoDia() {
         var resultado = calculadora.calcular(pontoEletronicoList);
         assertEquals(Duration.ofHours(2L), resultado);
     }

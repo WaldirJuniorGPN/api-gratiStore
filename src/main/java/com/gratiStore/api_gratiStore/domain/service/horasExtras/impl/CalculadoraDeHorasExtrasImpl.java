@@ -58,7 +58,7 @@ public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
                 .reduce(Duration.ZERO, Duration::plus);
     }
 
-    private Duration calcularHorasExtras(PontoEletronico ponto) {
+    private Duration calcularCargaHorariaDoDia(PontoEletronico ponto) {
         var manha = Duration.between(ponto.getEntrada(), ponto.getInicioAlmoco());
         var tarde = Duration.between(ponto.getFimAlmoco(), ponto.getSaida());
 
@@ -67,7 +67,7 @@ public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
 
     private Duration calcularHorasSemanais(List<PontoEletronico> pontos) {
         var totalHorasDiaras = pontos.stream()
-                .map(this::calcularHorasExtras)
+                .map(this::calcularCargaHorariaDoDia)
                 .reduce(Duration.ZERO, Duration::plus);
 
         return totalHorasDiaras.minus(JORNADA_SEMANAL);
@@ -75,7 +75,7 @@ public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
 
     private Duration calcularHorasExtrasDiarias(List<PontoEletronico> pontos) {
         return pontos.stream()
-                .map(this::calcularHorasExtras)
+                .map(this::calcularCargaHorariaDoDia)
                 .map(duration -> duration.minus(JORNADA_DIARIA))
                 .reduce(Duration.ZERO, Duration::plus);
     }
