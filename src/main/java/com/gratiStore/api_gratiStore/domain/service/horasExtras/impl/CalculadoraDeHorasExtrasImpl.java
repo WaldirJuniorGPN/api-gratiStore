@@ -2,10 +2,10 @@ package com.gratiStore.api_gratiStore.domain.service.horasExtras.impl;
 
 import com.gratiStore.api_gratiStore.domain.entities.ponto.PontoEletronico;
 import com.gratiStore.api_gratiStore.domain.service.horasExtras.CalculadoraDeHorasExtras;
+import com.gratiStore.api_gratiStore.domain.service.horasExtras.RegistroHorasExtras;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,44 +18,22 @@ public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
 
     @Override
     public Duration calcular(Map<Integer, List<PontoEletronico>> pontos) {
-        var resultadoSemanal = Duration.ZERO;
-        var resultadoDiario = Duration.ZERO;
 
-        var horasExtrasSemanais = new HashMap<Integer, Duration>();
-        var horasExtrasDiarias = new HashMap<Integer, Duration>();
+        List<RegistroHorasExtras> registros = pontos.entrySet().stream()
+                .map(entry -> new RegistroHorasExtras(
+                        entry.getKey(),
+                        calcularHorasExtrasDiarias(entry.getValue()),
+                        calcularHorasExtrasSemanais(entry.getValue())
+                ))
+                .toList();
 
-        for (var entry : pontos.entrySet()) {
-            var semana = entry.getKey();
-            var pontosDaSemana = entry.getValue();
-
-            var semanal = calcularHorasSemanais(pontosDaSemana);
-            var diario = calcularHorasExtrasDiarias(pontosDaSemana);
-
-            resultadoSemanal = resultadoSemanal.plus(semanal);
-            resultadoDiario = resultadoDiario.plus(diario);
-
-            horasExtrasSemanais.put(semana, semanal);
-            horasExtrasDiarias.put(semana, diario);
-        }
-
-        return compararHorasExtras(horasExtrasDiarias, horasExtrasSemanais);
+        return registros.stream()
+                .map(r -> escolherMaior(r.diaria(), r.semanal()))
+                .reduce(Duration.ZERO, Duration::plus);
     }
 
-    private Duration compararHorasExtras(Map<Integer, Duration> horasExtrasDiarias, Map<Integer, Duration> horasExtrasSemanais) {
-        var maiores = new HashMap<Integer, Duration>();
-
-        for (Integer semana : horasExtrasSemanais.keySet()) {
-            if (horasExtrasSemanais.containsKey(semana)) {
-                var diaria = horasExtrasDiarias.get(semana);
-                var semanal = horasExtrasSemanais.get(semana);
-                var maior = diaria.compareTo(semanal) > 0 ? diaria : semanal;
-                maiores.put(semana, maior);
-            }
-        }
-
-        return maiores.values()
-                .stream()
-                .reduce(Duration.ZERO, Duration::plus);
+    private Duration escolherMaior(Duration diaria, Duration semanal) {
+        return diaria.compareTo(semanal) > 0 ? diaria : semanal;
     }
 
     private Duration calcularCargaHorariaDoDia(PontoEletronico ponto) {
@@ -65,7 +43,7 @@ public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
         return manha.plus(tarde);
     }
 
-    private Duration calcularHorasSemanais(List<PontoEletronico> pontos) {
+    private Duration calcularHorasExtrasSemanais(List<PontoEletronico> pontos) {
         var totalHorasDiaras = pontos.stream()
                 .map(this::calcularCargaHorariaDoDia)
                 .reduce(Duration.ZERO, Duration::plus);
