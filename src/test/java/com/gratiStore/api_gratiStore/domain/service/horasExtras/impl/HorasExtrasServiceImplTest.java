@@ -5,6 +5,7 @@ import com.gratiStore.api_gratiStore.controller.dto.response.horasExtras.ResumoH
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import com.gratiStore.api_gratiStore.domain.entities.ponto.PontoEletronico;
+import com.gratiStore.api_gratiStore.domain.service.horasExtras.AgrupadorDePontosPorSemana;
 import com.gratiStore.api_gratiStore.domain.service.horasExtras.CalculadoraDeHorasExtras;
 import com.gratiStore.api_gratiStore.domain.service.ponto.PontoEletronicoService;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +19,9 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,6 +36,9 @@ class HorasExtrasServiceImplTest {
     @Mock
     private CalculadoraDeHorasExtras calculadora;
 
+    @Mock
+    private AgrupadorDePontosPorSemana agrupadorDePontosPorSemana;
+
     @InjectMocks
     private HorasExtrasServiceImpl horasExtrasService;
 
@@ -42,9 +48,12 @@ class HorasExtrasServiceImplTest {
     private List<PontoEletronico> pontoEletronicoList;
     private Atendente atendente;
     private Loja loja;
+    private Map<Integer, List<PontoEletronico>> pontosSemanais;
 
     @BeforeEach
     void setUp() {
+        var PRIMEIRA_SEMANA = 1;
+        pontosSemanais = new HashMap<>();
         response = new ResumoHorasExtrasResponse(1L, Duration.ofHours(2L));
         request = new FiltroHorasExtrasRequest(1, 2025, 1L);
         loja = new Loja("Strategy", "06026378000140");
@@ -58,6 +67,7 @@ class HorasExtrasServiceImplTest {
                 atendente
         );
         pontoEletronicoList = List.of(pontoEletronico, pontoEletronico);
+        pontosSemanais.put(PRIMEIRA_SEMANA, pontoEletronicoList);
     }
 
     @Test
@@ -65,7 +75,8 @@ class HorasExtrasServiceImplTest {
         var horasExtras = Duration.ofHours(2L);
         var responseList = List.of(response, response);
         when(pontoEletronicoService.listarHistorico(request)).thenReturn(pontoEletronicoList);
-        when(calculadora.calcular(pontoEletronicoList)).thenReturn(horasExtras);
+        when(agrupadorDePontosPorSemana.agrupar(pontoEletronicoList)).thenReturn(pontosSemanais);
+        when(calculadora.calcular(pontosSemanais)).thenReturn(horasExtras);
 
         var resultado = horasExtrasService.calcular(request);
 
@@ -75,6 +86,7 @@ class HorasExtrasServiceImplTest {
                         .forEach(i -> assertEquals(responseList.get(i).totalHorasExtras(), resultado.get(i).totalHorasExtras()));
 
         verify(pontoEletronicoService, times(1)).listarHistorico(request);
-        verify(calculadora, times(1)).calcular(pontoEletronicoList);
+        verify(agrupadorDePontosPorSemana, times(1)).agrupar(pontoEletronicoList);
+        verify(calculadora, times(1)).calcular(pontosSemanais);
     }
 }
