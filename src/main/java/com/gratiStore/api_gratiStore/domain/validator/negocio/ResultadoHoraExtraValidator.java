@@ -4,6 +4,7 @@ import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.exception.ValidacaoNegocioException;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 
 public class ResultadoHoraExtraValidator {
 
@@ -35,9 +36,15 @@ public class ResultadoHoraExtraValidator {
         }
     }
 
-    public static void validarHorasExtras(BigDecimal horasExtras) {
+    public static void validarValorAReceber(BigDecimal valorAReceber) {
+        if (valorAReceber == null) {
+            throw new ValidacaoNegocioException("o valor a receber não pode ser nulo");
+        }
+    }
+
+    public static void validarHorasExtras(Duration horasExtras) {
         if (horasExtras == null) {
-            throw new ValidacaoNegocioException("a hora extra não pode ser nula");
+            throw new ValidacaoNegocioException("A hora extra não pode ser nula");
         }
     }
 }

@@ -1,35 +1,48 @@
 package com.gratiStore.api_gratiStore.domain.service.horasExtras.impl;
 
+import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.ponto.PontoEletronico;
 import com.gratiStore.api_gratiStore.domain.service.horasExtras.CalculadoraDeHorasExtras;
-import com.gratiStore.api_gratiStore.domain.service.horasExtras.RegistroHorasExtras;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
 
-    private final Duration JORNADA_DIARIA = Duration.ofHours(8);
+    private final Duration JORNADA_DOMINGO = Duration.ofHours(6);
+    private final Duration JORNADA_NORMAL = Duration.ofHours(8);
     private final Duration JORNADA_SEMANAL = Duration.ofHours(44);
 
 
     @Override
-    public Duration calcular(Map<Integer, List<PontoEletronico>> pontos) {
+    public Map<Atendente, Duration> calcular(Map<Integer, List<PontoEletronico>> pontos) {
+        var resultado = new HashMap<Atendente, Duration>();
 
-        List<RegistroHorasExtras> registros = pontos.entrySet().stream()
-                .map(entry -> new RegistroHorasExtras(
-                        entry.getKey(),
-                        calcularHorasExtrasDiarias(entry.getValue()),
-                        calcularHorasExtrasSemanais(entry.getValue())
-                ))
-                .toList();
+        pontos.forEach((semana, pontosSemanais) -> {
+            Map<Atendente, Duration> pontosAgrupados = pontosSemanais.stream()
+                    .collect(Collectors.groupingBy(PontoEletronico::getAtendente))
+                    .entrySet().stream()
+                    .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            e -> {
+                                var pontosDoAtendente = e.getValue();
+                                var horasDiarias = calcularHorasExtrasDiarias(pontosDoAtendente);
+                                var horasSemanais = calcularHorasExtrasSemanais(pontosDoAtendente);
+                                return escolherMaior(horasDiarias, horasSemanais);
+                            }
+                    ));
 
-        return registros.stream()
-                .map(r -> escolherMaior(r.diaria(), r.semanal()))
-                .reduce(Duration.ZERO, Duration::plus);
+            pontosAgrupados.forEach((atendente, duracao) -> {
+                resultado.merge(atendente, duracao, Duration::plus);
+            });
+        });
+        return resultado;
     }
 
     private Duration escolherMaior(Duration diaria, Duration semanal) {
@@ -43,6 +56,11 @@ public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
         return manha.plus(tarde);
     }
 
+    private Duration calcularCargaHorariaDeDomingo(PontoEletronico ponto) {
+        var horas = calcularCargaHorariaDoDia(ponto);
+        return horas.minus(JORNADA_DOMINGO);
+    }
+
     private Duration calcularHorasExtrasSemanais(List<PontoEletronico> pontos) {
         var totalHorasDiaras = pontos.stream()
                 .map(this::calcularCargaHorariaDoDia)
@@ -52,9 +70,24 @@ public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
     }
 
     private Duration calcularHorasExtrasDiarias(List<PontoEletronico> pontos) {
+        var horasDeSegundaASabado = calcularHorasExtrasDeSegundaASabado(pontos);
+        var horasDeDomingo = calcularHorasExtrasDeDomingo(pontos);
+
+        return horasDeSegundaASabado.plus(horasDeDomingo);
+    }
+
+    private Duration calcularHorasExtrasDeSegundaASabado(List<PontoEletronico> pontos) {
         return pontos.stream()
+                .filter(ponto -> ponto.getData().getDayOfWeek() != DayOfWeek.SUNDAY)
                 .map(this::calcularCargaHorariaDoDia)
-                .map(duration -> duration.minus(JORNADA_DIARIA))
+                .map(duration -> duration.minus(JORNADA_NORMAL))
+                .reduce(Duration.ZERO, Duration::plus);
+    }
+
+    private Duration calcularHorasExtrasDeDomingo(List<PontoEletronico> pontos) {
+        return pontos.stream()
+                .filter(ponto -> ponto.getData().getDayOfWeek() == DayOfWeek.SUNDAY)
+                .map(this::calcularCargaHorariaDeDomingo)
                 .reduce(Duration.ZERO, Duration::plus);
     }
 }

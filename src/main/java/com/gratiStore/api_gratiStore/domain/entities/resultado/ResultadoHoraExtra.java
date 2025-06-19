@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Duration;
 
 import static com.gratiStore.api_gratiStore.domain.validator.negocio.ResultadoHoraExtraValidator.*;
 
@@ -32,18 +33,22 @@ public class ResultadoHoraExtra extends EntidadeBase {
     @Column(name = "ano", nullable = false)
     private Integer ano;
 
-    @Column(name = "horas_extras", nullable = false, precision = 5, scale = 2)
-    private BigDecimal horasExtras;
+    @Column(name = "valor_a_receber", nullable = false, precision = 5, scale = 2)
+    private BigDecimal valorAReceber;
 
-    public ResultadoHoraExtra(Atendente atendente, Integer mes, Integer ano, BigDecimal horasExtras) {
+    @Column(name = "horas_extras", nullable = false)
+    private Duration horasExtras;
+
+    public ResultadoHoraExtra(Atendente atendente, Integer mes, Integer ano, BigDecimal valorAReceber, Duration horasExtras) {
         validarAtendente(atendente);
         validarMes(mes);
         validarAno(ano);
+        validarValorAReceber(valorAReceber);
         validarHorasExtras(horasExtras);
 
         this.atendente = atendente;
         this.mes = mes;
         this.ano = ano;
-        this.horasExtras = horasExtras.setScale(2, RoundingMode.HALF_UP);
+        this.valorAReceber = valorAReceber.setScale(2, RoundingMode.HALF_UP);
     }
 }

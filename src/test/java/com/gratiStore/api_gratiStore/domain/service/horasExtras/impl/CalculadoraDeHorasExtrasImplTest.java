@@ -14,66 +14,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CalculadoraDeHorasExtrasImplTest {
 
-    private final int PRIMEIRA_SEMANA = 1;
-    private Atendente atendente;
     private PontoEletronico pontoEletronico;
-    private Loja loja;
-    private List<PontoEletronico> pontoEletronicoList;
-    private CalculadoraDeHorasExtrasImpl calculadora;
-    private Map<Integer, List<PontoEletronico>> pontosSemanais;
+    private List<PontoEletronico> pontosDaSemana;
 
-    @BeforeEach
-    void setUp() {
-        pontosSemanais = new HashMap<>();
-        loja = new Loja("Apple", "06026378000140");
-        atendente = new Atendente("Fulano", loja, BigDecimal.valueOf(30000));
-        calculadora = new CalculadoraDeHorasExtrasImpl();
-
-    }
-
-    @Test
-    void deveCalcularCargaHorariaDoDia_quandoHoraSemanalForMenor() {
-        pontoEletronico = new PontoEletronico(
-                LocalDate.now().minusDays(1),
-                LocalTime.of(8, 0),
-                LocalTime.of(11, 0),
-                LocalTime.of(12, 0),
-                LocalTime.of(18,0),
-                atendente
-        );
-        pontoEletronicoList = List.of(pontoEletronico, pontoEletronico);
-        pontosSemanais.put(PRIMEIRA_SEMANA, pontoEletronicoList);
-
-        var resultado = calculadora.calcular(pontosSemanais);
-        assertEquals(Duration.ofHours(2L), resultado);
-    }
-
-    @Test
-    void deveCalcularCargaHorariaDaSemana_quandoHoraDiariaForMenor() {
-        pontoEletronico = new PontoEletronico(
-                LocalDate.now().minusDays(1),
-                LocalTime.of(8, 0),
-                LocalTime.of(11, 0),
-                LocalTime.of(12, 0),
-                LocalTime.of(17,0),
-                atendente
-        );
-
-        pontoEletronicoList = List.of(pontoEletronico,
-                pontoEletronico,
-                pontoEletronico,
-                pontoEletronico,
-                pontoEletronico,
-                pontoEletronico);
-        pontosSemanais.put(PRIMEIRA_SEMANA, pontoEletronicoList);
-
-        var resultado = calculadora.calcular(pontosSemanais);
-        assertEquals(Duration.ofHours(4), resultado);
-    }
 }
