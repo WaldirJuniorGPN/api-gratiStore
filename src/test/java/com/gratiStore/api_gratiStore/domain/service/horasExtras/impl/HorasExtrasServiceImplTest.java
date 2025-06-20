@@ -3,7 +3,6 @@ package com.gratiStore.api_gratiStore.domain.service.horasExtras.impl;
 import com.gratiStore.api_gratiStore.controller.dto.request.horasExtras.FiltroHorasExtrasRequest;
 import com.gratiStore.api_gratiStore.controller.dto.response.horasExtras.ResultadoHorasExtrasResponse;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
-import com.gratiStore.api_gratiStore.domain.entities.calculadora.Calculadora;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import com.gratiStore.api_gratiStore.domain.service.horasExtras.AgrupadorDePontosPorSemana;
 import com.gratiStore.api_gratiStore.domain.service.horasExtras.CalculadoraDeHorasExtras;
@@ -19,6 +18,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class HorasExtrasServiceImplTest {
@@ -42,7 +46,6 @@ class HorasExtrasServiceImplTest {
     private HorasExtrasServiceImpl horasExtrasService;
 
     private ResultadoHorasExtrasResponse resultadoHorasExtrasResponse;
-    private List<ResultadoHorasExtrasResponse> resultadoHorasExtrasResponseList;
     private FiltroHorasExtrasRequest filtroHorasExtrasRequest;
     private Atendente atendente;
     private Loja loja;
@@ -50,18 +53,36 @@ class HorasExtrasServiceImplTest {
     @BeforeEach
     void setUp() {
         loja = new Loja("Americanas", "06026378000140");
-        atendente = new Atendente("Fulano", loja, BigDecimal.valueOf(20000));
+        atendente = new Atendente("Fulano", loja, BigDecimal.valueOf(1500));
         filtroHorasExtrasRequest = new FiltroHorasExtrasRequest(MES, ANO, ID_LOJA);
         resultadoHorasExtrasResponse = new ResultadoHorasExtrasResponse(atendente.getNome(),
                 MES,
                 ANO,
                 VALOR_A_RECEBER,
                 HORAS_EXTRAS);
-        resultadoHorasExtrasResponseList.add(resultadoHorasExtrasResponse);
     }
 
     @Test
     void deveCalcularHorasExtras_comSucesso() {
+        when(pontoEletronicoService.listarHistorico(filtroHorasExtrasRequest)).thenReturn(List.of());
+        when(agrupadorDePontosPorSemana.agrupar(anyList())).thenReturn(Map.of());
+        when(calculadoraDeHorasExtras.calcular(anyMap())).thenReturn(Map.of(atendente, HORAS_EXTRAS));
 
+        var resultado = horasExtrasService.calcular(filtroHorasExtrasRequest);
+
+        assertEquals(List.of(resultadoHorasExtrasResponse), resultado);
+        verify(repository, times(1)).save(any());
+    }
+
+    @Test
+    void deveRetornarListaVazia_quandoNaoHouverHorasExtras() {
+        when(pontoEletronicoService.listarHistorico(filtroHorasExtrasRequest)).thenReturn(List.of());
+        when(agrupadorDePontosPorSemana.agrupar(anyList())).thenReturn(Map.of());
+        when(calculadoraDeHorasExtras.calcular(anyMap())).thenReturn(Map.of());
+
+        var resultado = horasExtrasService.calcular(filtroHorasExtrasRequest);
+
+        assertTrue(resultado.isEmpty());
+        verify(repository, never()).save(any());
     }
 }
