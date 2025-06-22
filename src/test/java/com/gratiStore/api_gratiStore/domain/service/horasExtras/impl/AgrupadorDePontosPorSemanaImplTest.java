@@ -3,6 +3,7 @@ package com.gratiStore.api_gratiStore.domain.service.horasExtras.impl;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import com.gratiStore.api_gratiStore.domain.entities.ponto.PontoEletronico;
+import com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,6 +36,7 @@ class AgrupadorDePontosPorSemanaImplTest {
                 LocalTime.of(11, 0),
                 LocalTime.of(12, 0),
                 LocalTime.of(19,0),
+                FeriadoUtils.NAO,
                 atendente);
 
         ponto2 = new PontoEletronico(LocalDate.of(2025, 5, 4),
@@ -42,6 +44,7 @@ class AgrupadorDePontosPorSemanaImplTest {
                 LocalTime.of(11, 0),
                 LocalTime.of(12, 0),
                 LocalTime.of(19,0),
+                FeriadoUtils.NAO,
                 atendente);
 
         ponto3 = new PontoEletronico(LocalDate.of(2025, 5, 13),
@@ -49,6 +52,7 @@ class AgrupadorDePontosPorSemanaImplTest {
                 LocalTime.of(11, 0),
                 LocalTime.of(12, 0),
                 LocalTime.of(19,0),
+                FeriadoUtils.NAO,
                 atendente);
 
         ponto4 = new PontoEletronico(LocalDate.of(2025, 5, 24),
@@ -56,6 +60,7 @@ class AgrupadorDePontosPorSemanaImplTest {
                 LocalTime.of(11, 0),
                 LocalTime.of(12, 0),
                 LocalTime.of(19,0),
+                FeriadoUtils.NAO,
                 atendente);
 
         ponto5 = new PontoEletronico(LocalDate.of(2025, 5, 30),
@@ -63,6 +68,7 @@ class AgrupadorDePontosPorSemanaImplTest {
                 LocalTime.of(11, 0),
                 LocalTime.of(12, 0),
                 LocalTime.of(19,0),
+                FeriadoUtils.NAO,
                 atendente);
 
         pontoEletronicoList = List.of(ponto1, ponto2, ponto3, ponto4, ponto5);

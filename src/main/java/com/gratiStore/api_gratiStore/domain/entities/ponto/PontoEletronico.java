@@ -2,6 +2,7 @@ package com.gratiStore.api_gratiStore.domain.entities.ponto;
 
 import com.gratiStore.api_gratiStore.domain.entities.EntidadeBase;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
+import com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -35,6 +36,10 @@ public class PontoEletronico extends EntidadeBase {
     @Column(name = "saida", nullable = false)
     private LocalTime saida;
 
+    @Column(name = "status_feriado", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private FeriadoUtils feriado;
+
     @ManyToOne
     @JoinColumn(name = "atendente-id", nullable = false)
     private Atendente atendente;
@@ -44,14 +49,16 @@ public class PontoEletronico extends EntidadeBase {
                            LocalTime inicioAlmoco,
                            LocalTime fimAlmoco,
                            LocalTime saida,
+                           FeriadoUtils feriado,
                            Atendente atendente) {
 
-        validarPonto(data, entrada, inicioAlmoco, fimAlmoco, saida, atendente);
+        validarPonto(data, entrada, inicioAlmoco, fimAlmoco, saida, feriado, atendente);
         this.data = data;
         this.entrada = entrada;
         this.inicioAlmoco = inicioAlmoco;
         this.fimAlmoco = fimAlmoco;
         this.saida = saida;
         this.atendente = atendente;
+        this.feriado = feriado;
     }
 }

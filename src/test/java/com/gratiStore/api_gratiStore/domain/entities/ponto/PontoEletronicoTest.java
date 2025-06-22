@@ -3,6 +3,7 @@ package com.gratiStore.api_gratiStore.domain.entities.ponto;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import com.gratiStore.api_gratiStore.domain.exception.ValidacaoNegocioException;
+import com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,6 +30,7 @@ class PontoEletronicoTest {
                 LocalTime.of(11,0),
                 LocalTime.of(12,0),
                 LocalTime.of(18,0),
+                FeriadoUtils.NAO,
                 this.atendente);
 
         assertEquals(LocalTime.of(7,0), ponto.getEntrada());
@@ -44,6 +46,7 @@ class PontoEletronicoTest {
                         LocalTime.of(11,0),
                         LocalTime.of(12,0),
                         LocalTime.of(18,0),
+                        FeriadoUtils.NAO,
                         this.atendente));
     }
 
@@ -55,6 +58,7 @@ class PontoEletronicoTest {
                         LocalTime.of(11,0),
                         LocalTime.of(12,0),
                         LocalTime.of(18,0),
+                        FeriadoUtils.NAO,
                         this.atendente));
     }
 
@@ -66,6 +70,7 @@ class PontoEletronicoTest {
                         LocalTime.of(11,0),
                         LocalTime.of(12,0),
                         LocalTime.of(18,0),
+                        FeriadoUtils.NAO,
                         this.atendente));
     }
 
@@ -77,6 +82,7 @@ class PontoEletronicoTest {
                         LocalTime.of(6,0),
                         LocalTime.of(12,0),
                         LocalTime.of(18,0),
+                        FeriadoUtils.NAO,
                         this.atendente));
     }
 
@@ -88,6 +94,7 @@ class PontoEletronicoTest {
                         null,
                         LocalTime.of(12,0),
                         LocalTime.of(18,0),
+                        FeriadoUtils.NAO,
                         this.atendente));
     }
 
@@ -99,6 +106,7 @@ class PontoEletronicoTest {
                         LocalTime.of(11,0),
                         LocalTime.of(10,0),
                         LocalTime.of(18,0),
+                        FeriadoUtils.NAO,
                         this.atendente));
     }
 
@@ -110,6 +118,7 @@ class PontoEletronicoTest {
                         LocalTime.of(11,0),
                         null,
                         LocalTime.of(18,0),
+                        FeriadoUtils.NAO,
                         this.atendente));
     }
 
@@ -121,6 +130,7 @@ class PontoEletronicoTest {
                         LocalTime.of(11,0),
                         LocalTime.of(12,0),
                         LocalTime.of(10,0),
+                        FeriadoUtils.NAO,
                         this.atendente));
     }
 
@@ -132,6 +142,7 @@ class PontoEletronicoTest {
                         LocalTime.of(11,0),
                         LocalTime.of(12,0),
                         null,
+                        FeriadoUtils.NAO,
                         this.atendente));
     }
 
@@ -143,6 +154,7 @@ class PontoEletronicoTest {
                         LocalTime.of(11,0),
                         LocalTime.of(12,0),
                         LocalTime.of(18,0),
+                        FeriadoUtils.NAO,
                         null));
     }
 }

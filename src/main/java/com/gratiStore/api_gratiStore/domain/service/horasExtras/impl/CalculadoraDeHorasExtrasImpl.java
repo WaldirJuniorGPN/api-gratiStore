@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils.*;
+
 @Service
 public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
 
@@ -78,7 +80,7 @@ public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
 
     private Duration calcularHorasExtrasDeSegundaASabado(List<PontoEletronico> pontos) {
         return pontos.stream()
-                .filter(ponto -> ponto.getData().getDayOfWeek() != DayOfWeek.SUNDAY)
+                .filter(ponto -> ponto.getData().getDayOfWeek() != DayOfWeek.SUNDAY & ponto.getFeriado() != SIM)
                 .map(this::calcularCargaHorariaDoDia)
                 .map(duration -> duration.minus(JORNADA_NORMAL))
                 .reduce(Duration.ZERO, Duration::plus);
@@ -86,7 +88,7 @@ public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
 
     private Duration calcularHorasExtrasDeDomingo(List<PontoEletronico> pontos) {
         return pontos.stream()
-                .filter(ponto -> ponto.getData().getDayOfWeek() == DayOfWeek.SUNDAY)
+                .filter(ponto -> ponto.getData().getDayOfWeek() == DayOfWeek.SUNDAY & ponto.getFeriado() == SIM)
                 .map(this::calcularCargaHorariaDeDomingo)
                 .reduce(Duration.ZERO, Duration::plus);
     }

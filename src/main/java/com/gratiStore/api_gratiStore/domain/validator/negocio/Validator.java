@@ -62,7 +62,7 @@ public class Validator {
 
     public static void validarAtrasoStatus(AtrasoStatus status) {
         if (status == null) {
-            throw new ValidacaoNegocioException("O status de atraso não pode ser nulo");
+            throw new ValidacaoNegocioException("O feriado de atraso não pode ser nulo");
         }
     }
 

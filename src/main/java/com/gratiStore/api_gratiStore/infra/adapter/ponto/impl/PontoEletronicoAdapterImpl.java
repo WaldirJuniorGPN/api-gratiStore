@@ -22,7 +22,13 @@ public class PontoEletronicoAdapterImpl implements PontoEletronicoAdapter {
 
     @Override
     public HistoricoResponse pontoToHistoricoResponse(PontoEletronico ponto) {
-        return new HistoricoResponse(ponto.getId(), ponto.getData(), ponto.getEntrada(),
-                ponto.getInicioAlmoco(), ponto.getFimAlmoco(), ponto.getSaida(), ponto.getAtendente().getId());
+        return new HistoricoResponse(ponto.getId(),
+                ponto.getData(),
+                ponto.getEntrada(),
+                ponto.getInicioAlmoco(),
+                ponto.getFimAlmoco(),
+                ponto.getSaida(),
+                ponto.getFeriado(),
+                ponto.getAtendente().getId());
     }
 }

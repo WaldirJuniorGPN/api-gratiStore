@@ -2,6 +2,7 @@ package com.gratiStore.api_gratiStore.domain.validator.negocio;
 
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.exception.ValidacaoNegocioException;
+import com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,6 +18,7 @@ public class PontoEletronicoValidator {
                                     LocalTime inicioAlmoco,
                                     LocalTime fimAlmoco,
                                     LocalTime saida,
+                                    FeriadoUtils feriado,
                                     Atendente atendente) {
 
         if (data == null) {
@@ -36,6 +38,9 @@ public class PontoEletronicoValidator {
         }
         if (atendente == null) {
             throw new ValidacaoNegocioException("O atendente não pode ser nulo");
+        }
+        if (feriado == null) {
+            throw new ValidacaoNegocioException("O status do feriado não pode ser nulo");
         }
 
         if (data.isAfter(LocalDate.now())) {
