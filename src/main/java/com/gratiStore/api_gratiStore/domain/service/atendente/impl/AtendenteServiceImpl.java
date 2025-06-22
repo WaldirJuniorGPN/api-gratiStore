@@ -1,12 +1,7 @@
 package com.gratiStore.api_gratiStore.domain.service.atendente.impl;
 
-import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequest;
-import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequestPlanilha;
-import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequestVendas;
-import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtrasoRequest;
-import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
-import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponseVendas;
-import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtrasoResponse;
+import com.gratiStore.api_gratiStore.controller.dto.request.atendente.*;
+import com.gratiStore.api_gratiStore.controller.dto.response.atendente.*;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.exception.PaginacaoInvalidaException;
 import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
@@ -152,6 +147,22 @@ public class AtendenteServiceImpl implements AtendenteService {
         repository.save(atendente);
 
         return adapter.atendenteToAtrasoResponse(atendente, request);
+    }
+
+    @Override
+    @Transactional
+    public UpdateSalarioResponse atualizarSalario(UpdateSalarioRequest request) {
+        var atendente = buscarNoBanco(request.id());
+        atendente.setSalario(request.salario());
+
+        return adapter.atendentetoUpdateSalarioResponse(atendente);
+    }
+
+    @Override
+    public SalarioAtendenteResponse buscarSalarioAtendente(Long id) {
+        var atendente = buscarNoBanco(id);
+
+        return adapter.atendenteToSalarioAtendenteResponse(atendente);
     }
 
     @Override

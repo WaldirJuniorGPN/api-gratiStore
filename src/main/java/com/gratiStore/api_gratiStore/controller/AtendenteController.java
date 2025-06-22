@@ -3,9 +3,8 @@ package com.gratiStore.api_gratiStore.controller;
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequest;
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequestVendas;
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtrasoRequest;
-import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
-import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponseVendas;
-import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtrasoResponse;
+import com.gratiStore.api_gratiStore.controller.dto.request.atendente.UpdateSalarioRequest;
+import com.gratiStore.api_gratiStore.controller.dto.response.atendente.*;
 import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
 import com.gratiStore.api_gratiStore.domain.service.planilha.PlanilhaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -72,6 +71,17 @@ public class AtendenteController {
     @GetMapping("/{id}")
     public ResponseEntity<AtendenteResponse> buscar(@PathVariable Long id) {
         var response = service.buscar(id);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(
+            summary = "Buscar salário do Atendente",
+            description = "Retorna o salário do Atendente ativo com base no ID informado. Inclui nome e salário associado."
+    )
+    @GetMapping("/salario/{id}")
+    public ResponseEntity<SalarioAtendenteResponse> buscarSalario(@PathVariable Long id) {
+        var response = service.buscarSalarioAtendente(id);
 
         return ResponseEntity.ok(response);
     }
@@ -182,6 +192,17 @@ public class AtendenteController {
     @PatchMapping("/update/atrasos")
     public ResponseEntity<AtrasoResponse> updateAtrasos(@Valid @RequestBody AtrasoRequest request) {
         var response = service.updateAtraso(request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(
+        summary = "Atualiza o valor do salário do Atendente",
+        description = "Registra na base o salário de um atendente específico."
+    )
+    @PatchMapping("/update/salario")
+    public ResponseEntity<UpdateSalarioResponse> updateSalario(@Valid @RequestBody UpdateSalarioRequest request) {
+        var response = service.atualizarSalario(request);
 
         return ResponseEntity.ok(response);
     }
