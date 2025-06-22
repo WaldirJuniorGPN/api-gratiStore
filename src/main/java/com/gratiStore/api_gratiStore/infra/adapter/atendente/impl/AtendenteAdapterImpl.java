@@ -3,9 +3,7 @@ package com.gratiStore.api_gratiStore.infra.adapter.atendente.impl;
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequest;
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequestPlanilha;
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtrasoRequest;
-import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
-import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponseVendas;
-import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtrasoResponse;
+import com.gratiStore.api_gratiStore.controller.dto.response.atendente.*;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import com.gratiStore.api_gratiStore.domain.factory.atendente.AtendenteFactory;
@@ -61,6 +59,16 @@ public class AtendenteAdapterImpl implements AtendenteAdapter {
     @Override
     public AtrasoResponse atendenteToAtrasoResponse(Atendente atendente, AtrasoRequest request) {
         return new AtrasoResponse(atendente.getId(), request.atraso(), request.semana());
+    }
+
+    @Override
+    public UpdateSalarioResponse atendentetoUpdateSalarioResponse(Atendente atendente) {
+        return new UpdateSalarioResponse(atendente.getId(), atendente.getSalario());
+    }
+
+    @Override
+    public SalarioAtendenteResponse atendenteToSalarioAtendenteResponse(Atendente atendente) {
+        return new SalarioAtendenteResponse(atendente.getNome(), atendente.getSalario());
     }
 
     private void atribuirAtendenteALoja(Atendente atendente, Loja loja) {
