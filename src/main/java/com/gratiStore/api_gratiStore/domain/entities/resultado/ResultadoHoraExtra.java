@@ -49,6 +49,7 @@ public class ResultadoHoraExtra extends EntidadeBase {
         this.atendente = atendente;
         this.mes = mes;
         this.ano = ano;
+        this.horasExtras = horasExtras;
         this.valorAReceber = valorAReceber.setScale(2, RoundingMode.HALF_UP);
     }
 }
