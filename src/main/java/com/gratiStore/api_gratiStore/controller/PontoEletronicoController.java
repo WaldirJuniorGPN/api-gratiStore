@@ -24,7 +24,7 @@ public class PontoEletronicoController {
     )
     @PostMapping
     public ResponseEntity<Void> registrarPonto(@RequestBody @Valid PontoRequest request) {
-        service.registrarPronto(request);
+        service.registrarPonto(request);
 
         return ResponseEntity.noContent().build();
     }
@@ -38,5 +38,38 @@ public class PontoEletronicoController {
         var page = service.listarHistorico(pageable);
 
         return ResponseEntity.ok(page);
+    }
+
+    @Operation(
+            summary = "Buscar Ponto Eletrônico por ID",
+            description = "Retorna um Ponto Eletrônico com base no ID fornecido."
+    )
+    @GetMapping("/{id}")
+    public ResponseEntity<HistoricoResponse> buscarPonto(@PathVariable Long id) {
+        var response = service.buscar(id);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(
+            summary = "Atualizar Ponto Eletrônico",
+            description = "Atualiza na base os dados de um Ponto Eletrônico. Todos os parâmetros são atualizados."
+    )
+    @PutMapping("/{id}")
+    public ResponseEntity<HistoricoResponse> atualizarPonto(@PathVariable Long id, @RequestBody @Valid PontoRequest request) {
+        var response = service.atualizar(id, request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(
+            summary = "Deletar Ponto Eletrônico",
+            description = "Faz a deleção física de um Ponto Eletrônico."
+    )
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarPonto(@PathVariable Long id) {
+        service.deletar(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
