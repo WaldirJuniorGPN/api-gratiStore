@@ -61,4 +61,21 @@ public class PontoEletronico extends EntidadeBase {
         this.atendente = atendente;
         this.feriado = feriado;
     }
+
+    public void atualizarParametros(LocalDate data,
+                                    LocalTime entrada,
+                                    LocalTime inicioAlmoco,
+                                    LocalTime fimAlmoco,
+                                    LocalTime saida,
+                                    FeriadoUtils feriado,
+                                    Atendente atendente) {
+        validarPonto(data, entrada, inicioAlmoco, fimAlmoco, saida, feriado, atendente);
+        this.data = data;
+        this.entrada = entrada;
+        this.inicioAlmoco = inicioAlmoco;
+        this.fimAlmoco = fimAlmoco;
+        this.saida = saida;
+        this.atendente = atendente;
+        this.feriado = feriado;
+    }
 }
