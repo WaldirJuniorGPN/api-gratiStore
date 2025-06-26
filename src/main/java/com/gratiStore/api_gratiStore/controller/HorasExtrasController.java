@@ -7,10 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,10 +24,17 @@ public class HorasExtrasController {
                     "retorna a lista resumida."
     )
     @PostMapping("/calcular")
-    public ResponseEntity<List<ResultadoHorasExtrasResponse>> calcular(@Valid @RequestBody FiltroHorasExtrasRequest request) {
+    public ResponseEntity<List<Void>> calcular(@Valid @RequestBody FiltroHorasExtrasRequest request) {
 
-        var horasExtras = service.calcular(request);
+        service.calcular(request);
 
-        return ResponseEntity.ok(horasExtras);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<ResultadoHorasExtrasResponse>> buscar(@Valid @RequestBody FiltroHorasExtrasRequest request) {
+        var response = service.buscar(request);
+
+        return ResponseEntity.ok(response);
     }
 }
