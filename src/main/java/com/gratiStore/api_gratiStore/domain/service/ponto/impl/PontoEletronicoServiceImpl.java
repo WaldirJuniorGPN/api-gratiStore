@@ -23,13 +23,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PontoEletronicoServiceImpl implements PontoEletronicoService {
 
+    private final String MSG_ERROR = "Ponto Eletrônico com id %d não encontrado";
+
     private final PontoEletronicoAdapter adapter;
     private final PontoEletronicoRepository repository;
     private final AtendenteService atendenteService;
     private final LojaService lojaService;
 
     @Override
-    public void registrarPronto(PontoRequest request) {
+    public void registrarPonto(PontoRequest request) {
         var atendente = atendenteService.buscarNoBanco(request.atendenteId());
         var ponto = adapter.pontoRequestToPonto(request, atendente);
         repository.save(ponto);
@@ -48,9 +50,36 @@ public class PontoEletronicoServiceImpl implements PontoEletronicoService {
         return carregaPontosEletronicos(atendentes, request.ano(), request.mes());
     }
 
+    @Override
+    public HistoricoResponse atualizar(Long id, PontoRequest request) {
+        var ponto = buscarNoBanco(id);
+        var atendente = atendenteService.buscarNoBanco(request.atendenteId());
+        ponto.atualizarParametros(request.data(),
+                request.entrada(),
+                request.inicioAlmoco(),
+                request.fimAlmoco(),
+                request.saida(),
+                request.feriado(),
+                atendente);
+
+        return adapter.pontoToHistoricoResponse(ponto);
+    }
+
+    @Override
+    public void deletar(Long id) {
+        repository.deleteById(id);
+    }
+
+    @Override
+    public HistoricoResponse buscar(Long id) {
+        var ponto = buscarNoBanco(id);
+
+        return adapter.pontoToHistoricoResponse(ponto);
+    }
+
     private PontoEletronico buscarNoBanco(Long id) {
         return repository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(String.format("Ponto Eletrônico com id %d não encontrado", id)));
+                () -> new EntityNotFoundException(String.format(MSG_ERROR, id)));
     }
 
     private List<Atendente> carregaAtendentes(Long lojaId) {

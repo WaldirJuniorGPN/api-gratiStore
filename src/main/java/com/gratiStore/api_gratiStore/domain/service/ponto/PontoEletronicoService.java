@@ -11,9 +11,15 @@ import java.util.List;
 
 public interface PontoEletronicoService {
 
-    void registrarPronto(PontoRequest request);
+    void registrarPonto(PontoRequest request);
 
     Page<HistoricoResponse> listarHistorico(Pageable pageable);
 
     List<PontoEletronico> listarHistorico(FiltroHorasExtrasRequest request);
+
+    HistoricoResponse atualizar(Long id, PontoRequest request);
+
+    void deletar(Long id);
+
+    HistoricoResponse buscar(Long id);
 }
