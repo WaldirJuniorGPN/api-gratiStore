@@ -11,6 +11,6 @@ public record HistoricoResponse(Long id,
                                 LocalTime inicioAlmoco,
                                 LocalTime fimAlmoco,
                                 LocalTime saida,
-                                FeriadoUtils ferido,
+                                FeriadoUtils feriado,
                                 Long atendenteId) {
 }
