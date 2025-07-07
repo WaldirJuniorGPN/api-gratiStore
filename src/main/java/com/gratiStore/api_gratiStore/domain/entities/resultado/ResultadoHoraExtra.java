@@ -1,5 +1,6 @@
 package com.gratiStore.api_gratiStore.domain.entities.resultado;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gratiStore.api_gratiStore.domain.entities.EntidadeBase;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import jakarta.persistence.*;
@@ -25,6 +26,7 @@ public class ResultadoHoraExtra extends EntidadeBase {
 
     @ManyToOne
     @JoinColumn(name = "atendente_id", nullable = false)
+    @JsonIgnore
     private Atendente atendente;
 
     @Column(name = "mes", nullable = false)

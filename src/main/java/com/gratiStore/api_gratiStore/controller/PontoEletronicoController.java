@@ -2,6 +2,7 @@ package com.gratiStore.api_gratiStore.controller;
 
 import com.gratiStore.api_gratiStore.controller.dto.request.ponto.PontoRequest;
 import com.gratiStore.api_gratiStore.controller.dto.response.ponto.HistoricoResponse;
+import com.gratiStore.api_gratiStore.controller.dto.response.ponto.PontoResponse;
 import com.gratiStore.api_gratiStore.domain.service.ponto.PontoEletronicoService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RequestMapping("/ponto")
 @RestController
@@ -23,10 +25,11 @@ public class PontoEletronicoController {
             description = "Registra um novo ponto eletrônico para um atendente com base nos dados fornecidos na requisição."
     )
     @PostMapping
-    public ResponseEntity<Void> registrarPonto(@RequestBody @Valid PontoRequest request) {
-        service.registrarPonto(request);
+    public ResponseEntity<PontoResponse> registrarPonto(@RequestBody @Valid PontoRequest request, UriComponentsBuilder uriComponentsBuilder) {
+        var response = service.registrarPonto(request);
+        var uri = uriComponentsBuilder.path("/ponto/{id}").buildAndExpand(response.id()).toUri();
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.created(uri).body(response);
     }
 
     @Operation(

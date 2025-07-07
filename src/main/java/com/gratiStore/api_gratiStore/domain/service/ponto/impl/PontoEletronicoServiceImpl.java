@@ -1,8 +1,8 @@
 package com.gratiStore.api_gratiStore.domain.service.ponto.impl;
 
-import com.gratiStore.api_gratiStore.controller.dto.request.horasExtras.FiltroHorasExtrasRequest;
 import com.gratiStore.api_gratiStore.controller.dto.request.ponto.PontoRequest;
 import com.gratiStore.api_gratiStore.controller.dto.response.ponto.HistoricoResponse;
+import com.gratiStore.api_gratiStore.controller.dto.response.ponto.PontoResponse;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.ponto.PontoEletronico;
 import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
@@ -31,10 +31,12 @@ public class PontoEletronicoServiceImpl implements PontoEletronicoService {
     private final LojaService lojaService;
 
     @Override
-    public void registrarPonto(PontoRequest request) {
+    public PontoResponse registrarPonto(PontoRequest request) {
         var atendente = atendenteService.buscarNoBanco(request.atendenteId());
         var ponto = adapter.pontoRequestToPonto(request, atendente);
         repository.save(ponto);
+
+        return adapter.pontoToPontoResponse(ponto);
     }
 
     @Override
@@ -44,10 +46,15 @@ public class PontoEletronicoServiceImpl implements PontoEletronicoService {
     }
 
     @Override
-    public List<PontoEletronico> listarHistorico(FiltroHorasExtrasRequest request) {
-        var atendentes = carregaAtendentes(request.lojaId());
+    public List<PontoEletronico> listarHistorico(List<Atendente> atendentes, int mes, int ano) {
+        var dataInicio = LocalDate.of(ano, mes, 1);
+        var dataFim = dataInicio.withDayOfMonth(dataInicio.lengthOfMonth());
 
-        return carregaPontosEletronicos(atendentes, request.ano(), request.mes());
+        return atendentes.stream()
+                .flatMap(atendente -> repository
+                        .findByAtendenteIdAndDataBetween(atendente.getId(), dataInicio, dataFim)
+                        .stream())
+                .toList();
     }
 
     @Override

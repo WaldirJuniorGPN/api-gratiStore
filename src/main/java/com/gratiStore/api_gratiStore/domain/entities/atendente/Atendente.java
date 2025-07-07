@@ -1,5 +1,6 @@
 package com.gratiStore.api_gratiStore.domain.entities.atendente;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gratiStore.api_gratiStore.domain.entities.EntidadeBase;
 import com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
@@ -101,6 +102,7 @@ public class Atendente extends EntidadeBase {
 
     @ManyToOne
     @ToString.Exclude
+    @JsonIgnore
     private Loja loja;
 
     public Atendente(String nome, Loja loja, BigDecimal salario) {

@@ -1,6 +1,8 @@
 package com.gratiStore.api_gratiStore.domain.service.ponto.impl;
 
+import com.gratiStore.api_gratiStore.controller.dto.request.horasExtras.FiltroHorasExtrasRequest;
 import com.gratiStore.api_gratiStore.controller.dto.request.ponto.PontoRequest;
+import com.gratiStore.api_gratiStore.controller.dto.response.ponto.HistoricoResponse;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import com.gratiStore.api_gratiStore.domain.entities.ponto.PontoEletronico;
@@ -15,10 +17,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import static com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,6 +35,7 @@ import static org.mockito.Mockito.*;
 class PontoEletronicoServiceImplTest {
 
     private final Long ATENDENTE_ID = 1L;
+    private final Long PONTO_ID = 1L;
 
     @Mock
     private PontoEletronicoAdapter adapter;
@@ -49,25 +56,37 @@ class PontoEletronicoServiceImplTest {
     private PontoEletronico ponto;
     private PontoRequest pontoRequest;
     private Loja loja;
+    private HistoricoResponse historicoResponse;
+    private List<Atendente> atendenteList;
 
     @BeforeEach
     void setUp() {
         loja = new Loja("Americanas", "06026378000140");
         atendente = new Atendente("Fulano", loja, BigDecimal.valueOf(1500));
-        pontoRequest = new PontoRequest(LocalDate.now().minusDays(1),
+        atendenteList = List.of(atendente);
+        pontoRequest = new PontoRequest(LocalDate.of(2025, 1, 1),
                 LocalTime.of(8, 0),
                 LocalTime.of(11, 0),
                 LocalTime.of(12, 0),
                 LocalTime.of(17, 0),
                 NAO,
                 ATENDENTE_ID);
-        ponto = new PontoEletronico(LocalDate.now().minusDays(1),
+        ponto = new PontoEletronico(LocalDate.of(2025, 1, 2),
                 LocalTime.of(8, 0),
                 LocalTime.of(11, 0),
                 LocalTime.of(12, 0),
                 LocalTime.of(17, 0),
                 NAO,
                 atendente);
+
+        historicoResponse = new HistoricoResponse(PONTO_ID,
+                LocalDate.of(2025, 1, 1),
+                LocalTime.of(8, 0),
+                LocalTime.of(11, 0),
+                LocalTime.of(12, 0),
+                LocalTime.of(17, 0),
+                NAO,
+                ATENDENTE_ID);
     }
 
     @Test
@@ -80,5 +99,25 @@ class PontoEletronicoServiceImplTest {
         verify(atendenteService, times(1)).buscarNoBanco(any(Long.class));
         verify(adapter, times(1)).pontoRequestToPonto(any(PontoRequest.class), any(Atendente.class));
         verify(repository, times(1)).save(any(PontoEletronico.class));
+    }
+
+    @Test
+    void deveListarHistoricoDePontosComSucesso_retornarPaginado() {
+        var pageable = PageRequest.of(0, 10);
+        var pontos = List.of(ponto, ponto);
+        var page = new PageImpl<>(pontos, pageable, pontos.size());
+
+        when(repository.findAll(any(Pageable.class))).thenReturn(page);
+        when(adapter.pontoToHistoricoResponse(ponto)).thenReturn(historicoResponse);
+
+        pontoEletronicoService.listarHistorico(pageable);
+
+        verify(repository, times(1)).findAll(pageable);
+        verify(adapter, times(2)).pontoToHistoricoResponse(any(PontoEletronico.class));
+    }
+
+    @Test
+    void deveAtualizarPontoComSucesso() {
+
     }
 }

@@ -38,6 +38,7 @@ public class AtendenteServiceImpl implements AtendenteService {
     @Transactional
     public AtendenteResponse criar(AtendenteRequest request) {
         var atendente = adapter.atendenteRequestToAtendente(request);
+        lojaService.adicionarAtendente(atendente, atendente.getLoja());
         repository.save(atendente);
 
         return adapter.atendenteToAtendenteResponse(atendente);

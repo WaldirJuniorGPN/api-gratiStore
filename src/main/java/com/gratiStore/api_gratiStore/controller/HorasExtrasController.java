@@ -31,6 +31,11 @@ public class HorasExtrasController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(
+            summary = "Busca as Horas Extras calculadas",
+            description = "Retorna as horas extras e o valor a receber de determinado mês de todos os Atendentes da " +
+                    "loja correspondente ao ID fornecido."
+    )
     @GetMapping()
     public ResponseEntity<List<ResultadoHorasExtrasResponse>> buscar(@Valid @RequestBody FiltroHorasExtrasRequest request) {
         var response = service.buscar(request);

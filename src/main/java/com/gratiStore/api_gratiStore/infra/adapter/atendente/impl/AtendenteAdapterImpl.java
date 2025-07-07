@@ -23,8 +23,6 @@ public class AtendenteAdapterImpl implements AtendenteAdapter {
     public Atendente atendenteRequestToAtendente(AtendenteRequest request) {
         var atendente = atendenteFactory.criar(request);
 
-        atendente.getLoja().getAtendentes().add(atendente);
-
         return atendente;
     }
 

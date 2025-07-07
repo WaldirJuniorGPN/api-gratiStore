@@ -13,6 +13,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.gratiStore.api_gratiStore.domain.validator.negocio.ResultadoHoraExtraValidator.validarAtendente;
 import static com.gratiStore.api_gratiStore.domain.validator.negocio.Validator.*;
 
 @Entity(name = "Loja")
@@ -32,7 +33,7 @@ public class Loja extends EntidadeBase {
     @Column(name = "total_de_vendas")
     private BigDecimal totalVendas = new BigDecimal(BigInteger.ZERO);
 
-    @OneToMany(mappedBy = "loja", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "loja", fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Atendente> atendentes = new ArrayList<>();
 
@@ -69,5 +70,10 @@ public class Loja extends EntidadeBase {
     public void setCalculadora(Calculadora calculadora) {
         validarCalculadora(calculadora);
         this.calculadora = calculadora;
+    }
+
+    public void adicionarAtendente(Atendente atendente) {
+        validarAtendente(atendente);
+        atendentes.add(atendente);
     }
 }

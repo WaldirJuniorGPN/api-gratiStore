@@ -129,7 +129,12 @@ public class LojaServiceImpl implements LojaService {
         
         return adapter.lojaToVendaResponse(loja);
     }
-    
+
+    @Override
+    public void adicionarAtendente(Atendente atendente, Loja loja) {
+        loja.adicionarAtendente(atendente);
+    }
+
     private void zerarValores(Atendente atendente) {
         atendente.setVendasPrimeiraSemana(BigDecimal.ZERO);
         atendente.setVendasSegundaSemana(BigDecimal.ZERO);

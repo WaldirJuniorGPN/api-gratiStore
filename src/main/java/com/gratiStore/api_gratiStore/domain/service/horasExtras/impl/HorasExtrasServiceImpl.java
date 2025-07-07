@@ -7,7 +7,9 @@ import com.gratiStore.api_gratiStore.domain.entities.resultado.ResultadoHoraExtr
 import com.gratiStore.api_gratiStore.domain.service.horasExtras.AgrupadorDePontosPorSemana;
 import com.gratiStore.api_gratiStore.domain.service.horasExtras.CalculadoraDeHorasExtras;
 import com.gratiStore.api_gratiStore.domain.service.horasExtras.HorasExtrasService;
+import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
 import com.gratiStore.api_gratiStore.domain.service.ponto.PontoEletronicoService;
+import com.gratiStore.api_gratiStore.infra.adapter.horasExtras.HorasExtrasAdapter;
 import com.gratiStore.api_gratiStore.infra.repository.ResultadoHoraExtraRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.math.RoundingMode;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,12 +34,15 @@ public class HorasExtrasServiceImpl implements HorasExtrasService {
     private final CalculadoraDeHorasExtras calculadora;
     private final AgrupadorDePontosPorSemana agrupadorDePontosPorSemana;
     private final ResultadoHoraExtraRepository repository;
+    private final LojaService lojaService;
+    private final HorasExtrasAdapter adapter;
 
     private BigDecimal valorAReceber = BigDecimal.ZERO;
 
     @Override
-    public List<ResultadoHorasExtrasResponse> calcular(FiltroHorasExtrasRequest request) {
-        var pontosEletronicos = pontoEletronicoService.listarHistorico(request);
+    public void calcular(FiltroHorasExtrasRequest request) {
+        var atendentes = buscarAtendentesDaLoja(request.lojaId());
+        var pontosEletronicos = pontoEletronicoService.listarHistorico(atendentes, request.mes(), request.ano());
         var pontosAgrupados = agrupadorDePontosPorSemana.agrupar(pontosEletronicos);
         Map<Atendente, Duration> totalHorasExtrasPorAtendente = calculadora.calcular(pontosAgrupados);
 
@@ -44,17 +50,24 @@ public class HorasExtrasServiceImpl implements HorasExtrasService {
             valorAReceber = calcularValorAReceber(atendente.getSalario(), horasExtras);
             salvarNoBanco(request.mes(), request.ano(), atendente,valorAReceber, horasExtras);
         });
+    }
 
-        return totalHorasExtrasPorAtendente.entrySet().stream()
-                .map(entry ->
-                        new ResultadoHorasExtrasResponse(
-                                entry.getKey().getNome(),
-                                request.mes(),
-                                request.ano(),
-                                valorAReceber,
-                                entry.getValue()
-                        ))
-                .toList();
+    @Override
+    public List<ResultadoHorasExtrasResponse> buscar(FiltroHorasExtrasRequest request) {
+        var atendentes = buscarAtendentesDaLoja(request.lojaId());
+
+        return atendentes.stream()
+                .map(atendente -> repository.findByAtendenteAndMesAndAno(atendente, request.mes(), request.ano())
+                        .map(adapter::horasExtrasToResultadoHorasExtrasResponse)
+                        .orElseThrow(IllegalArgumentException::new))
+                .collect(Collectors.toList());
+
+    }
+
+    private List<Atendente> buscarAtendentesDaLoja(Long id) {
+        var loja = lojaService.buscarLoja(id);
+
+        return loja.getAtendentes();
     }
 
     private void salvarNoBanco(int mes, int ano, Atendente atendente, BigDecimal valorAReceber, Duration horasExtras) {
