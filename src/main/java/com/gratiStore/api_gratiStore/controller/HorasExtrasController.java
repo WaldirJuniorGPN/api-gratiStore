@@ -33,11 +33,15 @@ public class HorasExtrasController {
 
     @Operation(
             summary = "Busca as Horas Extras calculadas",
-            description = "Retorna as horas extras e o valor a receber de determinado mês de todos os Atendentes da " +
-                    "loja correspondente ao ID fornecido."
+            description = "Retorna as horas extras e o valor a receber do mês informado para todos os Atendentes " +
+                    "da loja indicada. Os parâmetros \u0060mes\u0060, \u0060ano\u0060 e \u0060lojaId\u0060 devem ser enviados como query parameters."
     )
-    @GetMapping()
-    public ResponseEntity<List<ResultadoHorasExtrasResponse>> buscar(@Valid @RequestBody FiltroHorasExtrasRequest request) {
+    @GetMapping
+    public ResponseEntity<List<ResultadoHorasExtrasResponse>> buscar(
+            @RequestParam Integer mes,
+            @RequestParam Integer ano,
+            @RequestParam Long lojaId) {
+        var request = new FiltroHorasExtrasRequest(mes, ano, lojaId);
         var response = service.buscar(request);
 
         return ResponseEntity.ok(response);
