@@ -20,13 +20,14 @@ import static com.gratiStore.api_gratiStore.domain.validator.negocio.ResultadoHo
         @UniqueConstraint(columnNames = {"atendente_id", "mes", "ano"})
 })
 @Getter
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = "atendente")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ResultadoHoraExtra extends EntidadeBase {
 
     @ManyToOne
     @JoinColumn(name = "atendente_id", nullable = false)
     @JsonIgnore
+    @ToString.Exclude
     private Atendente atendente;
 
     @Column(name = "mes", nullable = false)

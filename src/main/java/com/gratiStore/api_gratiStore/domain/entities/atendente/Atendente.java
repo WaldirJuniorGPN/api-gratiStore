@@ -19,7 +19,7 @@ import static com.gratiStore.api_gratiStore.domain.validator.negocio.Validator.*
 @Table(name = "atendentes")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"pontos", "loja"})
 public class Atendente extends EntidadeBase {
 
     @Column(name = "nome", nullable = false)
@@ -98,6 +98,7 @@ public class Atendente extends EntidadeBase {
     private BigDecimal salario = BigDecimal.ZERO;
 
     @OneToMany(mappedBy = "atendente")
+    @ToString.Exclude
     private List<PontoEletronico> pontos;
 
     @ManyToOne
