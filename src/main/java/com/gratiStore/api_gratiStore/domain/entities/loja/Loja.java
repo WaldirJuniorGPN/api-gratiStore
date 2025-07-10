@@ -20,7 +20,7 @@ import static com.gratiStore.api_gratiStore.domain.validator.negocio.Validator.*
 @Table(name = "lojas")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"atendentes", "calculadora"})
 public class Loja extends EntidadeBase {
 
     @Column(name = "nome", nullable = false)

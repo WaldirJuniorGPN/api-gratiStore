@@ -17,7 +17,7 @@ import static com.gratiStore.api_gratiStore.domain.validator.negocio.PontoEletro
 @Entity
 @Table(name = "pontos_eletronicos")
 @Getter
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = "atendente")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PontoEletronico extends EntidadeBase {
 
@@ -42,6 +42,7 @@ public class PontoEletronico extends EntidadeBase {
 
     @ManyToOne
     @JoinColumn(name = "atendente-id", nullable = false)
+    @ToString.Exclude
     private Atendente atendente;
 
     public PontoEletronico(LocalDate data,
