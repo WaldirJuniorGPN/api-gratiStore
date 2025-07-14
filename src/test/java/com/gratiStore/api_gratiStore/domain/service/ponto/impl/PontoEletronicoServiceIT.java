@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -20,7 +21,8 @@ import java.time.LocalTime;
 import static com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils.NAO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PontoEletroncioServiceIT extends TestContainerConfig {
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+public class PontoEletronicoServiceIT extends TestContainerConfig {
 
     @Autowired
     private AtendenteService atendenteService;
