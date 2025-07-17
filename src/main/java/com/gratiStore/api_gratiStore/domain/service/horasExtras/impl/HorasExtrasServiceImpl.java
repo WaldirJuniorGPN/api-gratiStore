@@ -36,16 +36,15 @@ public class HorasExtrasServiceImpl implements HorasExtrasService {
     private BigDecimal valorAReceber = BigDecimal.ZERO;
 
     @Override
-    public void calcular(FiltroHorasExtrasRequest request) {
+    public List<ResultadoHorasExtrasResponse> calcular(FiltroHorasExtrasRequest request) {
         var atendentes = buscarAtendentesDaLoja(request.lojaId());
         var pontosEletronicos = pontoEletronicoService.listarHistorico(atendentes, request.mes(), request.ano());
         var pontosAgrupados = agrupadorDePontosPorSemana.agrupar(pontosEletronicos);
         Map<Atendente, Duration> totalHorasExtrasPorAtendente = calculadora.calcularHorasExtras(pontosAgrupados);
 
-        totalHorasExtrasPorAtendente.forEach((atendente, horasExtras) -> {
-            valorAReceber = calculadora.calcularValorAReceber(atendente.getSalario(), horasExtras);
-            salvarNoBanco(request.mes(), request.ano(), atendente,valorAReceber, horasExtras);
-        });
+        return totalHorasExtrasPorAtendente.entrySet().stream()
+                .map(entry -> processarResultado(request, entry))
+                .toList();
     }
 
     @Override
@@ -58,6 +57,16 @@ public class HorasExtrasServiceImpl implements HorasExtrasService {
                         .orElseThrow(IllegalArgumentException::new))
                 .collect(Collectors.toList());
 
+    }
+
+    private ResultadoHorasExtrasResponse processarResultado(FiltroHorasExtrasRequest request, Map.Entry<Atendente, Duration> entry) {
+        var atendente = entry.getKey();
+        var horasExtras = entry.getValue();
+        var valorAReceber = calculadora.calcularValorAReceber(atendente.getSalario(), horasExtras);
+
+        salvarNoBanco(request.mes(), request.ano(), atendente, valorAReceber, horasExtras);
+
+        return new ResultadoHorasExtrasResponse(atendente.getNome(), request.mes(), request.ano(), valorAReceber, horasExtras);
     }
 
     private List<Atendente> buscarAtendentesDaLoja(Long id) {

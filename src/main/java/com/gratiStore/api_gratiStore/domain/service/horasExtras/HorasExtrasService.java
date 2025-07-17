@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface HorasExtrasService {
 
-    void calcular(FiltroHorasExtrasRequest request);
+    List<ResultadoHorasExtrasResponse> calcular(FiltroHorasExtrasRequest request);
 
     List<ResultadoHorasExtrasResponse> buscar(@Valid FiltroHorasExtrasRequest request);
 }
