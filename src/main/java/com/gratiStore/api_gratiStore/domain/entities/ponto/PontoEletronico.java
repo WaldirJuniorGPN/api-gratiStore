@@ -12,7 +12,9 @@ import java.time.LocalTime;
 import static com.gratiStore.api_gratiStore.domain.validator.negocio.PontoEletronicoValidator.validarPonto;
 
 @Entity
-@Table(name = "pontos_eletronicos")
+@Table(name = "pontos_eletronicos", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"atendente_id", "data"})
+})
 @Getter
 @EqualsAndHashCode(callSuper = true, exclude = "atendente")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,7 +26,7 @@ public class PontoEletronico extends EntidadeBase {
     @Column(name = "entrada", nullable = false)
     private LocalTime entrada;
 
-    @Column(name = "inicio-almoco", nullable = false)
+    @Column(name = "inicio_almoco", nullable = false)
     private LocalTime inicioAlmoco;
 
     @Column(name = "fim-almoco", nullable = false)
@@ -38,7 +40,7 @@ public class PontoEletronico extends EntidadeBase {
     private FeriadoUtils feriado;
 
     @ManyToOne
-    @JoinColumn(name = "atendente-id", nullable = false)
+    @JoinColumn(name = "atendente_id", nullable = false)
     @ToString.Exclude
     private Atendente atendente;
 
