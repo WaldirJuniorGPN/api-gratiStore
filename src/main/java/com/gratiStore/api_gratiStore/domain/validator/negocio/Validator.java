@@ -42,6 +42,12 @@ public class Validator {
         }
     }
 
+    public static void validarIdPonto(Long id) {
+        if (id == null) {
+            throw new ValidacaoNegocioException("O id do Ponto Eletrônico não pode estar nulo");
+        }
+    }
+
     public static void validarValor(BigDecimal vendas) {
         if (vendas == null) {
             throw new ValidacaoNegocioException("o valor não pode ser nulo");

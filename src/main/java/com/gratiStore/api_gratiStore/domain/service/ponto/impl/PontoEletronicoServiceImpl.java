@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.gratiStore.api_gratiStore.domain.validator.negocio.Validator.validarIdPonto;
+
 @Service
 @RequiredArgsConstructor
 public class PontoEletronicoServiceImpl implements PontoEletronicoService {
@@ -74,6 +76,7 @@ public class PontoEletronicoServiceImpl implements PontoEletronicoService {
 
     @Override
     public void deletar(Long id) {
+        validarIdPonto(id);
         repository.deleteById(id);
     }
 
@@ -85,6 +88,7 @@ public class PontoEletronicoServiceImpl implements PontoEletronicoService {
     }
 
     private PontoEletronico buscarNoBanco(Long id) {
+        validarIdPonto(id);
         return repository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(String.format(MSG_ERROR, id)));
     }
