@@ -105,7 +105,7 @@ public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
 
     private Duration calcularHorasExtrasDeDomingo(List<PontoEletronico> pontos) {
         return pontos.stream()
-                .filter(ponto -> ponto.getData().getDayOfWeek() == DayOfWeek.SUNDAY & ponto.getFeriado() == SIM)
+                .filter(ponto -> ponto.getData().getDayOfWeek() == DayOfWeek.SUNDAY || ponto.getFeriado() == SIM)
                 .map(this::calcularCargaHorariaDeDomingo)
                 .reduce(Duration.ZERO, Duration::plus);
     }
