@@ -1,14 +1,13 @@
 package com.gratiStore.api_gratiStore.domain.service.ponto.impl;
 
-import com.gratiStore.api_gratiStore.controller.dto.request.horasExtras.FiltroHorasExtrasRequest;
 import com.gratiStore.api_gratiStore.controller.dto.request.ponto.PontoRequest;
 import com.gratiStore.api_gratiStore.controller.dto.response.ponto.HistoricoResponse;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import com.gratiStore.api_gratiStore.domain.entities.ponto.PontoEletronico;
+import com.gratiStore.api_gratiStore.domain.exception.ValidacaoNegocioException;
 import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
 import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
-import com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils;
 import com.gratiStore.api_gratiStore.infra.adapter.ponto.PontoEletronicoAdapter;
 import com.gratiStore.api_gratiStore.infra.repository.PontoEletronicoRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,9 +24,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
-import static com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils.NAO;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -58,6 +58,7 @@ class PontoEletronicoServiceImplTest {
     private Loja loja;
     private HistoricoResponse historicoResponse;
     private List<Atendente> atendenteList;
+    private Optional<PontoEletronico> pontoEletronicoOptional;
 
     @BeforeEach
     void setUp() {
@@ -87,6 +88,8 @@ class PontoEletronicoServiceImplTest {
                 LocalTime.of(17, 0),
                 NAO,
                 ATENDENTE_ID);
+
+        pontoEletronicoOptional = Optional.of(ponto);
     }
 
     @Test
@@ -118,6 +121,46 @@ class PontoEletronicoServiceImplTest {
 
     @Test
     void deveAtualizarPontoComSucesso() {
+        when(repository.findById(PONTO_ID)).thenReturn(pontoEletronicoOptional);
+        when(atendenteService.buscarNoBanco(any(Long.class))).thenReturn(atendente);
 
+        pontoEletronicoService.atualizar(PONTO_ID, pontoRequest);
+
+        verify(repository, times(1)).findById(PONTO_ID);
+        verify(adapter, times(1)).pontoToHistoricoResponse(pontoEletronicoOptional.get());
+    }
+
+    @Test
+    void deveFalharAoAtualziarPonto_quandoIdForNulo() {
+        assertThrows(ValidacaoNegocioException.class, () -> pontoEletronicoService.atualizar(null, pontoRequest));
+    }
+
+    @Test
+    void deveFazerDelecaoFisicaComSucesso() {
+        doNothing().when(repository).deleteById(PONTO_ID);
+
+        pontoEletronicoService.deletar(PONTO_ID);
+
+        verify(repository, times(1)).deleteById(PONTO_ID);
+    }
+
+    @Test
+    void deveFalharAoTentarDelecaoFisica_quandoIdForNull() {
+        assertThrows(ValidacaoNegocioException.class, () -> pontoEletronicoService.deletar(null));
+    }
+
+    @Test
+    void deveBuscarPontoComSucesso() {
+        when(repository.findById(PONTO_ID)).thenReturn(pontoEletronicoOptional);
+
+        pontoEletronicoService.buscar(PONTO_ID);
+
+        verify(repository, times(1)).findById(PONTO_ID);
+        verify(adapter, times(1)).pontoToHistoricoResponse(pontoEletronicoOptional.get());
+    }
+
+    @Test
+    void deveFalharAoBuscarPonto_quandoIdForNull() {
+        assertThrows(ValidacaoNegocioException.class, () -> pontoEletronicoService.buscar(null));
     }
 }
