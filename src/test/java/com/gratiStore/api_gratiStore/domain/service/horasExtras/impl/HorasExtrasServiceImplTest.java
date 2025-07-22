@@ -139,7 +139,7 @@ class HorasExtrasServiceImplTest {
     }
 
     @Test
-    void deveFalharAoBuscarHorasExtras_quandoNaoEncontrarNenhumResultado() {
+    void deveRetornarListaVaziaENaoChamarAdapterAoBuscarHorasExtras_quandoNaoEncontrarNenhumResultado() {
 
         Optional<ResultadoHoraExtra> resultadoHoraExtraOptional = Optional.empty();
 
@@ -147,6 +147,8 @@ class HorasExtrasServiceImplTest {
         when(repository.findByAtendenteAndMesAndAno(atendente, filtroHorasExtrasRequest.mes(), filtroHorasExtrasRequest.ano()))
                 .thenReturn(resultadoHoraExtraOptional);
 
-        assertThrows(IllegalArgumentException.class, () -> horasExtrasService.buscar(filtroHorasExtrasRequest));
+        horasExtrasService.buscar(filtroHorasExtrasRequest);
+
+        verify(horasExtrasAdapter, never()).horasExtrasToResultadoHorasExtrasResponse(any());
     }
 }
