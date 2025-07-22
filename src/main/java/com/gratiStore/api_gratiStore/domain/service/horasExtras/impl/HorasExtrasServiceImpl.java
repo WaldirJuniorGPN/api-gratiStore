@@ -20,6 +20,7 @@ import java.math.RoundingMode;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,8 +54,8 @@ public class HorasExtrasServiceImpl implements HorasExtrasService {
 
         return atendentes.stream()
                 .map(atendente -> repository.findByAtendenteAndMesAndAno(atendente, request.mes(), request.ano())
-                        .map(adapter::horasExtrasToResultadoHorasExtrasResponse)
-                        .orElseThrow(IllegalArgumentException::new))
+                        .map(adapter::horasExtrasToResultadoHorasExtrasResponse))
+                .flatMap(Optional::stream)
                 .collect(Collectors.toList());
 
     }
