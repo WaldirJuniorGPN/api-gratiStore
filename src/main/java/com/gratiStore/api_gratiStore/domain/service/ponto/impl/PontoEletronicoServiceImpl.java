@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -33,6 +34,7 @@ public class PontoEletronicoServiceImpl implements PontoEletronicoService {
     private final LojaService lojaService;
 
     @Override
+    @Transactional
     public PontoResponse registrarPonto(PontoRequest request) {
         var atendente = atendenteService.buscarNoBanco(request.atendenteId());
         var ponto = adapter.pontoRequestToPonto(request, atendente);
@@ -65,6 +67,7 @@ public class PontoEletronicoServiceImpl implements PontoEletronicoService {
     }
 
     @Override
+    @Transactional
     public HistoricoResponse atualizar(Long id, PontoRequest request) {
         var ponto = buscarNoBanco(id);
         var atendente = atendenteService.buscarNoBanco(request.atendenteId());
@@ -75,11 +78,13 @@ public class PontoEletronicoServiceImpl implements PontoEletronicoService {
                 request.saida(),
                 request.feriado(),
                 atendente);
+        repository.save(ponto);
 
         return adapter.pontoToHistoricoResponse(ponto);
     }
 
     @Override
+    @Transactional
     public void deletar(Long id) {
         validarIdPonto(id);
         repository.deleteById(id);
