@@ -36,7 +36,12 @@ public class PontoEletronicoServiceImpl implements PontoEletronicoService {
     public PontoResponse registrarPonto(PontoRequest request) {
         var atendente = atendenteService.buscarNoBanco(request.atendenteId());
         var ponto = adapter.pontoRequestToPonto(request, atendente);
-        repository.save(ponto);
+
+        var pontoExistente = repository.findByDataAndAtendente(ponto.getData(), atendente);
+
+        if (pontoExistente.isEmpty()) {
+            repository.save(ponto);
+        }
 
         return adapter.pontoToPontoResponse(ponto);
     }
