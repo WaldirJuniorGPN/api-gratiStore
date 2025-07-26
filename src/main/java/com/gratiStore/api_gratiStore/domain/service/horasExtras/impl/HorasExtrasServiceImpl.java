@@ -64,8 +64,13 @@ public class HorasExtrasServiceImpl implements HorasExtrasService {
         var atendente = entry.getKey();
         var horasExtras = entry.getValue();
         var valorAReceber = calculadora.calcularValorAReceber(atendente.getSalario(), horasExtras);
+        var resultadoExistente = buscarResultadoNoBanco(atendente, request.mes(), request.ano());
 
-        salvarNoBanco(request.mes(), request.ano(), atendente, valorAReceber, horasExtras);
+        if (resultadoExistente.isEmpty()) {
+            salvarNoBanco(request.mes(), request.ano(), atendente, valorAReceber, horasExtras);
+        } else {
+            atualizarResultado(resultadoExistente.get(), valorAReceber, horasExtras);
+        }
 
         return new ResultadoHorasExtrasResponse(atendente.getNome(), request.mes(), request.ano(), valorAReceber, horasExtras);
     }
@@ -78,5 +83,18 @@ public class HorasExtrasServiceImpl implements HorasExtrasService {
 
     private void salvarNoBanco(int mes, int ano, Atendente atendente, BigDecimal valorAReceber, Duration horasExtras) {
         repository.save(new ResultadoHoraExtra(atendente, mes, ano, valorAReceber, horasExtras));
+    }
+
+    private void salvarNoBAnco(ResultadoHoraExtra resultadoHoraExtra) {
+        repository.save(resultadoHoraExtra);
+    }
+
+    private Optional<ResultadoHoraExtra> buscarResultadoNoBanco(Atendente atendente, Integer mes, Integer ano) {
+        return repository.findByAtendenteAndMesAndAno(atendente, mes, ano);
+    }
+
+    private void atualizarResultado(ResultadoHoraExtra resultadoHoraExtra, BigDecimal valorAReceber, Duration horasExtras) {
+        resultadoHoraExtra.atualizarResultado(valorAReceber, horasExtras);
+        salvarNoBAnco(resultadoHoraExtra);
     }
 }

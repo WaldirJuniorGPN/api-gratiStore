@@ -52,4 +52,12 @@ public class ResultadoHoraExtra extends EntidadeBase {
         this.horasExtras = horasExtras;
         this.valorAReceber = valorAReceber.setScale(2, RoundingMode.HALF_UP);
     }
+
+    public void atualizarResultado(BigDecimal valorAReceber, Duration horasExtras) {
+        validarValorAReceber(valorAReceber);
+        validarHorasExtras(horasExtras);
+
+        this.valorAReceber = valorAReceber;
+        this.horasExtras = horasExtras;
+    }
 }
