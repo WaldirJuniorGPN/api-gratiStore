@@ -1,13 +1,9 @@
 package com.gratiStore.api_gratiStore.domain.service.atendente.impl;
 
-import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequest;
-import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequestPlanilha;
-import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequestVendas;
-import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtrasoRequest;
-import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponse;
-import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtendenteResponseVendas;
-import com.gratiStore.api_gratiStore.controller.dto.response.atendente.AtrasoResponse;
+import com.gratiStore.api_gratiStore.controller.dto.request.atendente.*;
+import com.gratiStore.api_gratiStore.controller.dto.response.atendente.*;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
+import com.gratiStore.api_gratiStore.domain.exception.PaginacaoInvalidaException;
 import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
 import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
 import com.gratiStore.api_gratiStore.domain.utils.SemanaUtils;
@@ -42,6 +38,7 @@ public class AtendenteServiceImpl implements AtendenteService {
     @Transactional
     public AtendenteResponse criar(AtendenteRequest request) {
         var atendente = adapter.atendenteRequestToAtendente(request);
+        lojaService.adicionarAtendente(atendente, atendente.getLoja());
         repository.save(atendente);
 
         return adapter.atendenteToAtendenteResponse(atendente);
@@ -87,7 +84,7 @@ public class AtendenteServiceImpl implements AtendenteService {
     @Override
     public Page<AtendenteResponse> listarTodos(Pageable pageable) {
         return repository.findAllByAtivoTrue(pageable).orElseThrow(
-                () -> new IllegalArgumentException("A estrutura de paginação está inválida"))
+                () -> new PaginacaoInvalidaException("A estrutura de paginação está inválida"))
                 .map(adapter::atendenteToAtendenteResponse);
     }
 
@@ -112,11 +109,6 @@ public class AtendenteServiceImpl implements AtendenteService {
         defaultAtributos(atendente);
 
         repository.save(atendente);
-    }
-
-    @Override
-    public AtendenteResponse converteAtendenteToAtendenteResponse(Atendente atendente) {
-        return adapter.atendenteToAtendenteResponse(atendente);
     }
 
     @Override
@@ -155,7 +147,23 @@ public class AtendenteServiceImpl implements AtendenteService {
         setterAtraso(atendente, request);
         repository.save(atendente);
 
-        return new AtrasoResponse(atendente.getId(), true, request.semana());
+        return adapter.atendenteToAtrasoResponse(atendente, request);
+    }
+
+    @Override
+    @Transactional
+    public UpdateSalarioResponse atualizarSalario(UpdateSalarioRequest request) {
+        var atendente = buscarNoBanco(request.id());
+        atendente.setSalario(request.salario());
+
+        return adapter.atendentetoUpdateSalarioResponse(atendente);
+    }
+
+    @Override
+    public SalarioAtendenteResponse buscarSalarioAtendente(Long id) {
+        var atendente = buscarNoBanco(id);
+
+        return adapter.atendenteToSalarioAtendenteResponse(atendente);
     }
 
     @Override
@@ -181,6 +189,11 @@ public class AtendenteServiceImpl implements AtendenteService {
     }
 
     private void atualizarSemana(Atendente atendente, AtendenteRequestPlanilha request, SemanaUtils semana) {
+
+        if (semana == null) {
+            throw new IllegalArgumentException("Semana não pode ser nula");
+        }
+
         switch (semana) {
             case PRIMEIRA -> {
                 atendente.setVendasPrimeiraSemana(request.vendas());
@@ -211,7 +224,7 @@ public class AtendenteServiceImpl implements AtendenteService {
     }
 
     private void defaultAtributos(Atendente atendente) {
-        atendente.setLoja(null);
+        atendente.removerLoja();
         atendente.setAtivo(false);
 
         removarAtendenteDaLoja(atendente);

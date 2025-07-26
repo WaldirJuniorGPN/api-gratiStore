@@ -2,6 +2,7 @@ package com.gratiStore.api_gratiStore.domain.service.loja;
 
 import java.util.List;
 
+import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -36,4 +37,6 @@ public interface LojaService {
     void zerarValoresAtendentes(Long lojaId);
 
     VendasResponse buscarVendasTotais(Long id);
+
+    void adicionarAtendente(Atendente atendente, Loja loja);
 }

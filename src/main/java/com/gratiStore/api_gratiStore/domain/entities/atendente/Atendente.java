@@ -1,5 +1,6 @@
 package com.gratiStore.api_gratiStore.domain.entities.atendente;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gratiStore.api_gratiStore.domain.entities.EntidadeBase;
 import com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
@@ -12,14 +13,13 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import static com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus.NAO;
+import static com.gratiStore.api_gratiStore.domain.validator.negocio.Validator.*;
 
 @Entity(name = "Atendente")
 @Table(name = "atendentes")
-@NoArgsConstructor
-@AllArgsConstructor
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"pontos", "loja"})
 public class Atendente extends EntidadeBase {
 
     @Column(name = "nome", nullable = false)
@@ -98,23 +98,159 @@ public class Atendente extends EntidadeBase {
     private BigDecimal salario = BigDecimal.ZERO;
 
     @OneToMany(mappedBy = "atendente")
+    @ToString.Exclude
     private List<PontoEletronico> pontos;
 
     @ManyToOne
     @ToString.Exclude
+    @JsonIgnore
     private Loja loja;
 
+    public Atendente(String nome, Loja loja, BigDecimal salario) {
+        setNome(nome);
+        setLoja(loja);
+        setSalario(salario);
+    }
+
+    public void setSalario(BigDecimal salario) {
+        validarValor(salario);
+        this.salario = salario.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public void setNome(String nome) {
+        validarNome(nome);
+        this.nome = nome;
+    }
+
+    public void setLoja(Loja loja) {
+        validarLoja(loja);
+        this.loja = loja;
+    }
+
+    public void setVendasPrimeiraSemana(BigDecimal vendasPrimeiraSemana) {
+        validarValor(vendasPrimeiraSemana);
+        this.vendasPrimeiraSemana = vendasPrimeiraSemana.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public void setVendasSegundaSemana(BigDecimal vendasSegundaSemana) {
+        validarValor(vendasSegundaSemana);
+        this.vendasSegundaSemana = vendasSegundaSemana.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public void setVendasTerceiraSemana(BigDecimal vendasTerceiraSemana) {
+        validarValor(vendasTerceiraSemana);
+        this.vendasTerceiraSemana = vendasTerceiraSemana.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public void setVendasQuartaSemana(BigDecimal vendasQuartaSemana) {
+        validarValor(vendasQuartaSemana);
+        this.vendasQuartaSemana = vendasQuartaSemana.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public void setVendasQuintaSemana(BigDecimal vendasQuintaSemana) {
+        validarValor(vendasQuintaSemana);
+        this.vendasQuintaSemana = vendasQuintaSemana.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public void setVendasSextaSemana(BigDecimal vendasSextaSemana) {
+        validarValor(vendasSextaSemana);
+        this.vendasSextaSemana = vendasSextaSemana.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public void setQuantidadeAtendimentosPrimeiraSemana(Integer atendimentosPrimeiraSemana) {
+        validarAtendimentos(atendimentosPrimeiraSemana);
+        this.quantidadeAtendimentosPrimeiraSemana = atendimentosPrimeiraSemana;
+    }
+
+    public void setQuantidadeAtendimentosSegundaSemana(Integer atendimentosSegundaSemana) {
+        validarAtendimentos(atendimentosSegundaSemana);
+        this.quantidadeAtendimentosSegundaSemana = atendimentosSegundaSemana;
+    }
+
+    public void setQuantidadeAtendimentosTerceiraSemana(Integer atendimentosTerceiraSemana) {
+        validarAtendimentos(atendimentosTerceiraSemana);
+        this.quantidadeAtendimentosTerceiraSemana = atendimentosTerceiraSemana;
+    }
+
+    public void setQuantidadeAtendimentosQuartaSemana(Integer atendimentosQuartaSemana) {
+        validarAtendimentos(atendimentosQuartaSemana);
+        this.quantidadeAtendimentosQuartaSemana = atendimentosQuartaSemana;
+    }
+
+    public void setQuantidadeAtendimentosQuintaSemana(Integer atendimentosQuintaSemana) {
+        validarAtendimentos(atendimentosQuintaSemana);
+        this.quantidadeAtendimentosQuintaSemana = atendimentosQuintaSemana;
+    }
+
+    public void setQuantidadeAtendimentosSextaSemana(Integer atendimentosSextaSemana) {
+        validarAtendimentos(atendimentosSextaSemana);
+        this.quantidadeAtendimentosSextaSemana = atendimentosSextaSemana;
+    }
+
+    public void setAtrasoStatusPrimeiraSemana(AtrasoStatus status) {
+        validarAtrasoStatus(status);
+        this.atrasoStatusPrimeiraSemana = status;
+    }
+
+    public void setAtrasoStatusSegundaSemana(AtrasoStatus status) {
+        validarAtrasoStatus(status);
+        this.atrasoStatusSegundaSemana = status;
+    }
+
+    public void setAtrasoStatusTerceiraSemana(AtrasoStatus status) {
+        validarAtrasoStatus(status);
+        this.atrasoStatusTerceiraSemana = status;
+    }
+
+    public void setAtrasoStatusQuartaSemana(AtrasoStatus status) {
+        validarAtrasoStatus(status);
+        this.atrasoStatusQuartaSemana = status;
+    }
+
+    public void setAtrasoStatusQuintaSemana(AtrasoStatus status) {
+        validarAtrasoStatus(status);
+        this.atrasoStatusQuintaSemana = status;
+    }
+
+    public void setAtrasoStatusSextaSemana(AtrasoStatus status) {
+        validarAtrasoStatus(status);
+        this.atrasoStatusSextaSemana = status;
+    }
+
+    public void setBonus(BigDecimal bonus) {
+        validarValor(bonus);
+        this.bonus = bonus.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public void setGratificacao(BigDecimal gratificacao) {
+        validarValor(gratificacao);
+        this.gratificacao = gratificacao.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public void setTotalVendas(BigDecimal totalVendas) {
+        validarValor(totalVendas);
+        this.totalVendas = totalVendas.setScale(2, RoundingMode.HALF_UP);
+    }
+
     public void atribuirGratificacao(BigDecimal valor) {
+        validarValor(valor);
         gratificacao = gratificacao.add(valor);
         gratificacao = gratificacao.setScale(2, RoundingMode.HALF_UP);
     }
 
     public void atribuirBonus(BigDecimal valor) {
+        validarValor(valor);
         bonus = bonus.add(valor);
+        bonus = bonus.setScale(2, RoundingMode.HALF_UP);
     }
 
     public void atribuirVendaTotal(BigDecimal valor) {
+        validarValor(valor);
         totalVendas = totalVendas.add(valor);
         totalVendas = totalVendas.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public void removerLoja() {
+        this.loja = null;
     }
 }

@@ -15,8 +15,6 @@ public interface LojaAdapter {
 
     LojaResponse lojaToLojaResponse(Loja loja);
 
-    Loja lojaRequestToLoja(Loja loja, LojaRequest request);
-
     List<AtendenteResponse> mapAtendentesToAtendenteResponse(List<Atendente> atendentes);
 
     VendasResponse lojaToVendaResponse(Loja loja);

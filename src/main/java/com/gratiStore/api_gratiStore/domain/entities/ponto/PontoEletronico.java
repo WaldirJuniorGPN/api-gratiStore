@@ -2,18 +2,22 @@ package com.gratiStore.api_gratiStore.domain.entities.ponto;
 
 import com.gratiStore.api_gratiStore.domain.entities.EntidadeBase;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
+import com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static com.gratiStore.api_gratiStore.domain.validator.negocio.PontoEletronicoValidator.validarPonto;
+
 @Entity
-@Table(name = "pontos_eletrônicos")
+@Table(name = "pontos_eletronicos", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"atendente_id", "data"})
+})
 @Getter
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = "atendente")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class PontoEletronico extends EntidadeBase {
 
     @Column(name = "data", nullable = false)
@@ -22,7 +26,7 @@ public class PontoEletronico extends EntidadeBase {
     @Column(name = "entrada", nullable = false)
     private LocalTime entrada;
 
-    @Column(name = "inicio-almoco", nullable = false)
+    @Column(name = "inicio_almoco", nullable = false)
     private LocalTime inicioAlmoco;
 
     @Column(name = "fim-almoco", nullable = false)
@@ -31,7 +35,47 @@ public class PontoEletronico extends EntidadeBase {
     @Column(name = "saida", nullable = false)
     private LocalTime saida;
 
+    @Column(name = "status_feriado", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private FeriadoUtils feriado;
+
     @ManyToOne
-    @JoinColumn(name = "atendente-id")
+    @JoinColumn(name = "atendente_id", nullable = false)
+    @ToString.Exclude
     private Atendente atendente;
+
+    public PontoEletronico(LocalDate data,
+                           LocalTime entrada,
+                           LocalTime inicioAlmoco,
+                           LocalTime fimAlmoco,
+                           LocalTime saida,
+                           FeriadoUtils feriado,
+                           Atendente atendente) {
+
+        validarPonto(data, entrada, inicioAlmoco, fimAlmoco, saida, feriado, atendente);
+        this.data = data;
+        this.entrada = entrada;
+        this.inicioAlmoco = inicioAlmoco;
+        this.fimAlmoco = fimAlmoco;
+        this.saida = saida;
+        this.atendente = atendente;
+        this.feriado = feriado;
+    }
+
+    public void atualizarParametros(LocalDate data,
+                                    LocalTime entrada,
+                                    LocalTime inicioAlmoco,
+                                    LocalTime fimAlmoco,
+                                    LocalTime saida,
+                                    FeriadoUtils feriado,
+                                    Atendente atendente) {
+        validarPonto(data, entrada, inicioAlmoco, fimAlmoco, saida, feriado, atendente);
+        this.data = data;
+        this.entrada = entrada;
+        this.inicioAlmoco = inicioAlmoco;
+        this.fimAlmoco = fimAlmoco;
+        this.saida = saida;
+        this.atendente = atendente;
+        this.feriado = feriado;
+    }
 }

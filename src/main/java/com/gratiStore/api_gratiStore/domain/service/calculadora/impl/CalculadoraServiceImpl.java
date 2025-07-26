@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.gratiStore.api_gratiStore.domain.validator.integridadeDeEntrada.Validator.*;
+
 @Service
 @RequiredArgsConstructor
 public class CalculadoraServiceImpl implements CalculadoraService {
@@ -26,6 +28,7 @@ public class CalculadoraServiceImpl implements CalculadoraService {
     @Override
     @Transactional
     public CalculadoraResponse criar(CalculadoraRequest request) {
+        validarRequisicao(request);
         var calculadora = adapter.calculadoraRequestToCalculadora(request);
         repository.save(calculadora);
 
@@ -35,6 +38,8 @@ public class CalculadoraServiceImpl implements CalculadoraService {
     @Override
     @Transactional
     public CalculadoraResponse atualizar(Long id, CalculadoraRequest request) {
+        validarId(id);
+        validarRequisicao(request);
         var calculadora = buscarNoBanco(id);
         calculadora = adapter.calculadoraRequestToCalculadora(calculadora, request);
         repository.save(calculadora);
@@ -44,6 +49,7 @@ public class CalculadoraServiceImpl implements CalculadoraService {
 
     @Override
     public CalculadoraResponse buscar(Long id) {
+        validarId(id);
         var calculadora = buscarNoBanco(id);
 
         return adapter.calculadoraToCalculadoraResponse(calculadora);
@@ -51,6 +57,7 @@ public class CalculadoraServiceImpl implements CalculadoraService {
 
     @Override
     public Page<CalculadoraResponse> listarTodos(Pageable pageable) {
+        validarPageable(pageable);
         return repository.findAllByAtivoTrue(pageable).orElseThrow(
                         () -> new IllegalArgumentException("A estrutura de paginação está inválida"))
                 .map(adapter::calculadoraToCalculadoraResponse);
@@ -71,12 +78,14 @@ public class CalculadoraServiceImpl implements CalculadoraService {
     @Override
     @Transactional
     public void deletar(Long id) {
+        validarId(id);
         var calculadora = buscarNoBanco(id);
         calculadora.setAtivo(false);
         repository.save(calculadora);
     }
 
     private Calculadora buscarNoBanco(Long id) {
+        validarId(id);
         return repository.findByIdAndAtivoTrue(id).orElseThrow(
                 () -> new EntityNotFoundException(String.format("Calculadora com ID: %d não existe ou não está ativa", id)));
     }

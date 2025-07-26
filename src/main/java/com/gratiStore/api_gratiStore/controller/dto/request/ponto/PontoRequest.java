@@ -1,9 +1,9 @@
 package com.gratiStore.api_gratiStore.controller.dto.request.ponto;
 
+import com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -30,6 +30,9 @@ public record PontoRequest(
         @NotNull(message = "A saída não pode ser nula")
         @Schema(type = "string", example = "17:00:00", format = "time")
         LocalTime saida,
+
+        @NotNull
+        FeriadoUtils feriado,
 
         @NotNull(message = "O ID do atendente não pode ser nulo")
         @Schema(example = "123")
