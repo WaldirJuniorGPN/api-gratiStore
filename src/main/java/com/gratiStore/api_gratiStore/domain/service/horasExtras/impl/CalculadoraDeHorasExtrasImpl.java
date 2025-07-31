@@ -41,9 +41,7 @@ public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
                             Map.Entry::getKey,
                             e -> {
                                 var pontosDoAtendente = e.getValue();
-                                var horasDiarias = calcularHorasExtrasDiarias(pontosDoAtendente);
-                                var horasSemanais = calcularHorasExtrasSemanais(pontosDoAtendente);
-                                return escolherMaior(horasDiarias, horasSemanais);
+                                return calcularHorasExtrasDiarias(pontosDoAtendente);
                             }
                     ));
 
