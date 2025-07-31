@@ -59,7 +59,9 @@ public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
         var salarioDia = salario.divide(DIAS_DO_MES, MathContext.DECIMAL64);
         var valorHora = salarioDia.divide(JORNADA_DIARIA, MathContext.DECIMAL64);
         var valorHoraExtra = valorHora.add(valorHora.multiply(ADICIONAL_HORA_EXTRA_50_POR_CENTO, MathContext.DECIMAL64));
-        var totalAReceber = valorHoraExtra.multiply((BigDecimal.valueOf(horasExtras.toHours())));
+        var horasDecimais = BigDecimal.valueOf(horasExtras.getSeconds())
+                .divide(BigDecimal.valueOf(3600), MathContext.DECIMAL64);
+        var totalAReceber = valorHoraExtra.multiply(horasDecimais);
 
         return totalAReceber.setScale(2, RoundingMode.HALF_UP);
     }
