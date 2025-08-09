@@ -3,7 +3,10 @@ package com.gratiStore.api_gratiStore.domain.service.horasExtras.impl;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import com.gratiStore.api_gratiStore.domain.entities.ponto.PontoEletronico;
+import com.gratiStore.api_gratiStore.domain.utils.AtestadoUtils;
+import com.gratiStore.api_gratiStore.domain.utils.DescontarEmHorasUtils;
 import com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils;
+import com.gratiStore.api_gratiStore.domain.utils.FolgaUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -54,14 +57,20 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA,
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendente);
         pontoEletronico2 = new PontoEletronico(LocalDate.of(ANO, MES, 8),
                 ENTRADA,
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA,
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendente);
 
         pontoEletronico3 = new PontoEletronico(LocalDate.of(ANO, MES, 9),
@@ -69,7 +78,10 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA,
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendente);
 
         pontoEletronico4 = new PontoEletronico(LocalDate.of(ANO, MES, 10),
@@ -77,7 +89,10 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA,
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendente);
 
         pontoEletronico5 = new PontoEletronico(LocalDate.of(ANO, MES, 11),
@@ -85,7 +100,10 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA,
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendente);
 
         pontoEletronico6 = new PontoEletronico(LocalDate.of(ANO, MES, 12),
@@ -93,7 +111,10 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA,
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendente);
     }
 
@@ -115,7 +136,10 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusHours(1),
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendente);
         var pontoEletronicoList = List.of(pontoComHorasExtrasDiarias, pontoEletronico2, pontoEletronico3,
                 pontoEletronico4, pontoEletronico5, pontoEletronico6);
@@ -133,14 +157,20 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusMinutes(30),
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendente);
         var pontoComHorasDiarias2 = new PontoEletronico(LocalDate.of(ANO, MES, 8),
                 ENTRADA,
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusMinutes(30),
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendente);
 
         var pontoComHorasDiarias3 = new PontoEletronico(LocalDate.of(ANO, MES, 9),
@@ -148,7 +178,10 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusMinutes(30),
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendente);
 
         var pontoComHorasDiarias4 = new PontoEletronico(LocalDate.of(ANO, MES, 10),
@@ -156,7 +189,10 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusMinutes(30),
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendente);
 
         var pontoComHorasDiarias5 = new PontoEletronico(LocalDate.of(ANO, MES, 11),
@@ -164,7 +200,10 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusMinutes(30),
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendente);
 
         var pontoComHorasDiarias6 = new PontoEletronico(LocalDate.of(ANO, MES, 12),
@@ -172,7 +211,10 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusMinutes(30),
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendente);
 
         var pontosComHorasDiariasList = List.of(pontoComHorasDiarias1, pontoComHorasDiarias2, pontoComHorasDiarias3,
@@ -192,14 +234,20 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusMinutes(30),
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendente);
         var pontoComHorasDiarias2 = new PontoEletronico(LocalDate.of(ANO, MES, 8),
                 ENTRADA,
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusMinutes(30),
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendente);
 
         var pontoComHorasDiarias3 = new PontoEletronico(LocalDate.of(ANO, MES, 9),
@@ -207,7 +255,10 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusMinutes(30),
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendente);
 
         var pontoComHorasDiarias4 = new PontoEletronico(LocalDate.of(ANO, MES, 10),
@@ -215,7 +266,10 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusMinutes(30),
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendente);
 
         var pontoComHorasDiarias5 = new PontoEletronico(LocalDate.of(ANO, MES, 11),
@@ -223,7 +277,10 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA,
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendente);
 
         var pontoComHorasDiarias6 = new PontoEletronico(LocalDate.of(ANO, MES, 12),
@@ -231,7 +288,10 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.minusHours(5),
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendente);
 
         var pontosComHorasDiariasList = List.of(pontoComHorasDiarias1, pontoComHorasDiarias2, pontoComHorasDiarias3,
@@ -263,7 +323,10 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 LocalTime.of(16, 30),
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendente);
 
         var pontosDeDomingoList = List.of(pontoDeDomingo);
@@ -281,7 +344,10 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 LocalTime.of(16, 30),
-                SIM,
+                FeriadoUtils.SIM,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendente);
 
         var pontosDeFeriadoList = List.of(pontoFeriado);

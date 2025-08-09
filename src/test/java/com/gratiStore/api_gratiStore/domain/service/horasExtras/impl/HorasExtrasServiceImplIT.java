@@ -3,7 +3,6 @@ package com.gratiStore.api_gratiStore.domain.service.horasExtras.impl;
 
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtendenteRequest;
 import com.gratiStore.api_gratiStore.controller.dto.request.horasExtras.FiltroHorasExtrasRequest;
-import com.gratiStore.api_gratiStore.controller.dto.request.loja.LojaRequest;
 import com.gratiStore.api_gratiStore.controller.dto.request.ponto.PontoRequest;
 import com.gratiStore.api_gratiStore.controller.dto.response.horasExtras.ResultadoHorasExtrasResponse;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
@@ -11,9 +10,11 @@ import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
 import com.gratiStore.api_gratiStore.domain.service.horasExtras.HorasExtrasService;
 import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
 import com.gratiStore.api_gratiStore.domain.service.ponto.PontoEletronicoService;
+import com.gratiStore.api_gratiStore.domain.utils.AtestadoUtils;
+import com.gratiStore.api_gratiStore.domain.utils.DescontarEmHorasUtils;
 import com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils;
+import com.gratiStore.api_gratiStore.domain.utils.FolgaUtils;
 import com.gratiStore.api_gratiStore.infra.config.TestContainerConfig;
-import com.gratiStore.api_gratiStore.infra.repository.ResultadoHoraExtraRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils.NAO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
@@ -37,11 +37,8 @@ public class HorasExtrasServiceImplIT extends TestContainerConfig {
     private final LocalTime FIM_ALMOCO = LocalTime.of(12, 0);
     private final LocalTime SAIDA = LocalTime.of(19, 0);
 
-    private AtendenteRequest atendenteRequest;
-    private PontoRequest pontoRequest;
     private FiltroHorasExtrasRequest filtroHorasExtrasRequest;
     private ResultadoHorasExtrasResponse resultadoHorasExtrasResponse;
-    private Loja loja;
 
     @Autowired
     private HorasExtrasService horasExtrasService;
@@ -57,18 +54,21 @@ public class HorasExtrasServiceImplIT extends TestContainerConfig {
 
     @BeforeEach
     void setUp() {
-        loja = new Loja("Google", "06026378000140");
+        var loja = new Loja("Google", "06026378000140");
         lojaService.salvarNoBanco(loja);
 
-        atendenteRequest = new AtendenteRequest("Fulano", loja.getId(), BigDecimal.valueOf(3000));
+        var atendenteRequest = new AtendenteRequest("Fulano", loja.getId(), BigDecimal.valueOf(3000));
         var atendenteResponse = atendenteService.criar(atendenteRequest);
 
-        pontoRequest = new PontoRequest(DATA,
+        var pontoRequest = new PontoRequest(DATA,
                 ENTRADA,
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA,
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendenteResponse.id());
         pontoEletronicoService.registrarPonto(pontoRequest);
 

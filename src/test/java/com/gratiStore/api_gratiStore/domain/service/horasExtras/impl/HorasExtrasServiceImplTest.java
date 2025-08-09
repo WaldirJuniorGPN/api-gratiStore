@@ -10,6 +10,10 @@ import com.gratiStore.api_gratiStore.domain.service.horasExtras.AgrupadorDePonto
 import com.gratiStore.api_gratiStore.domain.service.horasExtras.CalculadoraDeHorasExtras;
 import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
 import com.gratiStore.api_gratiStore.domain.service.ponto.PontoEletronicoService;
+import com.gratiStore.api_gratiStore.domain.utils.AtestadoUtils;
+import com.gratiStore.api_gratiStore.domain.utils.DescontarEmHorasUtils;
+import com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils;
+import com.gratiStore.api_gratiStore.domain.utils.FolgaUtils;
 import com.gratiStore.api_gratiStore.infra.adapter.horasExtras.HorasExtrasAdapter;
 import com.gratiStore.api_gratiStore.infra.repository.ResultadoHoraExtraRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -84,7 +88,10 @@ class HorasExtrasServiceImplTest {
                 LocalTime.of(11, 0),
                 LocalTime.of(12, 0),
                 LocalTime.of(18, 0),
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendente);
 
         atendenteList.forEach(atendente -> loja.adicionarAtendente(atendente));

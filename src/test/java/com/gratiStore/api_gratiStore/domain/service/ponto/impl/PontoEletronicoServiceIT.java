@@ -9,6 +9,10 @@ import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
 import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
 import com.gratiStore.api_gratiStore.domain.service.ponto.PontoEletronicoService;
+import com.gratiStore.api_gratiStore.domain.utils.AtestadoUtils;
+import com.gratiStore.api_gratiStore.domain.utils.DescontarEmHorasUtils;
+import com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils;
+import com.gratiStore.api_gratiStore.domain.utils.FolgaUtils;
 import com.gratiStore.api_gratiStore.infra.config.TestContainerConfig;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,7 +63,10 @@ public class PontoEletronicoServiceIT extends TestContainerConfig {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA,
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendenteResponse.id());
         pontoResponse = pontoEletronicoService.registrarPonto(pontoRequest);
     }
@@ -96,7 +103,10 @@ public class PontoEletronicoServiceIT extends TestContainerConfig {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusHours(1),
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 atendenteResponse.id()
         );
 
