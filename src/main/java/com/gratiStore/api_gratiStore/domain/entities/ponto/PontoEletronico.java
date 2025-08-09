@@ -50,7 +50,7 @@ public class PontoEletronico extends EntidadeBase {
     @Enumerated(EnumType.STRING)
     private FolgaUtils folga;
 
-    @Column(name = "status_descontar_em_horas")
+    @Column(name = "status_descontar_em_horas", nullable = false)
     @Enumerated(EnumType.STRING)
     private DescontarEmHorasUtils descontarEmHoras;
 
@@ -76,8 +76,11 @@ public class PontoEletronico extends EntidadeBase {
         this.inicioAlmoco = inicioAlmoco;
         this.fimAlmoco = fimAlmoco;
         this.saida = saida;
-        this.atendente = atendente;
         this.feriado = feriado;
+        this.atestado = atestado;
+        this.folga = folga;
+        this.descontarEmHoras = descontarEmHoras;
+        this.atendente = atendente;
     }
 
     public void atualizarParametros(LocalDate data,
