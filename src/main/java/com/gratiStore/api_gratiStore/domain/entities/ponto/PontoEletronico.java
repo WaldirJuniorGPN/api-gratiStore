@@ -2,7 +2,10 @@ package com.gratiStore.api_gratiStore.domain.entities.ponto;
 
 import com.gratiStore.api_gratiStore.domain.entities.EntidadeBase;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
+import com.gratiStore.api_gratiStore.domain.utils.AtestadoUtils;
+import com.gratiStore.api_gratiStore.domain.utils.DescontarEmHorasUtils;
 import com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils;
+import com.gratiStore.api_gratiStore.domain.utils.FolgaUtils;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,21 +26,33 @@ public class PontoEletronico extends EntidadeBase {
     @Column(name = "data", nullable = false)
     private LocalDate data;
 
-    @Column(name = "entrada", nullable = false)
+    @Column(name = "entrada")
     private LocalTime entrada;
 
-    @Column(name = "inicio_almoco", nullable = false)
+    @Column(name = "inicio_almoco")
     private LocalTime inicioAlmoco;
 
-    @Column(name = "fim-almoco", nullable = false)
+    @Column(name = "fim_almoco")
     private LocalTime fimAlmoco;
 
-    @Column(name = "saida", nullable = false)
+    @Column(name = "saida")
     private LocalTime saida;
 
     @Column(name = "status_feriado", nullable = false)
     @Enumerated(EnumType.STRING)
     private FeriadoUtils feriado;
+
+    @Column(name = "status_atestado", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AtestadoUtils atestado;
+
+    @Column(name = "status_folga", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private FolgaUtils folga;
+
+    @Column(name = "status_descontar_em_horas")
+    @Enumerated(EnumType.STRING)
+    private DescontarEmHorasUtils descontarEmHoras;
 
     @ManyToOne
     @JoinColumn(name = "atendente_id", nullable = false)
@@ -50,9 +65,12 @@ public class PontoEletronico extends EntidadeBase {
                            LocalTime fimAlmoco,
                            LocalTime saida,
                            FeriadoUtils feriado,
+                           AtestadoUtils atestado,
+                           FolgaUtils folga,
+                           DescontarEmHorasUtils descontarEmHoras,
                            Atendente atendente) {
 
-        validarPonto(data, entrada, inicioAlmoco, fimAlmoco, saida, feriado, atendente);
+        validarPonto(data, entrada, inicioAlmoco, fimAlmoco, saida, feriado, atestado, folga, descontarEmHoras, atendente);
         this.data = data;
         this.entrada = entrada;
         this.inicioAlmoco = inicioAlmoco;
@@ -68,8 +86,11 @@ public class PontoEletronico extends EntidadeBase {
                                     LocalTime fimAlmoco,
                                     LocalTime saida,
                                     FeriadoUtils feriado,
+                                    AtestadoUtils atestado,
+                                    FolgaUtils folga,
+                                    DescontarEmHorasUtils descontarEmHoras,
                                     Atendente atendente) {
-        validarPonto(data, entrada, inicioAlmoco, fimAlmoco, saida, feriado, atendente);
+        validarPonto(data, entrada, inicioAlmoco, fimAlmoco, saida, feriado, atestado, folga, descontarEmHoras, atendente);
         this.data = data;
         this.entrada = entrada;
         this.inicioAlmoco = inicioAlmoco;
@@ -77,5 +98,8 @@ public class PontoEletronico extends EntidadeBase {
         this.saida = saida;
         this.atendente = atendente;
         this.feriado = feriado;
+        this.atestado = atestado;
+        this.folga = folga;
+        this.descontarEmHoras = descontarEmHoras;
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,8 +18,6 @@ import static com.gratiStore.api_gratiStore.domain.utils.ConstantesUtils.*;
 
 @ControllerAdvice
 public class ExceptionHandlerAdvice {
-
-    private final StandardError error = new StandardError();
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<StandardError> handleGeneralException(Exception exception, HttpServletRequest request) {
@@ -37,7 +36,18 @@ public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<StandardError> handleValidationExceptions(MethodArgumentNotValidException exception, HttpServletRequest request) {
-        String errorMessage = exception.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        var errors = exception.getBindingResult().getAllErrors().stream()
+                .map(error -> {
+                    if (error instanceof FieldError fieldError) {
+                        return fieldError.getField() + ": " + fieldError.getDefaultMessage();
+                    }
+                    return error.getDefaultMessage();
+                })
+                .distinct()
+                .toList();
+
+        var errorMessage = String.join("; ", errors);
+
         return this.atribuirError(exception, HttpStatus.BAD_REQUEST, errorMessage, request);
     }
 
@@ -58,6 +68,7 @@ public class ExceptionHandlerAdvice {
     }
 
     private ResponseEntity<StandardError> atribuirError(Exception e, HttpStatus status, String msgError, HttpServletRequest request) {
+        var error = new StandardError();
         error.setTimestamp(Instant.now());
         error.setStatus(status.value());
         error.setError(msgError);
