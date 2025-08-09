@@ -10,6 +10,8 @@ import com.gratiStore.api_gratiStore.domain.utils.FolgaUtils;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static com.gratiStore.api_gratiStore.domain.validator.negocio.HorariosValidator.validarHorarios;
+
 public class PontoEletronicoValidator {
 
     private PontoEletronicoValidator() {
@@ -44,6 +46,9 @@ public class PontoEletronicoValidator {
         }
         if (descontarEmHoras == null) {
             throw new ValidacaoNegocioException("O status de descontar em horas não pode ser nulo");
+        }
+        if (!validarHorarios(entrada, inicioAlmoco, fimAlmoco, saida)) {
+            throw new ValidacaoNegocioException("Se um dos horários foi preenchido, todos devem ser preenchidos");
         }
 
         if (data.isAfter(LocalDate.now())) {
