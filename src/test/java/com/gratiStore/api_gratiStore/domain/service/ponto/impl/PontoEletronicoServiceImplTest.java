@@ -97,7 +97,10 @@ class PontoEletronicoServiceImplTest {
                 LocalTime.of(11, 0),
                 LocalTime.of(12, 0),
                 LocalTime.of(17, 0),
-                NAO,
+                FeriadoUtils.NAO,
+                AtestadoUtils.NAO,
+                FolgaUtils.NAO,
+                DescontarEmHorasUtils.NAO,
                 ATENDENTE_ID);
 
         pontoEletronicoOptional = Optional.of(ponto);

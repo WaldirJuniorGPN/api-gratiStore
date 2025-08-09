@@ -30,6 +30,9 @@ public class PontoEletronicoAdapterImpl implements PontoEletronicoAdapter {
                 ponto.getFimAlmoco(),
                 ponto.getSaida(),
                 ponto.getFeriado(),
+                ponto.getAtestado(),
+                ponto.getFolga(),
+                ponto.getDescontarEmHoras(),
                 ponto.getAtendente().getId());
     }
 

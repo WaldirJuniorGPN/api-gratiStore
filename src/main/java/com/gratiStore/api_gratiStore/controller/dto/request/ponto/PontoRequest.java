@@ -33,15 +33,19 @@ public record PontoRequest(
         LocalTime saida,
 
         @NotNull(message = "O status de Feriado não pode ser nulo")
+        @Schema(type = "string", example = "NAO")
         FeriadoUtils feriado,
 
         @NotNull(message = "O status do Atestado não pode ser nulo")
+        @Schema(type = "string", example = "NAO")
         AtestadoUtils atestado,
 
         @NotNull(message = "O status da Folga não pode ser nulo")
+        @Schema(type = "string", example = "NAO")
         FolgaUtils folga,
 
         @NotNull(message = "O status de Descontar em Horas não pode ser nulo")
+        @Schema(type = "string", example = "NAO")
         DescontarEmHorasUtils descontarEmHoras,
 
         @NotNull(message = "O ID do atendente não pode ser nulo")

@@ -132,6 +132,9 @@ public class PontoEletronicoServiceIT extends TestContainerConfig {
                 pontoResponse.fimAlmoco(),
                 pontoResponse.saida(),
                 pontoResponse.feriado(),
+                pontoResponse.atestado(),
+                pontoResponse.folga(),
+                pontoResponse.descontarEmHorasUtils(),
                 atendenteResponse.id());
         var resultado = pontoEletronicoService.buscar(pontoResponse.id());
 
