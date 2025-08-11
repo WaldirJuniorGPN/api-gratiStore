@@ -2,10 +2,7 @@ package com.gratiStore.api_gratiStore.domain.validator.negocio;
 
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.exception.ValidacaoNegocioException;
-import com.gratiStore.api_gratiStore.domain.utils.AtestadoUtils;
-import com.gratiStore.api_gratiStore.domain.utils.DescontarEmHorasUtils;
-import com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils;
-import com.gratiStore.api_gratiStore.domain.utils.FolgaUtils;
+import com.gratiStore.api_gratiStore.domain.utils.StatusUtils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -23,10 +20,7 @@ public class PontoEletronicoValidator {
                                     LocalTime inicioAlmoco,
                                     LocalTime fimAlmoco,
                                     LocalTime saida,
-                                    FeriadoUtils feriado,
-                                    AtestadoUtils atestado,
-                                    FolgaUtils folga,
-                                    DescontarEmHorasUtils descontarEmHoras,
+                                    StatusUtils status,
                                     Atendente atendente) {
 
         if (data == null) {
@@ -35,17 +29,8 @@ public class PontoEletronicoValidator {
         if (atendente == null) {
             throw new ValidacaoNegocioException("O atendente não pode ser nulo");
         }
-        if (feriado == null) {
-            throw new ValidacaoNegocioException("O status do feriado não pode ser nulo");
-        }
-        if (atestado == null) {
-            throw new ValidacaoNegocioException("O status do atestado não pode ser nulo");
-        }
-        if (folga == null) {
-            throw new ValidacaoNegocioException("O status da folga não pode ser nulo");
-        }
-        if (descontarEmHoras == null) {
-            throw new ValidacaoNegocioException("O status de descontar em horas não pode ser nulo");
+        if (status == null) {
+            throw new ValidacaoNegocioException("O status não pode ser nulo");
         }
         if (!validarHorarios(entrada, inicioAlmoco, fimAlmoco, saida)) {
             throw new ValidacaoNegocioException("Se um dos horários foi preenchido, todos devem ser preenchidos");
