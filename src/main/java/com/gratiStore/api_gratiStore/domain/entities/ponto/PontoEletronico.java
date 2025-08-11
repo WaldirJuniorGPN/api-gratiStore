@@ -2,7 +2,7 @@ package com.gratiStore.api_gratiStore.domain.entities.ponto;
 
 import com.gratiStore.api_gratiStore.domain.entities.EntidadeBase;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
-import com.gratiStore.api_gratiStore.domain.utils.*;
+import com.gratiStore.api_gratiStore.domain.utils.StatusUtils;
 import jakarta.persistence.*;
 import lombok.*;
 
