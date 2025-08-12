@@ -10,10 +10,6 @@ import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
 import com.gratiStore.api_gratiStore.domain.service.horasExtras.HorasExtrasService;
 import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
 import com.gratiStore.api_gratiStore.domain.service.ponto.PontoEletronicoService;
-import com.gratiStore.api_gratiStore.domain.utils.AtestadoUtils;
-import com.gratiStore.api_gratiStore.domain.utils.DescontarEmHorasUtils;
-import com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils;
-import com.gratiStore.api_gratiStore.domain.utils.FolgaUtils;
 import com.gratiStore.api_gratiStore.infra.config.TestContainerConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +22,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static com.gratiStore.api_gratiStore.domain.utils.StatusUtils.COMUM;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
@@ -65,10 +62,7 @@ public class HorasExtrasServiceImplIT extends TestContainerConfig {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA,
-                FeriadoUtils.NAO,
-                AtestadoUtils.NAO,
-                FolgaUtils.NAO,
-                DescontarEmHorasUtils.NAO,
+                COMUM,
                 atendenteResponse.id());
         pontoEletronicoService.registrarPonto(pontoRequest);
 

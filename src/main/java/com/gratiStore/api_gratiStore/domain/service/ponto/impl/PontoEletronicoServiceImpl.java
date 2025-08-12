@@ -83,10 +83,7 @@ public class PontoEletronicoServiceImpl implements PontoEletronicoService {
                 request.inicioAlmoco(),
                 request.fimAlmoco(),
                 request.saida(),
-                request.feriado(),
-                request.atestado(),
-                request.folga(),
-                request.descontarEmHoras(),
+                request.status(),
                 atendente);
         repository.save(ponto);
 

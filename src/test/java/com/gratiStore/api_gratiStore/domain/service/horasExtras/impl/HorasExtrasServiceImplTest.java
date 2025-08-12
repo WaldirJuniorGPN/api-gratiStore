@@ -10,10 +10,6 @@ import com.gratiStore.api_gratiStore.domain.service.horasExtras.AgrupadorDePonto
 import com.gratiStore.api_gratiStore.domain.service.horasExtras.CalculadoraDeHorasExtras;
 import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
 import com.gratiStore.api_gratiStore.domain.service.ponto.PontoEletronicoService;
-import com.gratiStore.api_gratiStore.domain.utils.AtestadoUtils;
-import com.gratiStore.api_gratiStore.domain.utils.DescontarEmHorasUtils;
-import com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils;
-import com.gratiStore.api_gratiStore.domain.utils.FolgaUtils;
 import com.gratiStore.api_gratiStore.infra.adapter.horasExtras.HorasExtrasAdapter;
 import com.gratiStore.api_gratiStore.infra.repository.ResultadoHoraExtraRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,9 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils.NAO;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.*;
+import static com.gratiStore.api_gratiStore.domain.utils.StatusUtils.COMUM;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -88,10 +84,7 @@ class HorasExtrasServiceImplTest {
                 LocalTime.of(11, 0),
                 LocalTime.of(12, 0),
                 LocalTime.of(18, 0),
-                FeriadoUtils.NAO,
-                AtestadoUtils.NAO,
-                FolgaUtils.NAO,
-                DescontarEmHorasUtils.NAO,
+                COMUM,
                 atendente);
 
         atendenteList.forEach(atendente -> loja.adicionarAtendente(atendente));

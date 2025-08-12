@@ -11,6 +11,7 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toUnmodifiableMap;
 
 public enum StatusUtils {
+    COMUM,
     FERIADO,
     ATESTADO,
     FOLGA,

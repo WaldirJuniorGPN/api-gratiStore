@@ -3,10 +3,6 @@ package com.gratiStore.api_gratiStore.domain.entities.ponto;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import com.gratiStore.api_gratiStore.domain.exception.ValidacaoNegocioException;
-import com.gratiStore.api_gratiStore.domain.utils.AtestadoUtils;
-import com.gratiStore.api_gratiStore.domain.utils.DescontarEmHorasUtils;
-import com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils;
-import com.gratiStore.api_gratiStore.domain.utils.FolgaUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,6 +10,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static com.gratiStore.api_gratiStore.domain.utils.StatusUtils.COMUM;
+import static com.gratiStore.api_gratiStore.domain.utils.StatusUtils.FERIADO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -38,10 +36,7 @@ class PontoEletronicoTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA,
-                FeriadoUtils.NAO,
-                AtestadoUtils.NAO,
-                FolgaUtils.NAO,
-                DescontarEmHorasUtils.NAO,
+                COMUM,
                 this.atendente);
     }
 
@@ -52,9 +47,7 @@ class PontoEletronicoTest {
         assertEquals(INICIO_ALMOCO, ponto.getInicioAlmoco());
         assertEquals(FIM_ALMOCO, ponto.getFimAlmoco());
         assertEquals(SAIDA, ponto.getSaida());
-        assertEquals(FeriadoUtils.NAO, ponto.getFeriado());
-        assertEquals(FolgaUtils.NAO, ponto.getFolga());
-        assertEquals(DescontarEmHorasUtils.NAO, ponto.getDescontarEmHoras());
+        assertEquals(COMUM, ponto.getStatus());
         assertEquals(atendente.getNome(), ponto.getAtendente().getNome());
     }
 
@@ -66,10 +59,7 @@ class PontoEletronicoTest {
                         INICIO_ALMOCO,
                         FIM_ALMOCO,
                         SAIDA,
-                        FeriadoUtils.NAO,
-                        AtestadoUtils.NAO,
-                        FolgaUtils.NAO,
-                        DescontarEmHorasUtils.NAO,
+                        COMUM,
                         this.atendente));
     }
 
@@ -81,10 +71,7 @@ class PontoEletronicoTest {
                         INICIO_ALMOCO,
                         FIM_ALMOCO,
                         SAIDA,
-                        FeriadoUtils.NAO,
-                        AtestadoUtils.NAO,
-                        FolgaUtils.NAO,
-                        DescontarEmHorasUtils.NAO,
+                        COMUM,
                         this.atendente));
     }
 
@@ -98,10 +85,7 @@ class PontoEletronicoTest {
                         horaInvalida,
                         FIM_ALMOCO,
                         SAIDA,
-                        FeriadoUtils.NAO,
-                        AtestadoUtils.NAO,
-                        FolgaUtils.NAO,
-                        DescontarEmHorasUtils.NAO,
+                        COMUM,
                         this.atendente));
     }
 
@@ -115,10 +99,7 @@ class PontoEletronicoTest {
                         INICIO_ALMOCO,
                         horaInvalida,
                         SAIDA,
-                        FeriadoUtils.NAO,
-                        AtestadoUtils.NAO,
-                        FolgaUtils.NAO,
-                        DescontarEmHorasUtils.NAO,
+                        COMUM,
                         this.atendente));
     }
 
@@ -132,10 +113,7 @@ class PontoEletronicoTest {
                         INICIO_ALMOCO,
                         FIM_ALMOCO,
                         horaInvalida,
-                        FeriadoUtils.NAO,
-                        AtestadoUtils.NAO,
-                        FolgaUtils.NAO,
-                        DescontarEmHorasUtils.NAO,
+                        COMUM,
                         this.atendente));
     }
 
@@ -147,10 +125,7 @@ class PontoEletronicoTest {
                         INICIO_ALMOCO,
                         FIM_ALMOCO,
                         SAIDA,
-                        FeriadoUtils.NAO,
-                        AtestadoUtils.NAO,
-                        FolgaUtils.NAO,
-                        DescontarEmHorasUtils.NAO,
+                        COMUM,
                         null));
     }
 
@@ -163,10 +138,7 @@ class PontoEletronicoTest {
                 INICIO_ALMOCO.plusHours(1),
                 FIM_ALMOCO.plusHours(1),
                 SAIDA.plusHours(1),
-                FeriadoUtils.SIM,
-                AtestadoUtils.SIM,
-                FolgaUtils.SIM,
-                DescontarEmHorasUtils.SIM,
+                FERIADO,
                 outroAtendente);
 
         assertEquals(LocalDate.now().minusDays(1), ponto.getData());
@@ -174,10 +146,7 @@ class PontoEletronicoTest {
         assertEquals(INICIO_ALMOCO.plusHours(1), ponto.getInicioAlmoco());
         assertEquals(FIM_ALMOCO.plusHours(1), ponto.getFimAlmoco());
         assertEquals(SAIDA.plusHours(1), ponto.getSaida());
-        assertEquals(FeriadoUtils.SIM, ponto.getFeriado());
-        assertEquals(AtestadoUtils.SIM, ponto.getAtestado());
-        assertEquals(FolgaUtils.SIM, ponto.getFolga());
-        assertEquals(DescontarEmHorasUtils.SIM, ponto.getDescontarEmHoras());
+        assertEquals(FERIADO, ponto.getStatus());
         assertEquals(outroAtendente, ponto.getAtendente());
     }
 
@@ -190,10 +159,7 @@ class PontoEletronicoTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA,
-                FeriadoUtils.NAO,
-                AtestadoUtils.NAO,
-                FolgaUtils.NAO,
-                DescontarEmHorasUtils.NAO,
+                COMUM,
                 atendente));
     }
 
@@ -204,10 +170,7 @@ class PontoEletronicoTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA,
-                FeriadoUtils.NAO,
-                AtestadoUtils.NAO,
-                FolgaUtils.NAO,
-                DescontarEmHorasUtils.NAO,
+                COMUM,
                 atendente));
     }
 }

@@ -1,9 +1,6 @@
 package com.gratiStore.api_gratiStore.controller.dto.response.ponto;
 
-import com.gratiStore.api_gratiStore.domain.utils.AtestadoUtils;
-import com.gratiStore.api_gratiStore.domain.utils.DescontarEmHorasUtils;
-import com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils;
-import com.gratiStore.api_gratiStore.domain.utils.FolgaUtils;
+import com.gratiStore.api_gratiStore.domain.utils.StatusUtils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -14,9 +11,6 @@ public record HistoricoResponse(Long id,
                                 LocalTime inicioAlmoco,
                                 LocalTime fimAlmoco,
                                 LocalTime saida,
-                                FeriadoUtils feriado,
-                                AtestadoUtils atestado,
-                                FolgaUtils folga,
-                                DescontarEmHorasUtils descontarEmHorasUtils,
+                                StatusUtils status,
                                 Long atendenteId) {
 }

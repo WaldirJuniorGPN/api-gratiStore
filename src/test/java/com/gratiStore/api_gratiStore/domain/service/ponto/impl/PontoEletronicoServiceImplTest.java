@@ -8,10 +8,6 @@ import com.gratiStore.api_gratiStore.domain.entities.ponto.PontoEletronico;
 import com.gratiStore.api_gratiStore.domain.exception.ValidacaoNegocioException;
 import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
 import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
-import com.gratiStore.api_gratiStore.domain.utils.AtestadoUtils;
-import com.gratiStore.api_gratiStore.domain.utils.DescontarEmHorasUtils;
-import com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils;
-import com.gratiStore.api_gratiStore.domain.utils.FolgaUtils;
 import com.gratiStore.api_gratiStore.infra.adapter.ponto.PontoEletronicoAdapter;
 import com.gratiStore.api_gratiStore.infra.repository.PontoEletronicoRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +27,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
-import static com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils.NAO;
+import static com.gratiStore.api_gratiStore.domain.utils.StatusUtils.COMUM;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -75,20 +71,14 @@ class PontoEletronicoServiceImplTest {
                 LocalTime.of(11, 0),
                 LocalTime.of(12, 0),
                 LocalTime.of(17, 0),
-                FeriadoUtils.NAO,
-                AtestadoUtils.NAO,
-                FolgaUtils.NAO,
-                DescontarEmHorasUtils.NAO,
+                COMUM,
                 ATENDENTE_ID);
         ponto = new PontoEletronico(LocalDate.of(2025, 1, 2),
                 LocalTime.of(8, 0),
                 LocalTime.of(11, 0),
                 LocalTime.of(12, 0),
                 LocalTime.of(17, 0),
-                FeriadoUtils.NAO,
-                AtestadoUtils.NAO,
-                FolgaUtils.NAO,
-                DescontarEmHorasUtils.NAO,
+                COMUM,
                 atendente);
 
         historicoResponse = new HistoricoResponse(PONTO_ID,
@@ -97,10 +87,7 @@ class PontoEletronicoServiceImplTest {
                 LocalTime.of(11, 0),
                 LocalTime.of(12, 0),
                 LocalTime.of(17, 0),
-                FeriadoUtils.NAO,
-                AtestadoUtils.NAO,
-                FolgaUtils.NAO,
-                DescontarEmHorasUtils.NAO,
+                COMUM,
                 ATENDENTE_ID);
 
         pontoEletronicoOptional = Optional.of(ponto);

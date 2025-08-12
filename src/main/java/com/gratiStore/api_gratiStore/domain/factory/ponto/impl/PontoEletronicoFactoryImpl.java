@@ -16,10 +16,7 @@ public class PontoEletronicoFactoryImpl implements PontoEletronicoFactory {
                 request.inicioAlmoco(),
                 request.fimAlmoco(),
                 request.saida(),
-                request.feriado(),
-                request.atestado(),
-                request.folga(),
-                request.descontarEmHoras(),
+                request.status(),
                 atendente);
     }
 }
