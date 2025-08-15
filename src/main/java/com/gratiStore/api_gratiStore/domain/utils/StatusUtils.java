@@ -13,8 +13,11 @@ import static java.util.stream.Collectors.toUnmodifiableMap;
 public enum StatusUtils {
     COMUM,
     FERIADO,
-    ATESTADO,
+    ATESTADO_INTEGRAL,
+    ATESTADO_MATUTINO,
+    ATESTADO_VESPERTINO,
     FOLGA,
+    FALTA,
     DESCONTAR_EM_HORAS;
 
     private static final Map<String, StatusUtils> LOOKUP =
