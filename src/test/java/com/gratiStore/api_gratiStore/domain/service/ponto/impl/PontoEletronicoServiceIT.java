@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils.NAO;
+import static com.gratiStore.api_gratiStore.domain.utils.StatusUtils.COMUM;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -59,7 +59,7 @@ public class PontoEletronicoServiceIT extends TestContainerConfig {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA,
-                NAO,
+                COMUM,
                 atendenteResponse.id());
         pontoResponse = pontoEletronicoService.registrarPonto(pontoRequest);
     }
@@ -96,7 +96,7 @@ public class PontoEletronicoServiceIT extends TestContainerConfig {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusHours(1),
-                NAO,
+                COMUM,
                 atendenteResponse.id()
         );
 
@@ -121,7 +121,7 @@ public class PontoEletronicoServiceIT extends TestContainerConfig {
                 pontoResponse.incioAlmoco(),
                 pontoResponse.fimAlmoco(),
                 pontoResponse.saida(),
-                pontoResponse.feriado(),
+                pontoResponse.status(),
                 atendenteResponse.id());
         var resultado = pontoEletronicoService.buscar(pontoResponse.id());
 

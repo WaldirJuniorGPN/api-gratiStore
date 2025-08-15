@@ -11,7 +11,12 @@ public class PontoEletronicoFactoryImpl implements PontoEletronicoFactory {
 
     @Override
     public PontoEletronico criar(PontoRequest request, Atendente atendente) {
-        return new PontoEletronico(request.data(), request.entrada(), request.inicioAlmoco(), request.fimAlmoco(),
-                request.saida(), request.feriado(), atendente);
+        return new PontoEletronico(request.data(),
+                request.entrada(),
+                request.inicioAlmoco(),
+                request.fimAlmoco(),
+                request.saida(),
+                request.status(),
+                atendente);
     }
 }

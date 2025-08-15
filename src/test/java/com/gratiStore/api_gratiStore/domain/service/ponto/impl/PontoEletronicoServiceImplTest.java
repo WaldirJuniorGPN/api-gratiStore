@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,7 +27,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
-import static com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils.NAO;
+import static com.gratiStore.api_gratiStore.domain.utils.StatusUtils.COMUM;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -70,14 +71,14 @@ class PontoEletronicoServiceImplTest {
                 LocalTime.of(11, 0),
                 LocalTime.of(12, 0),
                 LocalTime.of(17, 0),
-                NAO,
+                COMUM,
                 ATENDENTE_ID);
         ponto = new PontoEletronico(LocalDate.of(2025, 1, 2),
                 LocalTime.of(8, 0),
                 LocalTime.of(11, 0),
                 LocalTime.of(12, 0),
                 LocalTime.of(17, 0),
-                NAO,
+                COMUM,
                 atendente);
 
         historicoResponse = new HistoricoResponse(PONTO_ID,
@@ -86,7 +87,7 @@ class PontoEletronicoServiceImplTest {
                 LocalTime.of(11, 0),
                 LocalTime.of(12, 0),
                 LocalTime.of(17, 0),
-                NAO,
+                COMUM,
                 ATENDENTE_ID);
 
         pontoEletronicoOptional = Optional.of(ponto);
@@ -109,13 +110,17 @@ class PontoEletronicoServiceImplTest {
         var pageable = PageRequest.of(0, 10);
         var pontos = List.of(ponto, ponto);
         var page = new PageImpl<>(pontos, pageable, pontos.size());
+        var sort = pageable.getSort().isSorted()
+                ? pageable.getSort()
+                : Sort.by(Sort.Direction.ASC, "data");
+        var sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
 
         when(repository.findAll(any(Pageable.class))).thenReturn(page);
         when(adapter.pontoToHistoricoResponse(ponto)).thenReturn(historicoResponse);
 
         pontoEletronicoService.listarHistorico(pageable);
 
-        verify(repository, times(1)).findAll(pageable);
+        verify(repository, times(1)).findAll(sortedPageable);
         verify(adapter, times(2)).pontoToHistoricoResponse(any(PontoEletronico.class));
     }
 

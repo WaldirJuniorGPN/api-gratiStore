@@ -1,6 +1,6 @@
 package com.gratiStore.api_gratiStore.controller.dto.response.ponto;
 
-import com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils;
+import com.gratiStore.api_gratiStore.domain.utils.StatusUtils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -12,6 +12,6 @@ public record PontoResponse(Long id,
                             LocalTime fimAlmoco,
                             LocalTime saida,
                             String nomeAtendente,
-                            FeriadoUtils feriado
+                            StatusUtils status
 ) {
 }

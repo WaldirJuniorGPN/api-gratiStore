@@ -3,7 +3,6 @@ package com.gratiStore.api_gratiStore.domain.service.horasExtras.impl;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import com.gratiStore.api_gratiStore.domain.entities.ponto.PontoEletronico;
-import com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,17 +11,12 @@ import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-import static com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils.NAO;
-import static com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils.SIM;
+import static com.gratiStore.api_gratiStore.domain.utils.StatusUtils.COMUM;
+import static com.gratiStore.api_gratiStore.domain.utils.StatusUtils.FERIADO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CalculadoraDeHorasExtrasImplTest {
 
@@ -54,14 +48,14 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA,
-                NAO,
+                COMUM,
                 atendente);
         pontoEletronico2 = new PontoEletronico(LocalDate.of(ANO, MES, 8),
                 ENTRADA,
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA,
-                NAO,
+                COMUM,
                 atendente);
 
         pontoEletronico3 = new PontoEletronico(LocalDate.of(ANO, MES, 9),
@@ -69,7 +63,7 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA,
-                NAO,
+                COMUM,
                 atendente);
 
         pontoEletronico4 = new PontoEletronico(LocalDate.of(ANO, MES, 10),
@@ -77,7 +71,7 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA,
-                NAO,
+                COMUM,
                 atendente);
 
         pontoEletronico5 = new PontoEletronico(LocalDate.of(ANO, MES, 11),
@@ -85,7 +79,7 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA,
-                NAO,
+                COMUM,
                 atendente);
 
         pontoEletronico6 = new PontoEletronico(LocalDate.of(ANO, MES, 12),
@@ -93,7 +87,7 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA,
-                NAO,
+                COMUM,
                 atendente);
     }
 
@@ -115,7 +109,7 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusHours(1),
-                NAO,
+                COMUM,
                 atendente);
         var pontoEletronicoList = List.of(pontoComHorasExtrasDiarias, pontoEletronico2, pontoEletronico3,
                 pontoEletronico4, pontoEletronico5, pontoEletronico6);
@@ -133,14 +127,14 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusMinutes(30),
-                NAO,
+                COMUM,
                 atendente);
         var pontoComHorasDiarias2 = new PontoEletronico(LocalDate.of(ANO, MES, 8),
                 ENTRADA,
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusMinutes(30),
-                NAO,
+                COMUM,
                 atendente);
 
         var pontoComHorasDiarias3 = new PontoEletronico(LocalDate.of(ANO, MES, 9),
@@ -148,7 +142,7 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusMinutes(30),
-                NAO,
+                COMUM,
                 atendente);
 
         var pontoComHorasDiarias4 = new PontoEletronico(LocalDate.of(ANO, MES, 10),
@@ -156,7 +150,7 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusMinutes(30),
-                NAO,
+                COMUM,
                 atendente);
 
         var pontoComHorasDiarias5 = new PontoEletronico(LocalDate.of(ANO, MES, 11),
@@ -164,7 +158,7 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusMinutes(30),
-                NAO,
+                COMUM,
                 atendente);
 
         var pontoComHorasDiarias6 = new PontoEletronico(LocalDate.of(ANO, MES, 12),
@@ -172,7 +166,7 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusMinutes(30),
-                NAO,
+                COMUM,
                 atendente);
 
         var pontosComHorasDiariasList = List.of(pontoComHorasDiarias1, pontoComHorasDiarias2, pontoComHorasDiarias3,
@@ -192,14 +186,14 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusMinutes(30),
-                NAO,
+                COMUM,
                 atendente);
         var pontoComHorasDiarias2 = new PontoEletronico(LocalDate.of(ANO, MES, 8),
                 ENTRADA,
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusMinutes(30),
-                NAO,
+                COMUM,
                 atendente);
 
         var pontoComHorasDiarias3 = new PontoEletronico(LocalDate.of(ANO, MES, 9),
@@ -207,7 +201,7 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusMinutes(30),
-                NAO,
+                COMUM,
                 atendente);
 
         var pontoComHorasDiarias4 = new PontoEletronico(LocalDate.of(ANO, MES, 10),
@@ -215,7 +209,7 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.plusMinutes(30),
-                NAO,
+                COMUM,
                 atendente);
 
         var pontoComHorasDiarias5 = new PontoEletronico(LocalDate.of(ANO, MES, 11),
@@ -223,7 +217,7 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA,
-                NAO,
+                COMUM,
                 atendente);
 
         var pontoComHorasDiarias6 = new PontoEletronico(LocalDate.of(ANO, MES, 12),
@@ -231,7 +225,7 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 SAIDA.minusHours(5),
-                NAO,
+                COMUM,
                 atendente);
 
         var pontosComHorasDiariasList = List.of(pontoComHorasDiarias1, pontoComHorasDiarias2, pontoComHorasDiarias3,
@@ -250,7 +244,18 @@ class CalculadoraDeHorasExtrasImplTest {
         var horasExtras = Duration.ofHours(2);
         var valorAReceber = BigDecimal.valueOf(25).setScale(2, RoundingMode.HALF_UP);
 
-        var resultado = calculadoraDeHorasExtras.calcularValorAReceber(salario, horasExtras);
+        var resultado = calculadoraDeHorasExtras.calcularValorAReceber(salario, horasExtras, BigDecimal.valueOf(0.5));
+
+        assertEquals(valorAReceber, resultado);
+    }
+
+    @Test
+    void deveCalculadorValorAReceberComAdicionalDeCemPorCento() {
+        var salario = BigDecimal.valueOf(2000);
+        var horasExtras = Duration.ofHours(1);
+        var valorAReceber = BigDecimal.valueOf(16.67).setScale(2, RoundingMode.HALF_UP);
+
+        var resultado = calculadoraDeHorasExtras.calcularValorAReceber(salario, horasExtras, BigDecimal.valueOf(1));
 
         assertEquals(valorAReceber, resultado);
     }
@@ -263,7 +268,7 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 LocalTime.of(16, 30),
-                NAO,
+                COMUM,
                 atendente);
 
         var pontosDeDomingoList = List.of(pontoDeDomingo);
@@ -281,7 +286,7 @@ class CalculadoraDeHorasExtrasImplTest {
                 INICIO_ALMOCO,
                 FIM_ALMOCO,
                 LocalTime.of(16, 30),
-                SIM,
+                FERIADO,
                 atendente);
 
         var pontosDeFeriadoList = List.of(pontoFeriado);

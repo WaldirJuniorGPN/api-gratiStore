@@ -9,7 +9,8 @@ import java.time.Duration;
 public record ResultadoHorasExtrasResponse(String nomeAtendente,
                                            Integer mes,
                                            Integer ano,
-                                           BigDecimal valorAReceber,
+                                           BigDecimal valorAReceber50PorCento,
+                                           BigDecimal valorAReceber100PorCento,
                                            @JsonSerialize(using = DurationSerializer.class)
                                            Duration totalHorasExtras) {
 }

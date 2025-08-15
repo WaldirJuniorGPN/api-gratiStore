@@ -9,6 +9,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -37,7 +39,7 @@ public class PontoEletronicoController {
             description = "Retorna uma lista paginada contendo o histórico de pontos eletrônicos registrados."
     )
     @GetMapping
-    public ResponseEntity<Page<HistoricoResponse>> listarHistorico(Pageable pageable) {
+    public ResponseEntity<Page<HistoricoResponse>> listarHistorico(@PageableDefault(sort = "data", direction = Sort.Direction.ASC) Pageable pageable) {
         var page = service.listarHistorico(pageable);
 
         return ResponseEntity.ok(page);

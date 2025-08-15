@@ -29,7 +29,7 @@ public class PontoEletronicoAdapterImpl implements PontoEletronicoAdapter {
                 ponto.getInicioAlmoco(),
                 ponto.getFimAlmoco(),
                 ponto.getSaida(),
-                ponto.getFeriado(),
+                ponto.getStatus(),
                 ponto.getAtendente().getId());
     }
 
@@ -42,6 +42,6 @@ public class PontoEletronicoAdapterImpl implements PontoEletronicoAdapter {
                 ponto.getFimAlmoco(),
                 ponto.getSaida(),
                 ponto.getAtendente().getNome(),
-                ponto.getFeriado());
+                ponto.getStatus());
     }
 }

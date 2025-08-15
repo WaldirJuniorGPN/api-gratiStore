@@ -2,7 +2,7 @@ package com.gratiStore.api_gratiStore.domain.entities.ponto;
 
 import com.gratiStore.api_gratiStore.domain.entities.EntidadeBase;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
-import com.gratiStore.api_gratiStore.domain.utils.FeriadoUtils;
+import com.gratiStore.api_gratiStore.domain.utils.StatusUtils;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,21 +23,21 @@ public class PontoEletronico extends EntidadeBase {
     @Column(name = "data", nullable = false)
     private LocalDate data;
 
-    @Column(name = "entrada", nullable = false)
+    @Column(name = "entrada")
     private LocalTime entrada;
 
-    @Column(name = "inicio_almoco", nullable = false)
+    @Column(name = "inicio_almoco")
     private LocalTime inicioAlmoco;
 
-    @Column(name = "fim-almoco", nullable = false)
+    @Column(name = "fim_almoco")
     private LocalTime fimAlmoco;
 
-    @Column(name = "saida", nullable = false)
+    @Column(name = "saida")
     private LocalTime saida;
 
-    @Column(name = "status_feriado", nullable = false)
+    @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private FeriadoUtils feriado;
+    private StatusUtils status;
 
     @ManyToOne
     @JoinColumn(name = "atendente_id", nullable = false)
@@ -49,17 +49,17 @@ public class PontoEletronico extends EntidadeBase {
                            LocalTime inicioAlmoco,
                            LocalTime fimAlmoco,
                            LocalTime saida,
-                           FeriadoUtils feriado,
+                           StatusUtils status,
                            Atendente atendente) {
 
-        validarPonto(data, entrada, inicioAlmoco, fimAlmoco, saida, feriado, atendente);
+        validarPonto(data, entrada, inicioAlmoco, fimAlmoco, saida, status, atendente);
         this.data = data;
         this.entrada = entrada;
         this.inicioAlmoco = inicioAlmoco;
         this.fimAlmoco = fimAlmoco;
         this.saida = saida;
+        this.status = status;
         this.atendente = atendente;
-        this.feriado = feriado;
     }
 
     public void atualizarParametros(LocalDate data,
@@ -67,15 +67,15 @@ public class PontoEletronico extends EntidadeBase {
                                     LocalTime inicioAlmoco,
                                     LocalTime fimAlmoco,
                                     LocalTime saida,
-                                    FeriadoUtils feriado,
+                                    StatusUtils status,
                                     Atendente atendente) {
-        validarPonto(data, entrada, inicioAlmoco, fimAlmoco, saida, feriado, atendente);
+        validarPonto(data, entrada, inicioAlmoco, fimAlmoco, saida, status, atendente);
         this.data = data;
         this.entrada = entrada;
         this.inicioAlmoco = inicioAlmoco;
         this.fimAlmoco = fimAlmoco;
         this.saida = saida;
         this.atendente = atendente;
-        this.feriado = feriado;
+        this.status = status;
     }
 }

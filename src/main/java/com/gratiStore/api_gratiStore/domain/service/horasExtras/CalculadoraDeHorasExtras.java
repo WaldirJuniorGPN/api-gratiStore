@@ -12,5 +12,5 @@ public interface CalculadoraDeHorasExtras {
 
     Map<Atendente, Duration> calcularHorasExtras(Map<Integer, List<PontoEletronico>> pontos);
 
-    BigDecimal calcularValorAReceber(BigDecimal salario, Duration horasExtras);
+    BigDecimal calcularValorAReceber(BigDecimal salario, Duration horasExtras, BigDecimal adicional);
 }

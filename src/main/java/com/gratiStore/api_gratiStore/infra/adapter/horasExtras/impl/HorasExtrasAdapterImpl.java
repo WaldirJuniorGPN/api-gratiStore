@@ -14,7 +14,8 @@ public class HorasExtrasAdapterImpl implements HorasExtrasAdapter {
         return new ResultadoHorasExtrasResponse(horasExtras.getAtendente().getNome(),
                 horasExtras.getMes(),
                 horasExtras.getAno(),
-                horasExtras.getValorAReceber(),
+                horasExtras.getValorAReceber50PorCento(),
+                horasExtras.getValorAReceber100PorCento(),
                 horasExtras.getHorasExtras());
     }
 }
