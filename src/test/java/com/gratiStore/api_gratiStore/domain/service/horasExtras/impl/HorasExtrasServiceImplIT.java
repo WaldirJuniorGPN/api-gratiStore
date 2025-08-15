@@ -32,7 +32,7 @@ public class HorasExtrasServiceImplIT extends TestContainerConfig {
     private final LocalTime ENTRADA = LocalTime.of(9, 0);
     private final LocalTime INICIO_ALMOCO = LocalTime.of(11, 0);
     private final LocalTime FIM_ALMOCO = LocalTime.of(12, 0);
-    private final LocalTime SAIDA = LocalTime.of(19, 0);
+    private final LocalTime SAIDA = LocalTime.of(21, 0);
 
     private FiltroHorasExtrasRequest filtroHorasExtrasRequest;
     private ResultadoHorasExtrasResponse resultadoHorasExtrasResponse;
@@ -54,7 +54,7 @@ public class HorasExtrasServiceImplIT extends TestContainerConfig {
         var loja = new Loja("Google", "06026378000140");
         lojaService.salvarNoBanco(loja);
 
-        var atendenteRequest = new AtendenteRequest("Fulano", loja.getId(), BigDecimal.valueOf(3000));
+        var atendenteRequest = new AtendenteRequest("Fulano", loja.getId(), BigDecimal.valueOf(2000));
         var atendenteResponse = atendenteService.criar(atendenteRequest);
 
         var pontoRequest = new PontoRequest(DATA,
@@ -68,12 +68,14 @@ public class HorasExtrasServiceImplIT extends TestContainerConfig {
 
         filtroHorasExtrasRequest = new FiltroHorasExtrasRequest(DATA.getMonthValue(), DATA.getYear(), loja.getId());
 
-        var valorAReceber = BigDecimal.valueOf(18.75).setScale(2, RoundingMode.HALF_UP);
-        var totalHorasExtras = Duration.ofHours(1);
+        var valorAReceber50 = BigDecimal.valueOf(25).setScale(2, RoundingMode.HALF_UP);
+        var valorAReceber100 = BigDecimal.valueOf(16.666).setScale(2, RoundingMode.HALF_UP);
+        var totalHorasExtras = Duration.ofHours(3);
         resultadoHorasExtrasResponse = new ResultadoHorasExtrasResponse(atendenteRequest.nome(),
                 DATA.getMonthValue(),
                 DATA.getYear(),
-                valorAReceber,
+                valorAReceber50,
+                valorAReceber100,
                 totalHorasExtras);
     }
 

@@ -28,9 +28,6 @@ public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
     private final Duration JORNADA_SEMANAL = Duration.ofHours(44);
     private final BigDecimal DIAS_DO_MES = BigDecimal.valueOf(30);
     private final BigDecimal JORNADA_DIARIA = BigDecimal.valueOf(8);
-    private final BigDecimal ADICIONAL_HORA_EXTRA_50_POR_CENTO = BigDecimal.valueOf(0.5);
-    private final BigDecimal ADICIONAL_HORA_eXTRA_100_POR_CENTO = BigDecimal.valueOf(1);
-
 
     @Override
     public Map<Atendente, Duration> calcularHorasExtras(Map<Integer, List<PontoEletronico>> pontos) {
@@ -61,10 +58,10 @@ public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
     }
 
     @Override
-    public BigDecimal calcularValorAReceber(BigDecimal salario, Duration horasExtras) {
+    public BigDecimal calcularValorAReceber(BigDecimal salario, Duration horasExtras, BigDecimal adicional) {
         var salarioDia = salario.divide(DIAS_DO_MES, MathContext.DECIMAL64);
         var valorHora = salarioDia.divide(JORNADA_DIARIA, MathContext.DECIMAL64);
-        var valorHoraExtra = valorHora.add(valorHora.multiply(ADICIONAL_HORA_EXTRA_50_POR_CENTO, MathContext.DECIMAL64));
+        var valorHoraExtra = valorHora.add(valorHora.multiply(adicional, MathContext.DECIMAL64));
         var horasDecimais = BigDecimal.valueOf(horasExtras.getSeconds())
                 .divide(BigDecimal.valueOf(3600), MathContext.DECIMAL64);
         var totalAReceber = valorHoraExtra.multiply(horasDecimais);

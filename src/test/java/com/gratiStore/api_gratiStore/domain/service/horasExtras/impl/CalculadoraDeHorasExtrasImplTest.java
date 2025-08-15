@@ -244,7 +244,18 @@ class CalculadoraDeHorasExtrasImplTest {
         var horasExtras = Duration.ofHours(2);
         var valorAReceber = BigDecimal.valueOf(25).setScale(2, RoundingMode.HALF_UP);
 
-        var resultado = calculadoraDeHorasExtras.calcularValorAReceber(salario, horasExtras);
+        var resultado = calculadoraDeHorasExtras.calcularValorAReceber(salario, horasExtras, BigDecimal.valueOf(0.5));
+
+        assertEquals(valorAReceber, resultado);
+    }
+
+    @Test
+    void deveCalculadorValorAReceberComAdicionalDeCemPorCento() {
+        var salario = BigDecimal.valueOf(2000);
+        var horasExtras = Duration.ofHours(1);
+        var valorAReceber = BigDecimal.valueOf(16.67).setScale(2, RoundingMode.HALF_UP);
+
+        var resultado = calculadoraDeHorasExtras.calcularValorAReceber(salario, horasExtras, BigDecimal.valueOf(1));
 
         assertEquals(valorAReceber, resultado);
     }
