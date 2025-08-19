@@ -8,6 +8,7 @@ import com.gratiStore.api_gratiStore.domain.entities.ponto.PontoEletronico;
 import com.gratiStore.api_gratiStore.domain.entities.resultado.ResultadoHoraExtra;
 import com.gratiStore.api_gratiStore.domain.service.horasExtras.AgrupadorDePontosPorSemana;
 import com.gratiStore.api_gratiStore.domain.service.horasExtras.CalculadoraDeHorasExtras;
+import com.gratiStore.api_gratiStore.domain.service.horasExtras.vo.ResultadoPreliminar;
 import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
 import com.gratiStore.api_gratiStore.domain.service.ponto.PontoEletronicoService;
 import com.gratiStore.api_gratiStore.infra.adapter.horasExtras.HorasExtrasAdapter;
@@ -20,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -40,7 +42,6 @@ class HorasExtrasServiceImplTest {
     private final BigDecimal SALARIO = BigDecimal.valueOf(1500);
     private final BigDecimal VALOR_A_RECEBER_50 = BigDecimal.valueOf(18.75);
     private final BigDecimal VALOR_A_RECEBER_100 = BigDecimal.valueOf(25);
-    private final Duration HORAS_EXTRAS = Duration.ofHours(2);
     private final long ID_LOJA = 1l;
     private final String NOME_DA_LOJA = "Americanas";
     private final String NOME_DO_ATENDENTE = "Fulano";
@@ -89,7 +90,9 @@ class HorasExtrasServiceImplTest {
     void calcularHorasExtrasComSucesso() {
         var pontoEletronicoList = List.of(pontoEletronico);
         var pontosAgrupadosPorSemana = Map.of(1, pontoEletronicoList);
-        var totalHorasExtrasPorAtendente = Map.of(atendente, Duration.ofHours(1));
+        var valor50 = BigDecimal.valueOf(9.375).setScale(2, RoundingMode.HALF_UP);
+        var resultadoPreliminar = new ResultadoPreliminar(Duration.ofHours(1), Duration.ZERO, valor50, BigDecimal.ZERO);
+        var resultadoPreliminarMap = Map.of(atendente, resultadoPreliminar);
 
         when(pontoEletronicoService
                 .listarHistorico(atendenteList, filtroHorasExtrasRequest.mes(), filtroHorasExtrasRequest.ano()))
@@ -97,9 +100,7 @@ class HorasExtrasServiceImplTest {
 
         when(agrupadorDePontosPorSemana.agrupar(pontoEletronicoList)).thenReturn(pontosAgrupadosPorSemana);
         when(lojaService.buscarLoja(filtroHorasExtrasRequest.lojaId())).thenReturn(loja);
-        when(calculadoraDeHorasExtras.calcularHorasExtras(pontosAgrupadosPorSemana)).thenReturn(totalHorasExtrasPorAtendente);
-        when(calculadoraDeHorasExtras.calcularValorAReceber(eq(atendente.getSalario()), any(Duration.class), any(BigDecimal.class)))
-                .thenReturn(VALOR_A_RECEBER_50, VALOR_A_RECEBER_100);
+        when(calculadoraDeHorasExtras.calcularHorasExtras(pontosAgrupadosPorSemana)).thenReturn(resultadoPreliminarMap);
 
         horasExtrasService.calcular(filtroHorasExtrasRequest);
 
@@ -115,6 +116,7 @@ class HorasExtrasServiceImplTest {
                 filtroHorasExtrasRequest.ano(),
                 VALOR_A_RECEBER_50,
                 VALOR_A_RECEBER_100,
+                Duration.ofHours(2),
                 Duration.ofHours(1));
 
         var resultadoHoraExtraResponse = new ResultadoHorasExtrasResponse(resultadoHoraExtra.getAtendente().getNome(),
@@ -122,7 +124,8 @@ class HorasExtrasServiceImplTest {
                 resultadoHoraExtra.getAno(),
                 VALOR_A_RECEBER_50,
                 VALOR_A_RECEBER_100,
-                resultadoHoraExtra.getHorasExtras());
+                resultadoHoraExtra.getHorasExtras50PorCento(),
+                resultadoHoraExtra.getHorasExtras100PorCento());
 
         when(repository.findByAtendenteAndMesAndAno(atendente, filtroHorasExtrasRequest.mes(), filtroHorasExtrasRequest.ano()))
                 .thenReturn(Optional.of(resultadoHoraExtra));

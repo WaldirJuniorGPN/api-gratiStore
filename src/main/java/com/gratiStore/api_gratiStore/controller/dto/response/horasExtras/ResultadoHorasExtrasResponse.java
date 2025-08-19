@@ -12,5 +12,7 @@ public record ResultadoHorasExtrasResponse(String nomeAtendente,
                                            BigDecimal valorAReceber50PorCento,
                                            BigDecimal valorAReceber100PorCento,
                                            @JsonSerialize(using = DurationSerializer.class)
-                                           Duration totalHorasExtras) {
+                                           Duration totalHorasExtras50PorCento,
+                                           @JsonSerialize(using = DurationSerializer.class)
+                                           Duration totalHorasExtras100PorCento) {
 }

@@ -3,6 +3,7 @@ package com.gratiStore.api_gratiStore.domain.service.horasExtras.impl;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.loja.Loja;
 import com.gratiStore.api_gratiStore.domain.entities.ponto.PontoEletronico;
+import com.gratiStore.api_gratiStore.domain.service.horasExtras.vo.ResultadoPreliminar;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -96,14 +97,24 @@ class CalculadoraDeHorasExtrasImplTest {
         var pontoEletronicoList = List.of(pontoEletronico1, pontoEletronico2, pontoEletronico3,
                 pontoEletronico4, pontoEletronico5, pontoEletronico6);
         var pontosAgrupadosPorSemana = Map.of(SEMANA, pontoEletronicoList);
+        var h50 = Duration.ofHours(4);
+        var h100 = Duration.ZERO;
+        var valor50 = BigDecimal.valueOf(50).setScale(2, RoundingMode.HALF_UP);
+        var valor100 = BigDecimal.ZERO;
+        var resultadoPreliminar = new ResultadoPreliminar(h50, h100, valor50, valor100);
 
         var resultado = calculadoraDeHorasExtras.calcularHorasExtras(pontosAgrupadosPorSemana);
 
-        assertEquals(Duration.ofHours(4), resultado.get(atendente));
+        assertEquals(resultadoPreliminar, resultado.get(atendente));
     }
 
     @Test
     void deveCalcularHorasExtrasSemanais_comSucesso_mesmoHavendoHorasDiarias() {
+        var h50 = Duration.ofHours(5);
+        var h100 = Duration.ZERO;
+        var valor50 = BigDecimal.valueOf(62.5).setScale(2, RoundingMode.HALF_UP);
+        var valor100 = BigDecimal.ZERO;
+        var resultadoPreliminar = new ResultadoPreliminar(h50, h100, valor50, valor100);
         var pontoComHorasExtrasDiarias = new PontoEletronico(LocalDate.of(ANO, MES, 7),
                 ENTRADA,
                 INICIO_ALMOCO,
@@ -115,9 +126,10 @@ class CalculadoraDeHorasExtrasImplTest {
                 pontoEletronico4, pontoEletronico5, pontoEletronico6);
         var pontosAgrupadosPorSemana = Map.of(SEMANA, pontoEletronicoList);
 
+
         var resultado = calculadoraDeHorasExtras.calcularHorasExtras(pontosAgrupadosPorSemana);
 
-        assertEquals(Duration.ofHours(5), resultado.get(atendente));
+        assertEquals(resultadoPreliminar, resultado.get(atendente));
     }
 
     @Test
@@ -173,10 +185,15 @@ class CalculadoraDeHorasExtrasImplTest {
                 pontoComHorasDiarias4, pontoComHorasDiarias5, pontoComHorasDiarias6);
 
         var pontosAgrupadosPorSemana = Map.of(SEMANA, pontosComHorasDiariasList);
+        var h50 = Duration.ofHours(7);
+        var h100 = Duration.ZERO;
+        var valor50 = BigDecimal.valueOf(87.50).setScale(2, RoundingMode.HALF_UP);
+        var valor100 = BigDecimal.ZERO;
+        var resultadoPreliminar = new ResultadoPreliminar(h50, h100, valor50, valor100);
 
         var resultado = calculadoraDeHorasExtras.calcularHorasExtras(pontosAgrupadosPorSemana);
 
-        assertEquals(Duration.ofHours(7), resultado.get(atendente));
+        assertEquals(resultadoPreliminar, resultado.get(atendente));
     }
 
     @Test
@@ -232,10 +249,15 @@ class CalculadoraDeHorasExtrasImplTest {
                 pontoComHorasDiarias4, pontoComHorasDiarias5, pontoComHorasDiarias6);
 
         var pontosAgrupadosPorSemana = Map.of(SEMANA, pontosComHorasDiariasList);
+        var h50 = Duration.ofHours(1);
+        var h100 = Duration.ZERO;
+        var valor50 = BigDecimal.valueOf(12.5).setScale(2, RoundingMode.HALF_UP);
+        var valor100 = BigDecimal.ZERO;
+        var resultadoPreliminar = new ResultadoPreliminar(h50, h100, valor50, valor100);
 
         var resultado = calculadoraDeHorasExtras.calcularHorasExtras(pontosAgrupadosPorSemana);
 
-        assertEquals(Duration.ofHours(1), resultado.get(atendente));
+        assertEquals(resultadoPreliminar, resultado.get(atendente));
     }
 
     @Test
@@ -273,10 +295,15 @@ class CalculadoraDeHorasExtrasImplTest {
 
         var pontosDeDomingoList = List.of(pontoDeDomingo);
         var pontosAgrupadosPorSemana = Map.of(SEMANA, pontosDeDomingoList);
+        var h50 = Duration.ofMinutes(30);
+        var h100 = Duration.ZERO;
+        var valor50 = BigDecimal.valueOf(6.25).setScale(2, RoundingMode.HALF_UP);
+        var valor100 = BigDecimal.ZERO;
+        var resultadoPreliminar = new ResultadoPreliminar(h50, h100, valor50, valor100);
 
         var resutlado = calculadoraDeHorasExtras.calcularHorasExtras(pontosAgrupadosPorSemana);
 
-        assertEquals(Duration.ofMinutes(30), resutlado.get(atendente));
+        assertEquals(resultadoPreliminar, resutlado.get(atendente));
     }
 
     @Test
@@ -291,9 +318,14 @@ class CalculadoraDeHorasExtrasImplTest {
 
         var pontosDeFeriadoList = List.of(pontoFeriado);
         var pontosAgrupadosPorSemana = Map.of(SEMANA, pontosDeFeriadoList);
+        var h50 = Duration.ofMinutes(30);
+        var h100 = Duration.ZERO;
+        var valor50 = BigDecimal.valueOf(6.25).setScale(2, RoundingMode.HALF_UP);
+        var valor100 = BigDecimal.ZERO;
+        var resultadoPreliminar = new ResultadoPreliminar(h50, h100, valor50, valor100);
 
         var resultado = calculadoraDeHorasExtras.calcularHorasExtras(pontosAgrupadosPorSemana);
 
-        assertEquals(Duration.ofMinutes(30), resultado.get(atendente));
+        assertEquals(resultadoPreliminar, resultado.get(atendente));
     }
 }

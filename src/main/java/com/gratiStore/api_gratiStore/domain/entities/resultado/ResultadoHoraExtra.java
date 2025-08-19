@@ -33,43 +33,54 @@ public class ResultadoHoraExtra extends EntidadeBase {
     @Column(name = "ano", nullable = false)
     private Integer ano;
 
-    @Column(name = "valor_a_receber_50_Por_Cento", nullable = false, precision = 5, scale = 2)
+    @Column(name = "valor_a_receber_50_por_cento", nullable = false, precision = 5, scale = 2)
     private BigDecimal valorAReceber50PorCento;
 
-    @Column(name = "valor_a_receber_100_Por_Cento", nullable = false, precision = 5, scale = 2)
+    @Column(name = "valor_a_receber_100_por_cento", nullable = false, precision = 5, scale = 2)
     private BigDecimal valorAReceber100PorCento;
 
-    @Column(name = "horas_extras", nullable = false)
-    private Duration horasExtras;
+    @Column(name = "horas_extras_50_por_cento", nullable = false)
+    private Duration horasExtras50PorCento;
+
+    @Column(name = "horas_extras_100_por_cento")
+    private Duration horasExtras100PorCento;
 
     public ResultadoHoraExtra(Atendente atendente,
                               Integer mes,
                               Integer ano,
                               BigDecimal valorAReceber50PorCento,
                               BigDecimal valorAReceber100PorCento,
-                              Duration horasExtras) {
+                              Duration horasExtras50PorCento,
+                              Duration horasExtras100PorCento) {
         validarAtendente(atendente);
         validarMes(mes);
         validarAno(ano);
         validarValorAReceber(valorAReceber50PorCento);
         validarValorAReceber(valorAReceber100PorCento);
-        validarHorasExtras(horasExtras);
+        validarHorasExtras(horasExtras50PorCento);
+        validarHorasExtras(horasExtras100PorCento);
 
         this.atendente = atendente;
         this.mes = mes;
         this.ano = ano;
-        this.horasExtras = horasExtras;
+        this.horasExtras50PorCento = horasExtras50PorCento;
+        this.horasExtras100PorCento = horasExtras100PorCento;
         this.valorAReceber50PorCento = valorAReceber50PorCento.setScale(2, RoundingMode.HALF_UP);
         this.valorAReceber100PorCento = valorAReceber100PorCento.setScale(2, RoundingMode.HALF_UP);
     }
 
-    public void atualizarResultado(BigDecimal valorAReceber50PorCento, BigDecimal valorAReceber100PorCento, Duration horasExtras) {
+    public void atualizarResultado(BigDecimal valorAReceber50PorCento,
+                                   BigDecimal valorAReceber100PorCento,
+                                   Duration horasExtras50PorCento,
+                                   Duration horasExtras100PorCento) {
         validarValorAReceber(valorAReceber50PorCento);
         validarValorAReceber(valorAReceber100PorCento);
-        validarHorasExtras(horasExtras);
+        validarHorasExtras(horasExtras50PorCento);
+        validarHorasExtras(horasExtras100PorCento);
 
         this.valorAReceber50PorCento = valorAReceber50PorCento;
         this.valorAReceber100PorCento = valorAReceber100PorCento;
-        this.horasExtras = horasExtras;
+        this.horasExtras50PorCento = horasExtras50PorCento;
+        this.horasExtras100PorCento = horasExtras100PorCento;
     }
 }
