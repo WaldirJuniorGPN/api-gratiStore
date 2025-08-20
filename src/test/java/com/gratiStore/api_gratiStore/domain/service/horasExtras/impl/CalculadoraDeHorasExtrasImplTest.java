@@ -15,8 +15,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
-import static com.gratiStore.api_gratiStore.domain.utils.StatusUtils.COMUM;
-import static com.gratiStore.api_gratiStore.domain.utils.StatusUtils.FERIADO;
+import static com.gratiStore.api_gratiStore.domain.utils.StatusUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CalculadoraDeHorasExtrasImplTest {
@@ -327,5 +326,81 @@ class CalculadoraDeHorasExtrasImplTest {
         var resultado = calculadoraDeHorasExtras.calcularHorasExtras(pontosAgrupadosPorSemana);
 
         assertEquals(resultadoPreliminar, resultado.get(atendente));
+    }
+
+    @Test
+    void naoDeveGerarHorasNegativas_quandoAtestadoMatutinoAntesDoMeioDia() {
+        var ponto = new PontoEletronico(LocalDate.of(ANO, MES, 13),
+                LocalTime.of(10, 0),
+                LocalTime.of(12, 0),
+                LocalTime.of(13, 0),
+                LocalTime.of(17, 0),
+                ATESTADO_MATUTINO,
+                atendente);
+
+        var pontosAgrupados = Map.of(SEMANA, List.of(ponto));
+        var resultado = calculadoraDeHorasExtras.calcularHorasExtras(pontosAgrupados);
+
+        assertEquals(Duration.ZERO, resultado.get(atendente).horas50());
+        assertEquals(Duration.ZERO, resultado.get(atendente).horas100());
+    }
+
+    @Test
+    void deveGerarHorasNegativas_quandoAtestadoMatutinoComEntradaAposMeioDia() {
+        var ponto = new PontoEletronico(LocalDate.of(ANO, MES, 14),
+                LocalTime.of(14, 30),
+                LocalTime.of(14, 30),
+                LocalTime.of(15, 0),
+                LocalTime.of(18, 0),
+                ATESTADO_MATUTINO,
+                atendente);
+
+        var pontosAgrupados = Map.of(SEMANA, List.of(ponto));
+        var resultado = calculadoraDeHorasExtras.calcularHorasExtras(pontosAgrupados);
+
+        assertEquals(Duration.ofHours(-1), resultado.get(atendente).horas50());
+        assertEquals(Duration.ZERO, resultado.get(atendente).horas100());
+    }
+
+    @Test
+    void naoDeveGerarHorasNegativas_quandoAtestadoVespertino() {
+        var ponto = new PontoEletronico(LocalDate.of(ANO, MES, 15),
+                LocalTime.of(8, 0),
+                LocalTime.of(12, 0),
+                LocalTime.of(13, 0),
+                LocalTime.of(13, 0),
+                ATESTADO_VESPERTINO,
+                atendente);
+
+        var pontosAgrupados = Map.of(SEMANA, List.of(ponto));
+        var resultado = calculadoraDeHorasExtras.calcularHorasExtras(pontosAgrupados);
+
+        assertEquals(Duration.ZERO, resultado.get(atendente).horas50());
+        assertEquals(Duration.ZERO, resultado.get(atendente).horas100());
+    }
+
+    @Test
+    void naoDeveConsiderarPontosComStatusQueNaoEntramNoCalculo() {
+        var pontoComum = new PontoEletronico(LocalDate.of(ANO, MES, 16),
+                ENTRADA,
+                INICIO_ALMOCO,
+                FIM_ALMOCO,
+                SAIDA.plusHours(1),
+                COMUM,
+                atendente);
+
+        var pontoFolga = new PontoEletronico(LocalDate.of(ANO, MES, 17),
+                null,
+                null,
+                null,
+                null,
+                FOLGA,
+                atendente);
+
+        var pontosAgrupados = Map.of(SEMANA, List.of(pontoComum, pontoFolga));
+        var resultado = calculadoraDeHorasExtras.calcularHorasExtras(pontosAgrupados);
+
+        assertEquals(Duration.ofHours(1), resultado.get(atendente).horas50());
+        assertEquals(Duration.ZERO, resultado.get(atendente).horas100());
     }
 }

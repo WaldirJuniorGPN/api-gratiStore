@@ -12,6 +12,7 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.time.DayOfWeek;
 import java.time.Duration;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
     private static final BigDecimal SEGUNDO_POR_HORA = BigDecimal.valueOf(3600);
     private static final Duration JORNADA_DOMINGO_OU_FERIADO = Duration.ofHours(6);
     private static final Duration JORNADA_NORMAL = Duration.ofHours(8);
+    private static final Duration JORNADA_MEIO_DIA = Duration.ofHours(4);
     private static final Duration JORNADA_SEMANAL = Duration.ofHours(44);
     private static final BigDecimal DIAS_DO_MES = BigDecimal.valueOf(30);
     private static final BigDecimal JORNADA_DIARIA = BigDecimal.valueOf(8);
@@ -113,11 +115,15 @@ public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
         var tarde = Duration.between(ponto.getFimAlmoco(), ponto.getSaida());
         var jornadaTrabalhada = manha.plus(tarde);
 
-        var temAtestadoParcial = ponto.getStatus() == ATESTADO_MATUTINO
-                || ponto.getStatus() == ATESTADO_VESPERTINO;
+        if (ponto.getStatus() == ATESTADO_MATUTINO) {
+            if (ponto.getEntrada().isBefore(LocalTime.NOON)) {
+                return jornadaTrabalhada.compareTo(JORNADA_NORMAL) < 0 ? JORNADA_NORMAL : jornadaTrabalhada;
+            }
+            return jornadaTrabalhada.plus(JORNADA_MEIO_DIA);
+        }
 
-        if (jornadaTrabalhada.compareTo(JORNADA_NORMAL) < 0 && temAtestadoParcial) {
-            return Duration.ZERO;
+        if (ponto.getStatus() == ATESTADO_VESPERTINO) {
+            return jornadaTrabalhada.compareTo(JORNADA_NORMAL) < 0 ? JORNADA_NORMAL : jornadaTrabalhada;
         }
 
         return jornadaTrabalhada;
