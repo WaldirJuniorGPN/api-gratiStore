@@ -31,7 +31,6 @@ public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
     private static final BigDecimal SEGUNDO_POR_HORA = BigDecimal.valueOf(3600);
     private static final Duration JORNADA_DOMINGO_OU_FERIADO = Duration.ofHours(6);
     private static final Duration JORNADA_NORMAL = Duration.ofHours(8);
-    private static final Duration JORNADA_MEIO_DIA = Duration.ofHours(4);
     private static final Duration JORNADA_SEMANAL = Duration.ofHours(44);
     private static final BigDecimal DIAS_DO_MES = BigDecimal.valueOf(30);
     private static final BigDecimal JORNADA_DIARIA = BigDecimal.valueOf(8);
@@ -110,33 +109,58 @@ public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
         return valorDiario.compareTo(valorSemanal) > 0 ? diario : semanal;
     }
 
-    private Duration calcularCargaHorariaDoDia(PontoEletronico ponto) {
-        var manha = Duration.between(ponto.getEntrada(), ponto.getInicioAlmoco());
-        var tarde = Duration.between(ponto.getFimAlmoco(), ponto.getSaida());
-        var jornadaTrabalhada = manha.plus(tarde);
+    private Duration calcularCargaHorariaDiasUteis(PontoEletronico ponto) {
+        var jornadaTrabalhada = calcularJornadaTrabalhada(ponto);
 
-        if (ponto.getStatus() == ATESTADO_MATUTINO) {
-            if (ponto.getEntrada().isBefore(LocalTime.NOON)) {
-                return jornadaTrabalhada.compareTo(JORNADA_NORMAL) < 0 ? JORNADA_NORMAL : jornadaTrabalhada;
-            }
-            return jornadaTrabalhada.plus(JORNADA_MEIO_DIA);
-        }
-
-        if (ponto.getStatus() == ATESTADO_VESPERTINO) {
-            return jornadaTrabalhada.compareTo(JORNADA_NORMAL) < 0 ? JORNADA_NORMAL : jornadaTrabalhada;
-        }
-
-        return jornadaTrabalhada;
+        return validaAtestadoParcial(ponto.getStatus(), JORNADA_NORMAL, ponto.getEntrada(), ponto.getSaida(), jornadaTrabalhada);
     }
 
-    private Duration calcularCargaHorariaDeDomingo(PontoEletronico ponto) {
-        var horas = calcularCargaHorariaDoDia(ponto);
-        return horas.minus(JORNADA_DOMINGO_OU_FERIADO);
+    private Duration calcularCargaHorariaDeDomingoOuFeriado(PontoEletronico ponto) {
+        var jornadaTrabalhada = calcularJornadaTrabalhada(ponto);
+
+        return validaAtestadoParcial(ponto.getStatus(), JORNADA_DOMINGO_OU_FERIADO, ponto.getEntrada(), ponto.getSaida(), jornadaTrabalhada);
+    }
+
+    private Duration calcularCargaHorariaDeDomingoASabado(PontoEletronico ponto) {
+        return calcularJornadaTrabalhada(ponto);
+    }
+
+    private Duration validaAtestadoParcial(StatusUtils statusAtestado, Duration tipoJornada, LocalTime entrada, LocalTime saida, Duration jornadaTrabalhada) {
+
+        if (statusAtestado == ATESTADO_MATUTINO) {
+            if (entrada.isAfter(LocalTime.NOON) && jornadaTrabalhada.compareTo(tipoJornada) < 0) {
+
+                return Duration.between(entrada, LocalTime.NOON);
+            }
+            if ((entrada.isBefore(LocalTime.NOON) || entrada.equals(LocalTime.NOON)) && jornadaTrabalhada.compareTo(tipoJornada) < 0) {
+
+                return Duration.ZERO;
+            }
+        }
+
+        if (statusAtestado == ATESTADO_VESPERTINO) {
+            if (saida.isBefore(LocalTime.NOON)) {
+
+                return Duration.between(LocalTime.NOON, saida);
+            }
+            if (saida.isAfter(LocalTime.NOON) || saida.equals(LocalTime.NOON)) {
+
+                return Duration.ZERO;
+            }
+        }
+
+        return jornadaTrabalhada.minus(tipoJornada);
+    }
+
+    private Duration calcularJornadaTrabalhada(PontoEletronico ponto) {
+        var manha = Duration.between(ponto.getEntrada(), ponto.getInicioAlmoco());
+        var tarde = Duration.between(ponto.getFimAlmoco(), ponto.getSaida());
+        return manha.plus(tarde);
     }
 
     private ResultadoPreliminar calcularHorasExtrasSemanais(List<PontoEletronico> pontos) {
         var totalHorasNaSemana = pontos.stream()
-                .map(this::calcularCargaHorariaDoDia)
+                .map(this::calcularCargaHorariaDeDomingoASabado)
                 .reduce(Duration.ZERO, Duration::plus);
         var horasExtrasDaSemana = totalHorasNaSemana.minus(JORNADA_SEMANAL);
         if (pontos.isEmpty()) {
@@ -160,7 +184,7 @@ public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
         return pontos.stream()
                 .filter(ponto -> ponto.getData().getDayOfWeek() != DayOfWeek.SUNDAY && ponto.getStatus() != FERIADO)
                 .map(ponto -> {
-                    var horasExtras = calcularCargaHorariaDoDia(ponto).minus(JORNADA_NORMAL);
+                    var horasExtras = calcularCargaHorariaDiasUteis(ponto);
                     return processarResultadoPreliminarDiario(ponto.getAtendente().getSalario(), horasExtras);
                 })
                 .reduce(new ResultadoPreliminar(Duration.ZERO, Duration.ZERO, BigDecimal.ZERO, BigDecimal.ZERO),
@@ -192,7 +216,7 @@ public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
         return pontos.stream()
                 .filter(ponto -> ponto.getData().getDayOfWeek() == DayOfWeek.SUNDAY || ponto.getStatus() == FERIADO)
                 .map(ponto -> {
-                    var horasExtras = calcularCargaHorariaDeDomingo(ponto);
+                    var horasExtras = calcularCargaHorariaDeDomingoOuFeriado(ponto);
                     return processarResultadoPreliminarDiario(ponto.getAtendente().getSalario(), horasExtras);
                 })
                 .reduce(new ResultadoPreliminar(Duration.ZERO, Duration.ZERO, BigDecimal.ZERO, BigDecimal.ZERO),
