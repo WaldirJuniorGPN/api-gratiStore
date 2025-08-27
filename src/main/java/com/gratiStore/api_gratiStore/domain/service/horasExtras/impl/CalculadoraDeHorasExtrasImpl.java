@@ -50,9 +50,10 @@ public class CalculadoraDeHorasExtrasImpl implements CalculadoraDeHorasExtras {
                                 var pontosFiltrados = filtrarPontos(pontosDoAtendente);
                                 var horasDiarias = calcularHorasExtrasDiarias(pontosFiltrados);
                                 var horasSemanais = calcularHorasExtrasSemanais(pontosFiltrados);
-                                var resultadoPreliminar = escolherMaior(horasDiarias, horasSemanais);
                                 var horasASeremDescontadas = somarHorasASeremDescontadas(pontosDoAtendente);
-                                return descontarHoras(horasASeremDescontadas, resultadoPreliminar, e.getKey().getSalario());
+                                var horasDiariasComValorAReceber = descontarHoras(horasASeremDescontadas, horasDiarias, e.getKey().getSalario());
+                                var horasSemanaisComValorAReceber = descontarHoras(horasASeremDescontadas, horasSemanais, e.getKey().getSalario());
+                                return escolherMaior(horasDiariasComValorAReceber, horasSemanaisComValorAReceber);
                             }
                     ));
 
