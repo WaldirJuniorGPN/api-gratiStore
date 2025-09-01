@@ -33,10 +33,10 @@ public class ResultadoHoraExtra extends EntidadeBase {
     @Column(name = "ano", nullable = false)
     private Integer ano;
 
-    @Column(name = "valor_a_receber_50_por_cento", nullable = false, precision = 5, scale = 2)
+    @Column(name = "valor_a_receber_50_por_cento", nullable = false, precision = 10, scale = 2)
     private BigDecimal valorAReceber50PorCento;
 
-    @Column(name = "valor_a_receber_100_por_cento", nullable = false, precision = 5, scale = 2)
+    @Column(name = "valor_a_receber_100_por_cento", nullable = false, precision = 10, scale = 2)
     private BigDecimal valorAReceber100PorCento;
 
     @Column(name = "horas_extras_50_por_cento", nullable = false)
