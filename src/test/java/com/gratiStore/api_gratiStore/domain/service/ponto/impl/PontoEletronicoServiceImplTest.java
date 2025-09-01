@@ -58,14 +58,12 @@ class PontoEletronicoServiceImplTest {
     private PontoRequest pontoRequest;
     private Loja loja;
     private HistoricoResponse historicoResponse;
-    private List<Atendente> atendenteList;
     private Optional<PontoEletronico> pontoEletronicoOptional;
 
     @BeforeEach
     void setUp() {
         loja = new Loja("Americanas", "06026378000140");
         atendente = new Atendente("Fulano", loja, BigDecimal.valueOf(1500));
-        atendenteList = List.of(atendente);
         pontoRequest = new PontoRequest(LocalDate.of(2025, 1, 1),
                 LocalTime.of(8, 0),
                 LocalTime.of(11, 0),

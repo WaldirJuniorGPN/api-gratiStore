@@ -6,7 +6,6 @@ import com.gratiStore.api_gratiStore.controller.dto.response.ponto.PontoResponse
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.ponto.PontoEletronico;
 import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
-import com.gratiStore.api_gratiStore.domain.service.loja.LojaService;
 import com.gratiStore.api_gratiStore.domain.service.ponto.PontoEletronicoService;
 import com.gratiStore.api_gratiStore.infra.adapter.ponto.PontoEletronicoAdapter;
 import com.gratiStore.api_gratiStore.infra.repository.PontoEletronicoRepository;
@@ -33,7 +32,6 @@ public class PontoEletronicoServiceImpl implements PontoEletronicoService {
     private final PontoEletronicoAdapter adapter;
     private final PontoEletronicoRepository repository;
     private final AtendenteService atendenteService;
-    private final LojaService lojaService;
 
     @Override
     @Transactional
@@ -108,22 +106,5 @@ public class PontoEletronicoServiceImpl implements PontoEletronicoService {
         validarIdPonto(id);
         return repository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(String.format(MSG_ERROR, id)));
-    }
-
-    private List<Atendente> carregaAtendentes(Long lojaId) {
-        var loja = lojaService.buscarLoja(lojaId);
-
-        return loja.getAtendentes();
-    }
-
-    private List<PontoEletronico> carregaPontosEletronicos(List<Atendente> atendentes, int ano, int mes) {
-        var dataInicio = LocalDate.of(ano, mes, 1);
-        var dataFim = dataInicio.withDayOfMonth(dataInicio.lengthOfMonth());
-
-        return atendentes.stream()
-                .flatMap(atendente -> repository
-                        .findByAtendenteIdAndDataBetween(atendente.getId(), dataInicio, dataFim)
-                        .stream())
-                .toList();
     }
 }

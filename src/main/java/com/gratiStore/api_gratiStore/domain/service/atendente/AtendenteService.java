@@ -4,7 +4,6 @@ import com.gratiStore.api_gratiStore.controller.dto.request.atendente.*;
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.*;
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.utils.SemanaUtils;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
