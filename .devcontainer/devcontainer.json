@@ -1,0 +1,11 @@
+{
+  "name": "Java 17 Dev",
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "17",
+      "installMaven": "true",
+      "installGradle": "true"
+    }
+  },
+  "postCreateCommand": "java -version && echo JAVA_HOME=$JAVA_HOME"
+}
