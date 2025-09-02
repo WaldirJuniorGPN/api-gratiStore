@@ -2,10 +2,7 @@ package com.gratiStore.api_gratiStore.domain.service.bonificacao;
 
 import com.gratiStore.api_gratiStore.domain.entities.atendente.Atendente;
 import com.gratiStore.api_gratiStore.domain.entities.calculadora.Calculadora;
-import com.gratiStore.api_gratiStore.domain.entities.enus.AtrasoStatus;
-
 import java.util.List;
-import java.util.function.Function;
 
 public interface BonificacaoService {
 

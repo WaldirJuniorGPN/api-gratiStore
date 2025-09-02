@@ -47,7 +47,9 @@ public class PlanilhaServiceImpl implements PlanilhaService {
     }
 
     private void ler(MultipartFile file, Long lojaId) throws IOException {
-        @Cleanup var fileInputStream = file.getInputStream();
+        @Cleanup
+        var fileInputStream = file.getInputStream();
+        @Cleanup
         var workbook = new XSSFWorkbook(fileInputStream);
 
         var sheet = workbook.getSheetAt(0);

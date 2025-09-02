@@ -184,10 +184,6 @@ public class AtendenteServiceImpl implements AtendenteService {
         }
     }
 
-    private Atendente buscarPeloNome(String nome) {
-        return repository.findByNomeAndAtivoTrue(nome);
-    }
-
     private void atualizarSemana(Atendente atendente, AtendenteRequestPlanilha request, SemanaUtils semana) {
 
         if (semana == null) {
