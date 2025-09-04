@@ -10,6 +10,22 @@ spring:
       ddl-auto: update
     show-sql: true
 
+  application:
+    name: gratiStore-rabbit
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: root
+    listener:
+      simple:
+        acknowledge-mode: manual
+        concurrency: 1
+        max-concurrency: 4
+        prefetch: 10
+        default-requeue-rejected: false
+
 logging:
   level:
     root: WARN
