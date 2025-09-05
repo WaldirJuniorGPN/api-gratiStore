@@ -6,7 +6,8 @@ import com.gratiStore.api_gratiStore.controller.dto.request.atendente.AtrasoRequ
 import com.gratiStore.api_gratiStore.controller.dto.request.atendente.UpdateSalarioRequest;
 import com.gratiStore.api_gratiStore.controller.dto.response.atendente.*;
 import com.gratiStore.api_gratiStore.domain.service.atendente.AtendenteService;
-import com.gratiStore.api_gratiStore.domain.service.planilha.PlanilhaService;
+import com.gratiStore.api_gratiStore.domain.service.planilha.impl.LeitorDePlanilhaVO;
+import com.gratiStore.api_gratiStore.infra.port.PlanilhaPublisher;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ import static com.gratiStore.api_gratiStore.domain.utils.SemanaUtils.*;
 public class AtendenteController {
 
     private final AtendenteService service;
-    private final PlanilhaService planilhaService;
+    private final PlanilhaPublisher planilhaPublisher;
 
     @Operation(
             summary = "Cadastrar novo Atendente",
@@ -125,9 +126,9 @@ public class AtendenteController {
     )
     @PatchMapping("/upload/primeira-semana/{lojaId}")
     public ResponseEntity<Void> uploadPlanilhaPrimeiraSemana(@RequestParam("file") MultipartFile file, @PathVariable Long lojaId) throws IOException {
-        planilhaService.lerPlanilha(file, lojaId, PRIMEIRA);
+        planilhaPublisher.publicar(new LeitorDePlanilhaVO(file, lojaId, PRIMEIRA));
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.accepted().build();
     }
 
     @Operation(
@@ -136,9 +137,9 @@ public class AtendenteController {
     )
     @PatchMapping("/upload/segunda-semana/{lojaId}")
     public ResponseEntity<Void> uploadPlanilhaSegundaSemana(@RequestParam("file") MultipartFile file, @PathVariable Long lojaId) throws IOException {
-        planilhaService.lerPlanilha(file, lojaId, SEGUNDA);
+        planilhaPublisher.publicar(new LeitorDePlanilhaVO(file, lojaId, SEGUNDA));
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.accepted().build();
     }
 
     @Operation(
@@ -147,9 +148,9 @@ public class AtendenteController {
     )
     @PatchMapping("/upload/terceira-semana/{lojaId}")
     public ResponseEntity<Void> uploadPlanilhaTerceiraSemana(@RequestParam("file") MultipartFile file, @PathVariable Long lojaId) throws IOException {
-        planilhaService.lerPlanilha(file, lojaId, TERCEIRA);
+        planilhaPublisher.publicar(new LeitorDePlanilhaVO(file, lojaId, TERCEIRA));
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.accepted().build();
     }
 
     @Operation(
@@ -158,9 +159,9 @@ public class AtendenteController {
     )
     @PatchMapping("/upload/quarta-semana/{lojaId}")
     public ResponseEntity<Void> uploadPlanilhaQuartaSemana(@RequestParam("file") MultipartFile file, @PathVariable Long lojaId) throws IOException {
-        planilhaService.lerPlanilha(file, lojaId, QUARTA);
+        planilhaPublisher.publicar(new LeitorDePlanilhaVO(file, lojaId, QUARTA));
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.accepted().build();
     }
 
     @Operation(
@@ -169,9 +170,9 @@ public class AtendenteController {
     )
     @PatchMapping("/upload/quinta-semana/{lojaId}")
     public ResponseEntity<Void> uploadPlanilhaQuintaSemana(@RequestParam("file") MultipartFile file, @PathVariable Long lojaId) throws IOException {
-        planilhaService.lerPlanilha(file, lojaId, QUINTA);
+        planilhaPublisher.publicar(new LeitorDePlanilhaVO(file, lojaId, QUINTA));
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.accepted().build();
     }
 
     @Operation(
@@ -180,9 +181,9 @@ public class AtendenteController {
     )
     @PatchMapping("/upload/sexta-semana/{lojaId}")
     public ResponseEntity<Void> uploadPlanilhaSextaSemana(@RequestParam("file") MultipartFile file, @PathVariable Long lojaId) throws IOException {
-        planilhaService.lerPlanilha(file, lojaId, SEXTA);
+        planilhaPublisher.publicar(new LeitorDePlanilhaVO(file, lojaId, SEXTA));
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.accepted().build();
     }
 
     @Operation(
