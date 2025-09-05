@@ -1,7 +1,7 @@
 package com.gratiStore.api_gratiStore.infra.adapter.in.planilha;
 
 import com.gratiStore.api_gratiStore.domain.service.planilha.PlanilhaService;
-import com.gratiStore.api_gratiStore.domain.service.planilha.impl.LeitorDePlanilhaVO;
+import com.gratiStore.api_gratiStore.domain.service.planilha.impl.PlanilhaMessage;
 import com.rabbitmq.client.Channel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.Message;
@@ -19,7 +19,7 @@ public class PlanilhaConsumer {
     private final PlanilhaService planilhaService;
 
     @RabbitListener(queues = QUEUE)
-    public void consumir(LeitorDePlanilhaVO evento, Message msg, Channel ch) throws Exception {
+    public void consumir(PlanilhaMessage evento, Message msg, Channel ch) throws Exception {
         var tag = msg.getMessageProperties().getDeliveryTag();
 
         if (evento == null) {
@@ -30,7 +30,7 @@ public class PlanilhaConsumer {
         processar(evento);
     }
 
-    private void processar(LeitorDePlanilhaVO evento) throws IOException {
-        planilhaService.lerPlanilha(evento.file(), evento.lojaId(), evento.semana());
+    private void processar(PlanilhaMessage evento) throws IOException {
+        planilhaService.lerPlanilha(evento.conteudo(), evento.lojaId(), evento.semana());
     }
 }

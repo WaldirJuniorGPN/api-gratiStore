@@ -9,6 +9,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -29,15 +30,16 @@ public class LeitorDePlanilhaGenericoImpl implements PlanilhaService {
     private final AtendenteService atendenteService;
 
     @Override
-    public void lerPlanilha(MultipartFile file, Long lojaId, SemanaUtils semana) throws IOException {
+    public void lerPlanilha(byte[] file, Long lojaId, SemanaUtils semana) throws IOException {
 
         var vendas = lerVendas(file, lojaId);
         vendas.forEach(v -> atendenteService.uploadSemana(v, semana));
     }
 
-    private List<AtendenteRequestPlanilha> lerVendas(MultipartFile file, Long lojaId) throws IOException {
-        try (var in = file.getInputStream(); var workbook = WorkbookFactory.create(in)) {
+    private List<AtendenteRequestPlanilha> lerVendas(byte[] file, Long lojaId) throws IOException {
+        try (var in = new ByteArrayInputStream(file)) {
 
+            var workbook = WorkbookFactory.create(in);
             var sheet = workbook.getSheetAt(0);
             var inicioDosDados = 2;
 

@@ -1,6 +1,6 @@
 package com.gratiStore.api_gratiStore.infra.adapter.out.planilha;
 
-import com.gratiStore.api_gratiStore.domain.service.planilha.impl.LeitorDePlanilhaVO;
+import com.gratiStore.api_gratiStore.domain.service.planilha.impl.PlanilhaMessage;
 import com.gratiStore.api_gratiStore.infra.config.planilha.LerPlanilhaMensagemTopologyConfig;
 import com.gratiStore.api_gratiStore.infra.port.PlanilhaPublisher;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -16,7 +16,7 @@ public class PlanilhaPublisherRabbit implements PlanilhaPublisher {
     }
 
     @Override
-    public void publicar(LeitorDePlanilhaVO evento) {
+    public void publicar(PlanilhaMessage evento) {
         template.convertAndSend(LerPlanilhaMensagemTopologyConfig.EXCHANGE, LerPlanilhaMensagemTopologyConfig.ROUTING_KEY, evento);
     }
 }

@@ -7,5 +7,5 @@ import java.io.IOException;
 
 public interface PlanilhaService {
 
-    void lerPlanilha(MultipartFile file, Long lojaId, SemanaUtils semana) throws IOException;
+    void lerPlanilha(byte[] file, Long lojaId, SemanaUtils semana) throws IOException;
 }

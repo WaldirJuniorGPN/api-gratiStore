@@ -1,6 +1,10 @@
 package com.gratiStore.api_gratiStore.infra.config.planilha;
 
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -48,5 +52,17 @@ public class LerPlanilhaMensagemTopologyConfig {
         return BindingBuilder.bind(planilhaDeadLetterQueue())
                 .to(deadLetterExchange())
                 .with(ROUTING_KEY);
+    }
+
+    @Bean
+    MessageConverter messageConverter() {
+        return new Jackson2JsonMessageConverter();
+    }
+
+    @Bean
+    RabbitTemplate rabbitTemplate(ConnectionFactory cf, MessageConverter mc) {
+        var rt = new RabbitTemplate(cf);
+        rt.setMessageConverter(mc);
+        return rt;
     }
 }
